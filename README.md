@@ -61,7 +61,7 @@ O site ficará disponível em <http://127.0.0.1:8000/>.
 ---
 ## Entregas
 <details>
-<summary> Entrega 1: </summary>
+<summary> Entrega 1 </summary>
 
 [Analise_competidores](https://github.com/GManzii/Projeto-2--grupo-6/blob/main/Analise_Competidores.md)
 
@@ -69,7 +69,8 @@ O site ficará disponível em <http://127.0.0.1:8000/>.
 
 ---
 </details>
-### Entrega 2:
+<details>
+<summary> Entrega 2 </summary>
 
 #### Deployment
 - Aplicação publicada: [https://pedroesg.pythonanywhere.com](https://pedroesg.pythonanywhere.com)
@@ -88,6 +89,7 @@ As issues do projeto estão registradas na aba [Issues](https://github.com/GManz
 
 #### Print da sprint
 ![Print do sprint](imagens/image.png)
+</details>
 ### Entrega 3:
 _Em andamento._
 
