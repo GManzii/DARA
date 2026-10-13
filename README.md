@@ -60,14 +60,15 @@ O site ficará disponível em <http://127.0.0.1:8000/>.
  
 ---
 ## Entregas
+<details>
+<summary> Entrega 1: </summary>
 
-### Entrega 1:
 [Analise_competidores](https://github.com/GManzii/Projeto-2--grupo-6/blob/main/Analise_Competidores.md)
 
 ![Print do sprint](imagens/1.png)
 
 ---
-
+</details>
 ### Entrega 2:
 
 #### Deployment
