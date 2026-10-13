@@ -90,12 +90,14 @@ As issues do projeto estão registradas na aba [Issues](https://github.com/GManz
 #### Print da sprint
 ![Print do sprint](imagens/image.png)
 </details>
-### Entrega 3:
+<details><
+<summary> Entrega 3 </summary>
 _Em andamento._
-
-### Entrega 4:
+</details>
+ <details>
+<summary> Entrega 4 </summary>
 _Em andamento._
-
+</details>
 ---
 
 ### Membros:
