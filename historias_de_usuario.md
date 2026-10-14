@@ -13,6 +13,27 @@
 **Como** dono de uma empresa,  
 **quero** abrir uma aba de perfil e verificar o status da minha empresa em relação aos documentos, metas alcançadas e estatísticas referentes aos pilares ESG, além de questões logísticas, como funcionários contratados ou parcerias feitas,  
 **para** acompanhar de forma organizada a situação da minha empresa e seu progresso em relação às práticas ESG.
+#### Cenário 1: Exibição dos dados do perfil e status da empresa
+* **Dado** que estou logado na plataforma como gestor/dono,
+* **Quando** acesso a aba "Perfil",
+* **Então** devo ver o nome do usuário, cargo, e-mail, foto, e o nome e porte da empresa,
+* **E** devo ver o indicador visual de status (ex.: Sustentável).
+
+#### Cenário 2: Progresso e detalhes das metas ESG
+* **Dado** que estou na aba de Perfil,
+* **Quando** observo o quadro de "Metas cumpridas",
+* **Então** devo visualizar a proporção total de metas atingidas (ex.: 20/30) acompanhada da barra de progresso,
+* **E** a contagem detalhada de metas ambientais, de governança e sociais.
+
+#### Cenário 3: Acesso rápido aos documentos
+* **Dado** que estou na aba de Perfil,
+* **Quando** navego até a seção de "Documentos",
+* **Então** devo visualizar e poder clicar nos links para Documentos, Relatórios e Metas ESG.
+
+#### Cenário 4: Visualização das estatísticas de rentabilidade
+* **Dado** que estou na aba de Perfil,
+* **Quando** chego à seção inferior da página,
+* **Então** devo ver o gráfico de "Rentabilidade com aplicação de ESG" exibindo a evolução percentual da empresa ao longo dos anos.
 
 ---
 
