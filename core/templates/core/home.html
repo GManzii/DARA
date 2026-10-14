@@ -1,21 +1,25 @@
+
 <!DOCTYPE html>
-
-<html>
+<html lang="pt-br">
 <head>
-    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha seu perfil</title>
 </head>
-
 <body>
+    <h1>Bem-vindo!</h1>
+    <p>Como você deseja acessar o aplicativo?</p>
 
-    <h1>DARA</h1>
-    <p><i>ESG na palma da sua mão.</i></p>
-    <h2>"O que é ESG?"</h2>
-    <p>ESG significa o conjunto de práticas da empresa que avaliam o impacto de uma organização no meio ambiente, na sociedade e na transparência de sua gestão, indo além do foco exclusivo no lucro financeiro. São 3 pilares: o Ambiental, que engloba o uso de energia limpa, a redução de emissões de carbono, a gestão de resíduos e a preservação dos recursos naturais. O Social: Relações de trabalho, direitos humanos, diversidade e impacto positivo na comunidade. E o de Governança: Ética corporativa, transparência, compliance e liderança responsável.</p>
-    <h2>Sobre o Projeto</h2>
-    <p>Nosso objetivo é tornar o ESG algo facilmente acessível para pequenas e médias empresas do ramo alimentício, com relação tanto a atitudes sustentaveis como a questões logísticas como estabelecimento de conexões com outras empresas sustentáveis e guias de como obter certificados legais</p>
+    <form method="POST" action="{% url 'escolher_perfil' %}">
+        {% csrf_token %}
 
-    <a href="/about/">Sobre</a>
-    <a href="/faleconosco/">Fale Conosco</a>
+        <button type="submit" name="perfil" value="dono">
+            Sou dono
+        </button>
 
+        <button type="submit" name="perfil" value="funcionario">
+            Sou funcionário
+        </button>
+    </form>
 </body>
 </html>
