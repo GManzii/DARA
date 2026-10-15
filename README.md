@@ -90,7 +90,7 @@ As issues do projeto estão registradas na aba [Issues](https://github.com/GManz
 #### Print da sprint
 ![Print do sprint](imagens/image.png)
 </details>
-<details><
+<details>
 <summary> Entrega 3 </summary>
 
 ### Histórias implementadas
