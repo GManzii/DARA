@@ -92,7 +92,58 @@ As issues do projeto estão registradas na aba [Issues](https://github.com/GManz
 </details>
 <details><
 <summary> Entrega 3 </summary>
-_Em andamento._
+## Entrega 03
+
+### Histórias implementadas
+
+<table>
+<tr>
+<td>
+
+🟨 **POST-IT 01 — Escolher perfil**
+
+**História de usuário**
+
+Como usuário do sistema, quero escolher entre o perfil de dono e o de funcionário, para acessar a área correspondente às minhas necessidades.
+
+**Critérios de aceitação**
+- O sistema apresenta as opções de dono e funcionário.
+- Ao selecionar uma opção, o usuário é direcionado à área correspondente.
+- O sistema guarda a escolha na sessão.
+
+</td>
+</tr>
+<tr>
+<td>
+
+🟨 **POST-IT 02 — Acessar a área do dono**
+
+**História de usuário**
+
+Como dono de uma empresa, quero acessar uma área específica do sistema, para visualizar as funcionalidades destinadas à gestão da empresa.
+
+**Critérios de aceitação**
+- O sistema disponibiliza uma página para o dono.
+- A página apresenta a área destinada às funcionalidades administrativas.
+
+</td>
+</tr>
+<tr>
+<td>
+
+🟨 **POST-IT 03 — Acessar a área do funcionário**
+
+**História de usuário**
+
+Como funcionário, quero acessar uma área específica do sistema, para utilizar as funcionalidades destinadas aos colaboradores da minha empresa.
+
+**Critérios de aceitação**
+- O sistema disponibiliza uma página para o funcionário.
+- A página é acessível pela opção correspondente na tela inicial.
+
+</td>
+</tr>
+</table>
 </details>
  <details>
 <summary> Entrega 4 </summary>
