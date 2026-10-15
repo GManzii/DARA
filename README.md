@@ -92,7 +92,6 @@ As issues do projeto estão registradas na aba [Issues](https://github.com/GManz
 </details>
 <details><
 <summary> Entrega 3 </summary>
-## Entrega 03
 
 ### Histórias implementadas
 
