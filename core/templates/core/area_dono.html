@@ -1,12 +1,29 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Área do Dono</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - DARA</title>
 </head>
 <body>
-    <h1>Bem-vindo à área do dono!</h1>
-    <p>Esta página está funcionando.</p>
+    <p><a href="{% url 'trocar_perfil' %}">← Trocar Perfil (Dev)</a></p>
+    <h1>Cadastro Inicial</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p style="color: green;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        
+        {{ user_form.as_p }}
+
+        <h2>Dados da Empresa</h2>
+        {{ empresa_form.as_p }}
+
+        <button type="submit">Cadastrar e Continuar</button>
+    </form>
 </body>
 </html>

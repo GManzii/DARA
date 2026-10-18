@@ -17,12 +17,12 @@
 * **Dado** que estou logado na plataforma como gestor/dono,
 * **Quando** acesso a aba "Perfil",
 * **Então** devo ver o nome do usuário, cargo, e-mail, foto, e o nome e porte da empresa,
-* **E** devo ver o indicador visual de status (ex.: Sustentável).
+* **E** devo ver o indicador visual de status.
 
 #### Cenário 2: Progresso e detalhes das metas ESG
 * **Dado** que estou na aba de Perfil,
 * **Quando** observo o quadro de "Metas cumpridas",
-* **Então** devo visualizar a proporção total de metas atingidas (ex.: 20/30) acompanhada da barra de progresso,
+* **Então** devo visualizar a proporção total de metas atingidas acompanhada da barra de progresso,
 * **E** a contagem detalhada de metas ambientais, de governança e sociais.
 
 #### Cenário 3: Acesso rápido aos documentos

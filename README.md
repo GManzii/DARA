@@ -90,9 +90,63 @@ As issues do projeto estão registradas na aba [Issues](https://github.com/GManz
 #### Print da sprint
 ![Print do sprint](imagens/image.png)
 </details>
-<details><
+<details>
 <summary> Entrega 3 </summary>
-_Em andamento._
+
+### Histórias implementadas
+
+<table>
+<tr>
+<td>
+
+**POST-IT 01 — Escolher perfil**
+
+**História de usuário**
+
+Como usuário do sistema, quero escolher entre o perfil de dono e o de funcionário, para acessar a área correspondente às minhas necessidades.
+
+**Critérios de aceitação**
+- O sistema apresenta as opções de dono e funcionário.
+- Ao selecionar uma opção, o usuário é direcionado à área correspondente.
+- O sistema guarda a escolha na sessão.
+
+</td>
+</tr>
+<tr>
+<td>
+
+ **POST-IT 02 — Acessar cadastro**
+
+**História de usuário**
+
+Como usuário de uma empresa, quero acessar uma área específica do sistema através de um login, para visualizar as funcionalidades do aplicativo.
+
+**Critérios de aceitação**
+- O sistema disponibiliza uma página para o usuário.
+- A página apresenta a área destinada às funcionalidades administrativas.
+
+</td>
+</tr>
+<tr>
+<td>
+
+**POST-IT 03 — Questionário**
+
+**História de usuário**
+
+Como dono, quero personalizar o sistema para as necessidades da minha empresa, para acompanhar a evolução da minha empresa na aplicação de práticas ESG.
+
+**Critérios de aceitação**
+- O sistema disponibiliza um questionário.
+- A página é acessível pela opção correspondente a tela do dono.
+
+</td>
+</tr>
+</table>
+
+#### Print bug tracker
+![Print do bug tracker](imagens/imagem1.png)
+
 </details>
  <details>
 <summary> Entrega 4 </summary>

@@ -21,8 +21,12 @@
             Sou funcionário
         </button>
     </form>
-
-    <hr>
-    <p>Já está logado? <a href="{% url 'perfil' %}">Ver meu Perfil</a></p>
+    {% if messages %}
+    {% for message in messages %}
+        <div style="padding: 10px; background-color: #d4edda; color: #155724; border-radius: 5px; margin-bottom: 15px;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    {% endif %}
 </body>
 </html>
