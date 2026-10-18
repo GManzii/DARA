@@ -85,6 +85,8 @@ def questionario_esg(request):
         form = QuestionarioESGForm(request.POST, instance=empresa)
         if form.is_valid():
             form.save()
+            # Marca na sessão que o formulário/questionário foi preenchido com sucesso
+            request.session['questionario_preenchido'] = True
             messages.success(request, "Questionário ESG salvo com sucesso! Cadastro concluído.")
             return redirect('about')  # Depois mudaremos para o Perfil/Dashboard
     else:
@@ -101,7 +103,13 @@ def area_funcionario(request):
 
 
 def about(request):
-    return render(request, "core/about.html")
+    # Passa a informação se o questionário foi respondido para liberar o link dos pilares
+    exibir_pilares = request.session.get('questionario_preenchido', False)
+    return render(request, "core/about.html", {'exibir_pilares': exibir_pilares})
+
+
+def pilares(request):
+    return render(request, 'core/pilares.html')
 
 
 def contact(request):
@@ -122,6 +130,7 @@ def contact(request):
         'core/faleconosco.html',
         {'form': form}
     )
+
 #apagar essa funcao depois, ela serve para limpar a escolha de dono ou funcionario (usar apenas no desenvolvimento)
 def trocar_perfil(request):
     request.session.pop('perfil', None)
