@@ -126,3 +126,14 @@ def contact(request):
 def trocar_perfil(request):
     request.session.pop('perfil', None)
     return redirect('home')
+
+
+#acessar a página de pilares ESG
+def pilares(request):
+    return render(request, 'core/pilares.html')  
+
+def home(request):
+    return render(request, 'home.html')
+
+def pilares(request):
+    return render(request, 'pilares.html')

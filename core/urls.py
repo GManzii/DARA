@@ -12,4 +12,5 @@ urlpatterns = [
     path('questionario-esg/', views.questionario_esg, name='questionario_esg'),
     #apagar essa url depois
     path('trocar-perfil/', views.trocar_perfil, name='trocar_perfil'),
+    path('pilares/', views.pilares, name='pilares'),
 ]
