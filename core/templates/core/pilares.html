@@ -1,7 +1,11 @@
-{% extends 'base.html' %} <!-- Remova ou adapte esta linha caso seu projeto não utilize template base -->
-
-{% block content %}
-<div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilares ESG - DARA</title>
+</head>
+<body>
     <p><a href="{% url 'trocar_perfil' %}">← Voltar ao Perfil</a></p>
     
     <h1>Pilares ESG</h1>
@@ -195,5 +199,5 @@
             <button type="submit">Salvar Ações Selecionadas</button>
         </form>
     </section>
-</div>
-{% endblock %}
+</body>
+</html>
