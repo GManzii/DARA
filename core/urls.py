@@ -10,4 +10,5 @@ urlpatterns = [
     path("faleconosco/", views.contact, name="contact"), 
     #apagar essa url depois
     path('trocar-perfil/', views.trocar_perfil, name='trocar_perfil'),
+    path('perfil/', views.perfil, name='perfil'),
 ]
