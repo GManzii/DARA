@@ -143,6 +143,9 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
 </td>
 </tr>
 </table>
+#### Print bug tracker
+![Print do bug tracker](imagens/imagem1.png)
+
 </details>
  <details>
 <summary> Entrega 4 </summary>
