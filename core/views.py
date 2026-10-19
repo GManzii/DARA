@@ -8,13 +8,14 @@ def home(request):
     # Se já escolheu um perfil, direciona para a área correspondente
     perfil = request.session.get('perfil')
 
-    if perfil == 'dono':
-        return redirect('area_dono')
-    elif perfil == 'funcionario':
-        return redirect('area_funcionario')
+    # if perfil == 'dono':
+    #     return redirect('area_dono')
+    # elif perfil == 'funcionario':
+    #     return redirect('area_funcionario')
 
-    # Se ainda não escolheu, mostra a página inicial
+    # # Se ainda não escolheu, mostra a página inicial
     return render(request, "core/home.html")
+
 
 
 def escolher_perfil(request):
