@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>DARA - Perfil</title>
+</head>
+<body>
+    <header>
+        <h1>DARA</h1>
+        <nav>
+            <a href="{% url 'home' %}">Início</a> | 
+            <a href="{% url 'perfil' %}">Perfil</a>
+        </nav>
+    </header>
+
+    <hr>
+
+    <main>
+        <!-- Secção do Perfil e Utilizador -->
+        <section id="perfil-usuario">
+            <h2>Perfil</h2>
+            <p><strong>Nome:</strong> {{ usuario.nome }}</p>
+            <p><strong>Cargo:</strong> {{ usuario.cargo }}</p>
+            <p><strong>E-mail:</strong> {{ usuario.email }}</p>
+        </section>
+
+        <!-- Secção da Empresa -->
+        <section id="empresa-info">
+            <h2>{{ empresa.nome }}</h2>
+            <p><em>Porte: {{ empresa.porte }}</em></p>
+
+            <div>
+                <h3>Status da Empresa</h3>
+                <p><strong>{{ empresa.status }}</strong></p>
+            </div>
+
+            <!-- Destaque: Metas Alcançadas -->
+            <div>
+                <h3>Metas cumpridas</h3>
+                <p><strong>{{ metas.cumpridas }}/{{ metas.total }}</strong></p>
+                <ul>
+                    <li>{{ metas.ambientais }} metas ambientais</li>
+                    <li>{{ metas.governanca }} metas governança</li>
+                    <li>{{ metas.sociais }} metas sociais</li>
+                </ul>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Destaque: Documentação -->
+        <section id="documentacao">
+            <h2>Documentos</h2>
+            <ul>
+                <li><a href="#">Documentos ↗</a></li>
+                <li><a href="#">Relatórios ↗</a></li>
+                <li><a href="#">Metas ESG ↗</a></li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <!-- Destaque: Estatísticas referentes à implementação -->
+        <section id="estatisticas">
+            <h2>Rentabilidade com aplicação de ESG</h2>
+            <ul>
+                {% for ano, valor in rentabilidade.items %}
+                    <li><strong>{{ ano }}:</strong> {{ valor }}%</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </main>
+</body>
+</html>
