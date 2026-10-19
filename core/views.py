@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import ContatoForm, EmpresaForm, UsuarioDonoForm, QuestionarioESGForm
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     # Se já escolheu um perfil, direciona para a área correspondente
@@ -135,3 +136,14 @@ def contact(request):
 def trocar_perfil(request):
     request.session.pop('perfil', None)
     return redirect('home')
+
+@login_required
+def perfil(request):
+    # Procura a empresa associada ao utilizador logado
+    empresa = request.user.empresas.first()
+    
+    context = {
+        'usuario': request.user,
+        'empresa': empresa,
+    }
+    return render(request, 'core/perfil.html', context)
