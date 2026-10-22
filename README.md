@@ -73,8 +73,8 @@ O site ficará disponível em <http://127.0.0.1:8000/>.
 <summary> Entrega 2 </summary>
 
 #### Deployment
-- Aplicação publicada: [https://pedroesg.pythonanywhere.com](https://pedroesg.pythonanywhere.com)
-
+- Aplicação publicada: [https://daraesg.pythonanywhere.com](https://daraesg.pythonanywhere.com)
+  
 #### Screencasts
 
 - Explicação do código: [Assista no YouTube](https://youtu.be/nAHVaIYzRGQ)
