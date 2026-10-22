@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .forms import ContatoForm, EmpresaForm, UsuarioDonoForm, QuestionarioESGForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from .models import Empresa
 
 def home(request):
     # Se já escolheu um perfil, direciona para a área correspondente
@@ -74,23 +75,23 @@ def area_dono(request):
     }
     return render(request, 'core/area_dono.html', context)
 
-
+@login_required(login_url='area_dono')
 def questionario_esg(request):
-    # Garante que só usuários logados com empresa cadastrada respondam
-    if not request.user.is_authenticated:
-        return redirect('area_dono')
-
-    # Pega a empresa vinculada ao usuário logado
     empresa = request.user.empresas.first()
 
     if request.method == 'POST':
         form = QuestionarioESGForm(request.POST, instance=empresa)
         if form.is_valid():
-            form.save()
-            # Marca na sessão que o formulário/questionário foi preenchido com sucesso
+            # 1. Salva os dados do formulário (incluindo o nome_empresa)
+            empresa_obj = form.save()
+
+            # 2. Associa o usuário logado à lista de donos/gestores da empresa
+            if request.user.is_authenticated:
+                empresa_obj.donos.add(request.user)
+
             request.session['questionario_preenchido'] = True
-            messages.success(request, "Questionário ESG salvo com sucesso! Cadastro concluído.")
-            return redirect('about')  # Depois mudaremos para o Perfil/Dashboard
+            messages.success(request, "Questionário salvo com sucesso!")
+            return redirect('about')
     else:
         form = QuestionarioESGForm(instance=empresa)
 
@@ -138,13 +139,17 @@ def trocar_perfil(request):
     request.session.pop('perfil', None)
     return redirect('home')
 
-@login_required
+@login_required(login_url='area_dono')
 def perfil(request):
-    # Procura a empresa associada ao utilizador logado
-    empresa = request.user.empresas.first()
-    
+    # Usa 'donos' porque a relação no models.py é ManyToMany
+    empresa = request.user.empresas.first() 
+
     context = {
         'usuario': request.user,
         'empresa': empresa,
+        'total_funcionarios': 0,
+        'total_documentos': 0,
+        'total_metas': 0,
+        'total_comunidades': 0,
     }
     return render(request, 'core/perfil.html', context)
