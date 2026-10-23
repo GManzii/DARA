@@ -147,6 +147,9 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
 #### Print bug tracker
 ![Print do bug tracker](imagens/imagem1.png)
 
+#### Print da sprint
+![Print do sprint](imagens/print_sprint_3.png)
+
 #### Screencasts
 
 - Explicação do código: [Assista no YouTube](https://youtu.be/U0j3na3Lk6c)
