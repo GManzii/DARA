@@ -153,6 +153,7 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
 #### Screencasts
 
 - Explicação do código: [Assista no YouTube](https://youtu.be/U0j3na3Lk6c)
+- Deploy do código: [Assista no YouTube](https://youtu.be/12KqWi0HDcU?si=H74k8cRTDtOK-J46)
 
 </details>
  <details>
