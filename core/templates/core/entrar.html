@@ -1,0 +1,75 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Entrar{% endblock %}
+{% block app_class %}login{% endblock %}
+{% block bottom_nav %}{% endblock %}
+
+{% block topbar %}
+    <header class="login-top">
+        <a href="{% url 'home' %}" class="login-voltar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            Voltar
+        </a>
+    </header>
+{% endblock %}
+
+{% block content %}
+    <div class="login-hero" aria-hidden="true">
+        <svg class="login-orbits" viewBox="0 0 400 320" fill="none">
+            <circle cx="200" cy="160" r="150" stroke="currentColor" stroke-width="1.5"/>
+            <ellipse cx="210" cy="175" rx="190" ry="85" transform="rotate(22 210 175)" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <img class="login-pedro" src="{% static 'core/img/pedro.svg' %}" alt="">
+    </div>
+
+    <section class="card login-card">
+        <span class="eyebrow">Que bom ter você aqui</span>
+        <h1>Vamos continuar essa jornada?</h1>
+
+        <form method="post" class="form">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <ul class="errorlist nonfield"><li>E-mail ou senha incorretos.</li></ul>
+            {% endif %}
+
+            {% include "core/_campo.html" with campo=form.username %}
+
+            <div class="field">
+                <label for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
+                <div class="password-wrap">
+                    {{ form.password }}
+                    <button type="button" class="password-toggle" aria-label="Mostrar senha" aria-pressed="false">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    </button>
+                </div>
+                {{ form.password.errors }}
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit" class="btn btn-laranja btn-bloco btn-entrar">
+                Entrar
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+        </form>
+
+        <a href="{% url 'contact' %}" class="login-link">Esqueci minha senha</a>
+    </section>
+
+    <p class="form-footer">Ainda não tem conta? <a href="{% url 'home' %}">Cadastre-se</a></p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    (function () {
+        var botao = document.querySelector('.password-toggle');
+        var campo = document.getElementById('{{ form.password.id_for_label }}');
+        botao.addEventListener('click', function () {
+            var mostrar = campo.type === 'password';
+            campo.type = mostrar ? 'text' : 'password';
+            botao.setAttribute('aria-pressed', mostrar);
+            botao.setAttribute('aria-label', mostrar ? 'Esconder senha' : 'Mostrar senha');
+        });
+    })();
+</script>
+{% endblock %}

@@ -1,137 +1,94 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil - DARA</title>
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
-<body class="bg-profile">
+{% extends "core/base.html" %}
 
-    <!-- Cabeçalho -->
-    <header class="header">
-        <div class="logo">DARA</div>
-        <button class="menu-btn" aria-label="Abrir menu">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </header>
+{% block title %}Perfil{% endblock %}
 
-    <main class="container profile-container">
+{% block content %}
+<div class="perfil-grid">
 
-        <!-- Mensagens de Feedback -->
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+    <!-- 1. Card do Perfil do Utilizador -->
+    <section class="card card-user-profile">
+        <div class="avatar-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </div>
+        <div class="user-info">
+            <span class="eyebrow">Seu perfil</span>
+            <h1 class="user-name">{{ usuario.get_full_name|default:usuario.username }}</h1>
+            <p class="user-role">{{ empresa.cargo|default:"Gestor(a) de sustentabilidade" }}</p>
+            <p class="user-email">{{ usuario.email }}</p>
+        </div>
+    </section>
 
-        <!-- 1. Card do Perfil do Utilizador -->
-        <section class="card card-user-profile">
-            <div class="avatar-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
-                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
-                </svg>
-            </div>
-            <div class="user-info">
-                <span class="label-tag">SEU PERFIL</span>
-                <h1 class="user-name">{{ usuario.get_full_name|default:usuario.username }}</h1>
-                <p class="user-role">{{ empresa.cargo|default:"Gestor(a) de sustentabilidade" }}</p>
-                <p class="user-email">{{ usuario.email }}</p>
-            </div>
-        </section>
+    <!-- 2. Card da Empresa (Mostra o nome exato salvo) -->
+    <section class="card card-company">
+        <div class="company-info">
+            <span class="eyebrow">Sua empresa</span>
+            {% if empresa and empresa.nome_empresa %}
+                <h2 class="company-name">{{ empresa.nome_empresa }}</h2>
+                <p class="company-status">Em evolução sustentável</p>
+            {% else %}
+                <h2 class="company-name">Sem empresa vinculada</h2>
+                <p class="company-status">Preencha o questionário para cadastrar sua empresa.</p>
+            {% endif %}
+        </div>
+        <div class="badge-level">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            <span class="level-text">Nível 2</span>
+        </div>
+    </section>
 
-        <!-- 2. Card da Empresa (Mostra o nome exato salvo) -->
-        <section class="card card-company">
-            <div class="company-info">
-                <span class="label-tag">SUA EMPRESA</span>
-                {% if empresa and empresa.nome_empresa %}
-                    <h2 class="company-name">{{ empresa.nome_empresa }}</h2>
-                    <p class="company-status">Em evolução sustentável</p>
-                {% else %}
-                    <h2 class="company-name">Sem empresa vinculada</h2>
-                    <p class="company-status">Preencha o questionário para cadastrar sua empresa.</p>
-                {% endif %}
-            </div>
-            <div class="badge-level">
-                <span class="leaf-icon">🍂</span>
-                <span class="level-text">Nível 2</span>
-            </div>
-        </section>
+    <!-- 3. Card Metas ESG Cumpridas -->
+    <section class="card card-esg-goals">
+        <div class="goals-header">
+            <h3>Metas ESG cumpridas</h3>
+            <span class="goals-count"><strong>{{ metas_cumpridas|default:20 }}</strong> / {{ total_metas|default:30 }}</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 67%;"></div>
+        </div>
+        <p class="progress-subtitle">Você concluiu 67% das metas deste ciclo.</p>
+    </section>
 
-        <!-- 3. Card Metas ESG Cumpridas -->
-        <section class="card card-esg-goals">
-            <div class="goals-header">
-                <h3>Metas ESG cumpridas</h3>
-                <span class="goals-count"><strong>{{ metas_cumpridas|default:20 }}</strong> / {{ total_metas|default:30 }}</span>
-            </div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" style="width: 67%;"></div>
-            </div>
-            <p class="progress-subtitle">Você concluiu 67% das metas deste ciclo.</p>
-        </section>
+    <!-- 4. Lista de Atalhos e Métricas Dinâmicas -->
+    <section class="card card-stats-list">
+        <a href="{% url 'area_funcionario' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5A6.5 6.5 0 0 1 21.5 20"/></svg>
+                Funcionários cadastrados
+            </span>
+            <span class="stat-value">{{ total_funcionarios|default:0 }} &rarr;</span>
+        </a>
 
-        <!-- 4. Lista de Atalhos e Métricas Dinâmicas -->
-        <section class="card card-stats-list">
-            <a href="{% url 'area_funcionario' %}" class="stat-item">
-                <div class="stat-label">
-                    <span class="icon">👥</span>
-                    <span>Funcionários cadastrados</span>
-                </div>
-                <span class="stat-value">{{ total_funcionarios|default:0 }} &rarr;</span>
-            </a>
+        <a href="#" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
+                Documentos e relatórios
+            </span>
+            <span class="stat-value">{{ total_documentos|default:0 }} &rarr;</span>
+        </a>
 
-            <a href="#" class="stat-item">
-                <div class="stat-label">
-                    <span class="icon">📄</span>
-                    <span>Documentos e relatórios</span>
-                </div>
-                <span class="stat-value">{{ total_documentos|default:0 }} &rarr;</span>
-            </a>
+        <a href="{% url 'pilares' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                Metas ESG
+            </span>
+            <span class="stat-value">{{ total_metas|default:0 }} &rarr;</span>
+        </a>
 
-            <a href="#" class="stat-item">
-                <div class="stat-label">
-                    <span class="icon">🍂</span>
-                    <span>Metas ESG</span>
-                </div>
-                <span class="stat-value">{{ total_metas|default:0 }} &rarr;</span>
-            </a>
+        <a href="#" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Suas comunidades
+            </span>
+            <span class="stat-value">{{ total_comunidades|default:0 }} &rarr;</span>
+        </a>
+    </section>
 
-            <a href="#" class="stat-item">
-                <div class="stat-label">
-                    <span class="icon">💬</span>
-                    <span>Suas comunidades</span>
-                </div>
-                <span class="stat-value">{{ total_comunidades|default:0 }} &rarr;</span>
-            </a>
-        </section>
+    <!-- 5. Gráfico de Rentabilidade -->
+    <section class="card card-chart">
+        <span class="eyebrow">Últimos 6 anos</span>
+        <h3>Rentabilidade com aplicação de ESG</h3>
+        <div class="chart-placeholder">Gráfico em breve</div>
+    </section>
 
-        <!-- 5. Gráfico de Rentabilidade -->
-        <section class="card card-chart">
-            <span class="label-tag">ÚLTIMOS 6 ANOS</span>
-            <h3>Rentabilidade com aplicação de ESG</h3>
-            <div class="chart-placeholder">
-                <!-- Gráfico renderizado dinamicamente -->
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Rodapé -->
-    <footer class="site-footer">
-        <nav class="footer-links">
-            <a href="{% url 'home' %}">Início</a> | 
-            <a href="{% url 'perfil' %}">Perfil</a> | 
-            <a href="{% url 'contact' %}">Fale Conosco</a>
-        </nav>
-    </footer>
-
-</body>
-</html>
+</div>
+{% endblock %}

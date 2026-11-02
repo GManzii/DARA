@@ -16,7 +16,10 @@ def home(request):
     #     return redirect('area_funcionario')
 
     # # Se ainda não escolheu, mostra a página inicial
-    return render(request, "core/home.html")
+    # Quem já entrou vê os pilares; quem não entrou vê a tela de boas-vindas
+    if request.user.is_authenticated:
+        return render(request, "core/home.html")
+    return render(request, "core/boas_vindas.html")
 
 
 
@@ -75,7 +78,7 @@ def area_dono(request):
     }
     return render(request, 'core/area_dono.html', context)
 
-@login_required(login_url='area_dono')
+@login_required(login_url='entrar')
 def questionario_esg(request):
     empresa = request.user.empresas.first()
 
@@ -91,7 +94,7 @@ def questionario_esg(request):
 
             request.session['questionario_preenchido'] = True
             messages.success(request, "Questionário salvo com sucesso!")
-            return redirect('about')
+            return redirect('home')
     else:
         form = QuestionarioESGForm(instance=empresa)
 
@@ -139,7 +142,7 @@ def trocar_perfil(request):
     request.session.pop('perfil', None)
     return redirect('home')
 
-@login_required(login_url='area_dono')
+@login_required(login_url='entrar')
 def perfil(request):
     # Usa 'donos' porque a relação no models.py é ManyToMany
     empresa = request.user.empresas.first() 

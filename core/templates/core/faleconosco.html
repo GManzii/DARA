@@ -1,38 +1,28 @@
-{% load static %}
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
+{% block title %}Fale Conosco{% endblock %}
 
-<html>
-<head>
-    <title>Fale Conosco</title>
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
+{% block topbar %}
+    {% include "core/_topbar_voltar.html" with titulo="Fale conosco" %}
+{% endblock %}
 
-<body>
+{% block content %}
+<div class="split">
+    <section class="card hero">
+        <span class="eyebrow">Estamos aqui</span>
+        <h1>Fale conosco</h1>
+        <p>Utilize o formulário abaixo para enviar dúvidas, sugestões ou relatar erros.</p>
+    </section>
 
-    <div style="max-width: 600px; margin: 20px auto; font-family: sans-serif;">
-    <h2>Fale Conosco</h2>
-    <p>Utilize o formulário abaixo para enviar dúvidas, sugestões ou relatar erros.</p>
-
-    <!-- Exibição de mensagens de sucesso ou erro -->
-    {% if messages %}
-        {% for message in messages %}
-            <div style="padding: 10px; background-color: #d4edda; color: #155724; border-radius: 4px; margin-bottom: 15px;">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endif %}
-
-    <!-- Formulário do Django -->
-        <form method="post">
+    <section class="card">
+        <form method="post" class="form">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" style="padding: 10px 20px; background-color: #0d6efd; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                Enviar Mensagem
-            </button>
+            {{ form.non_field_errors }}
+            {% for campo in form %}
+                {% include "core/_campo.html" %}
+            {% endfor %}
+            <button type="submit" class="btn btn-laranja btn-bloco">Enviar mensagem</button>
         </form>
-    </div>
-    <a href="/">Início</a>
-    <a href="/about/">Sobre</a>
-</body>
-</html>
+    </section>
+</div>
+{% endblock %}

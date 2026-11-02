@@ -1,6 +1,7 @@
 from django import forms
 from .models import Empresa, MensagemContato
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 
 # 1. Formulário para Fale Conosco 
 class ContatoForm(forms.ModelForm):
@@ -138,3 +139,14 @@ class UsuarioDonoForm(forms.ModelForm):
         if senha and confirmar_senha and senha != confirmar_senha:
             raise forms.ValidationError("As senhas não coincidem.")
         return cleaned_data
+# 5. Login com conta existente (o username é o e-mail)
+class EntrarForm(AuthenticationForm):
+    username = forms.EmailField(
+        label="E-mail",
+        widget=forms.EmailInput(attrs={'placeholder': 'seuemail@exemplo.com', 'autofocus': True})
+    )
+    password = forms.CharField(
+        label="Senha",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'placeholder': 'Sua senha'})
+    )

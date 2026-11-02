@@ -1,12 +1,12 @@
-{% load static %}
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>funcionário</title>
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
-<body>
-</html>
+{% block title %}Colaborador{% endblock %}
+
+{% block content %}
+    <section class="card empty-state">
+        <span class="eyebrow">Área do colaborador</span>
+        <h1>Em breve por aqui</h1>
+        <p>Estamos preparando esta área para você.</p>
+        <a href="{% url 'pilares' %}" class="btn">Conhecer os pilares ESG</a>
+    </section>
+{% endblock %}

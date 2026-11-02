@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+
+{% block title %}Bem-vindo{% endblock %}
+{% block app_class %}welcome{% endblock %}
+{% block topbar %}{% endblock %}
+{% block bottom_nav %}{% endblock %}
+
+{% block content %}
+    <section class="welcome-hero">
+        <span class="welcome-logo" role="img" aria-label="DARA"></span>
+        <p class="welcome-tagline">ESG na palma da sua mão.</p>
+        <p class="welcome-text">Práticas ambientais, sociais e de governança de um jeito simples para pequenas e médias empresas do ramo alimentício.</p>
+    </section>
+
+    <section class="card welcome-card">
+        <h1>Como você deseja acessar?</h1>
+
+        <form method="POST" action="{% url 'escolher_perfil' %}" class="welcome-options">
+            {% csrf_token %}
+            <button type="submit" name="perfil" value="dono" class="option">
+                <span class="option-icon ambiental">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 13h18"/></svg>
+                </span>
+                <span><strong>Sou gerente</strong><small>Cadastre sua empresa e acompanhe as metas</small></span>
+            </button>
+            <button type="submit" name="perfil" value="funcionario" class="option">
+                <span class="option-icon social">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5A6.5 6.5 0 0 1 21.5 20"/></svg>
+                </span>
+                <span><strong>Sou colaborador</strong><small>Participe das ações da sua empresa</small></span>
+            </button>
+        </form>
+
+        <div class="divider"><span>ou</span></div>
+
+        <a href="{% url 'entrar' %}" class="btn btn-bloco">Já tenho conta · Entrar</a>
+    </section>
+
+    <nav class="welcome-links">
+        <a href="{% url 'about' %}">Sobre nós</a>
+        <a href="{% url 'contact' %}">Fale conosco</a>
+    </nav>
+{% endblock %}

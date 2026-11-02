@@ -1,45 +1,42 @@
-{% load static %}
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
+{% block title %}Sobre{% endblock %}
 
-<html>
-<head>
-    <title>Sobre</title>
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
+{% block topbar %}
+    {% include "core/_topbar_voltar.html" with titulo="Sobre nós" %}
+{% endblock %}
 
-<body>
+{% block content %}
+    <section class="card hero">
+        <span class="eyebrow">Quem somos</span>
+        <h1>Sobre o DARA</h1>
+        <p style="max-width: none">Somos alunos do 2º período de Ciência da Computação da CESAR School, responsáveis pelo desenvolvimento do projeto DARA — uma solução focada em simplificar a adoção de práticas ESG para pequenas e médias empresas do ramo alimentício.</p>
+    </section>
 
-    <h1>Sobre</h1>
-
-    <p>
-        Somos alunos do 2º período de Ciência da Computação da CESAR School, responsáveis pelo desenvolvimento do projeto DARA — uma solução focada em simplificar a adoção de práticas ESG para pequenas e médias empresas do ramo alimentício.
-    </p>
-
-    <!-- esse link só vai aparecer depois do usuário preencher o questionário -->
+    <!-- esse card só vai aparecer depois do usuário preencher o questionário -->
     {% if exibir_pilares %}
-        <hr>
-        <div style="background-color: #e8f5e9; padding: 15px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #2e7d32; margin-top: 0;">Questionário Concluído!</h3>
-            <p>Sua empresa está pronta para começar. Acesse o guia de ações para pontuar:</p>
-            <p><a href="{% url 'pilares' %}" style="font-weight: bold; color: #2e7d32;">→ Acessar Guia de Pilares ESG</a></p>
-        </div>
-        <hr>
+        <section class="card done-card">
+            <span class="eyebrow">Questionário concluído!</span>
+            <h2>Sua empresa está pronta para começar.</h2>
+            <p>Acesse o guia de ações para pontuar.</p>
+            <a href="{% url 'pilares' %}" class="btn btn-laranja btn-bloco">Acessar guia de pilares ESG</a>
+        </section>
     {% endif %}
 
-    <h1>Contatos</h1>
-    <ul>
-        <li>Ana Luiza Vieira Câmara — alvc@cesar.school</li>
-        <li>Anna Elizabete Asfóra Lisbôa Santos — aeals@cesar.school</li>
-        <li>Gabriela Manzi Sena Correia de Araújo — gmsca@cesar.school</li>
-        <li>Isabela Melo da Silva — ims2@cesar.school</li>
-        <li>João Carlos Soares Sampaio — jcss4@cesar.school</li>
-        <li>Laís Araújo Moura — lam2@cesar.school</li>
-    </ul>
+    <section class="card">
+        <span class="eyebrow">Contatos</span>
+        <h2>Nossa equipe</h2>
+        <ul class="team-list">
+            <li><strong>Ana Luiza Vieira Câmara</strong><a href="mailto:alvc@cesar.school">alvc@cesar.school</a></li>
+            <li><strong>Anna Elizabete Asfóra Lisbôa Santos</strong><a href="mailto:aeals@cesar.school">aeals@cesar.school</a></li>
+            <li><strong>Gabriela Manzi Sena Correia de Araújo</strong><a href="mailto:gmsca@cesar.school">gmsca@cesar.school</a></li>
+            <li><strong>Isabela Melo da Silva</strong><a href="mailto:ims2@cesar.school">ims2@cesar.school</a></li>
+            <li><strong>João Carlos Soares Sampaio</strong><a href="mailto:jcss4@cesar.school">jcss4@cesar.school</a></li>
+            <li><strong>Laís Araújo Moura</strong><a href="mailto:lam2@cesar.school">lam2@cesar.school</a></li>
+        </ul>
+    </section>
 
-    <a href="/">Início</a>
-    <a href="{% url 'perfil' %}">Perfil</a>
-    <a href="/faleconosco/">Fale Conosco</a>
-
-</body>
-</html>
+    <a href="{% url 'contact' %}" class="link-card">
+        <span><strong>Fale conosco</strong><small>Dúvidas, sugestões ou erros</small></span>
+    </a>
+{% endblock %}
