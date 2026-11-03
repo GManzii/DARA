@@ -73,8 +73,8 @@ O site ficará disponível em <http://127.0.0.1:8000/>.
 <summary> Entrega 2 </summary>
 
 #### Deployment
-- Aplicação publicada: [https://pedroesg.pythonanywhere.com](https://pedroesg.pythonanywhere.com)
-
+- Aplicação publicada: [https://daraesg.pythonanywhere.com](https://daraesg.pythonanywhere.com)
+  
 #### Screencasts
 
 - Explicação do código: [Assista no YouTube](https://youtu.be/nAHVaIYzRGQ)
@@ -147,9 +147,13 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
 #### Print bug tracker
 ![Print do bug tracker](imagens/imagem1.png)
 
+#### Print da sprint
+![Print do sprint](imagens/print_sprint_3.png)
+
 #### Screencasts
 
 - Explicação do código: [Assista no YouTube](https://youtu.be/U0j3na3Lk6c)
+- Demonstração do deploy: [Assista no YouTube](https://youtu.be/12KqWi0HDcU?si=H74k8cRTDtOK-J46)
 
 </details>
  <details>

@@ -1,31 +1,36 @@
-{% load static %}
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questionário ESG Inicial - DARA</title>
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
-<body>
-    <h1>Questionário ESG Inicial</h1>
-    <p>Empresa: <strong>{{ empresa.nome_empresa }}</strong></p>
-    <p>Selecione as ações que a sua empresa já realiza hoje no dia a dia:</p>
+{% block title %}Questionário ESG Inicial{% endblock %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <p style="color: green;">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+{% block topbar %}
+    {% include "core/_topbar_voltar.html" with titulo="Questionário ESG" %}
+{% endblock %}
 
-    <form method="POST">
-        {% csrf_token %}
-        
-        {{ form.as_p }}
+{% block content %}
+<div class="split">
+    <section class="card hero">
+        <span class="eyebrow">Passo 2 de 2 · {{ empresa.nome_empresa }}</span>
+        <h1>Diagnóstico inicial</h1>
+        <p>Selecione as ações que a sua empresa já realiza hoje no dia a dia.</p>
+    </section>
 
-        <br>
-        <button type="submit">Finalizar e Salvar Diagnóstico</button>
-    </form>
-</body>
-</html>
+    <section class="card">
+        <form method="POST" class="form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <ul class="check-list">
+                {% for campo in form %}
+                    <li>
+                        <label class="check-item">
+                            {{ campo }}
+                            <span>{{ campo.label }}</span>
+                        </label>
+                        {{ campo.errors }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <button type="submit" class="btn btn-laranja btn-bloco">Finalizar e salvar diagnóstico</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

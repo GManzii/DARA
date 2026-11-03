@@ -1,201 +1,159 @@
-{% load static %}
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pilares ESG - DARA</title>
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
-<body>
-    <p><a href="{% url 'trocar_perfil' %}">← Voltar ao Perfil</a></p>
-    
-    <h1>Pilares ESG</h1>
-    <p>Guia de Ações para PMEs do Ramo Alimentício</p>
+{% block title %}Pilares ESG{% endblock %}
+{% block app_class %}pilar-page{% endblock %}
+{% block app_attrs %}data-pilar="ambiental"{% endblock %}
 
-    <!-- NÍVEIS DE MATURIDADE -->
-    <hr>
-    <h2>Níveis de Maturidade</h2>
-    <ul>
-        <li><strong>Nível 1 - Cozinha Consciente (Bronze):</strong> Meta de até 50 pontos (mínimo de 4 Ações Baixas)</li>
-        <li><strong>Nível 2 - Gestão Sustentável (Prata):</strong> Meta superior a 90 pontos (mínimo de 7 Ações Baixas e 3 Médias)</li>
-        <li><strong>Nível 3 - Referência Local (Ouro):</strong> Meta superior a 130 pontos (até 150 pontos no total)</li>
-    </ul>
-    <hr>
+{% block topbar %}
+    {% url 'home' as url_home %}
+    {% include "core/_topbar_voltar.html" with titulo="ESG sem complicações" voltar=url_home %}
+{% endblock %}
+
+{% block content %}
+    <section class="card hero">
+        <span class="eyebrow">Guia essencial</span>
+        <h1>ESG sem complicações</h1>
+        <p>Guia de ações para PMEs do ramo alimentício. Entenda o que cada pilar significa e aplique no dia a dia.</p>
+    </section>
+
+    <div class="tabs" role="tablist" aria-label="Pilares ESG">
+        <button class="tab" role="tab" id="tab-ambiental" aria-controls="painel-ambiental" aria-selected="true" data-pilar="ambiental">Ambiental</button>
+        <button class="tab" role="tab" id="tab-social" aria-controls="painel-social" aria-selected="false" data-pilar="social" tabindex="-1">Social</button>
+        <button class="tab" role="tab" id="tab-governanca" aria-controls="painel-governanca" aria-selected="false" data-pilar="governanca" tabindex="-1">Governança</button>
+    </div>
 
     <!-- PILAR 1: AMBIENTAL (E) -->
-    <section>
-        <h2>E - Ambiental (Environmental)</h2>
-        <p>Ações voltadas à gestão de resíduos, economia de água/energia e uso responsável de embalagens.</p>
+    <section class="pilar-panel" id="painel-ambiental" role="tabpanel" aria-labelledby="tab-ambiental">
+        <header>
+            <h2>Ambiental</h2>
+            <p>Como sua empresa cuida do meio ambiente?</p>
+        </header>
 
-            <ul>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e1">
-                        <strong>Higiene e Manipulação Segura:</strong> Garantir que 100% da equipe siga as normas de higiene e controle de temperatura dos alimentos.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e2">
-                        <strong>Separação Simples de Lixo:</strong> Lixeiras separadas para resíduos orgânicos e recicláveis na cozinha e no atendimento.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e3">
-                        <strong>Coleta de Óleo Usado:</strong> Armazenar o óleo de fritura em recipientes adequados e entregar a coletores credenciados.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e4">
-                        <strong>Combate ao Desperdício Visível:</strong> Avisos amigáveis para conscientizar clientes sobre o desperdício em buffets ou pratos.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e6">
-                        <strong>Comandas e Recibos Digitais:</strong> Adotar comandas eletrônicas e enviar nota fiscal por e-mail ou WhatsApp para poupar papel.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e7">
-                        <strong>Aeradores nas Torneiras:</strong> Instalar adaptadores de vazão nas pias da cozinha e nos banheiros para poupar água.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e9">
-                        <strong>Descarte de Lâmpadas e Baterias:</strong> Separar lâmpadas queimadas e pilhas para destinação em pontos de coleta da cidade.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e11">
-                        <strong>Rotina Apagando Luz:</strong> Procedimento para desligar luzes e aparelhos em estoques, vestiários e ambientes vazios.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e12">
-                        <strong>Uso Consciente de Embalagens:</strong> Perguntar no delivery se o cliente realmente precisa de talheres e guardanapos descartáveis.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e13">
-                        <strong>Troca Gradual de Descartáveis:</strong> Substituir recipientes de plástico por embalagens de papel kraft ou biodegradáveis.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e14">
-                        <strong>Compra na Feira / Produtor Local:</strong> Comprar ingredientes hortifrúti diretamente de feirantes ou agricultores da região.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e15">
-                        <strong>Compostagem Básica:</strong> Encaminhar restos vegetais e cascas cruas para hortas comunitárias ou composteiras locais.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="g3">
-                        <strong>Equipamentos Inverter / Eficientes:</strong> Trocar geladeiras e freezers antigos por modelos com selo Procel A ou tecnologia Inverter.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="g5">
-                        <strong>Energia Solar (Alugada ou Própria):</strong> Aderir a cooperativas regionais de energia solar para consumir eletricidade 100% limpa.
-                    </label>
-                </li>
+        <div class="card">
+            <span class="eyebrow">01 — Entenda</span>
+            <h2>O que é?</h2>
+            <p>Ações voltadas à gestão de resíduos, economia de água/energia e uso responsável de embalagens.</p>
+        </div>
+
+        <div class="card">
+            <span class="eyebrow">02 — Coloque em prática</span>
+            <h2>Como aplicar?</h2>
+            <ul class="check-list">
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e1"><span><strong>Higiene e Manipulação Segura</strong>Garantir que 100% da equipe siga as normas de higiene e controle de temperatura dos alimentos.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e2"><span><strong>Separação Simples de Lixo</strong>Lixeiras separadas para resíduos orgânicos e recicláveis na cozinha e no atendimento.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e3"><span><strong>Coleta de Óleo Usado</strong>Armazenar o óleo de fritura em recipientes adequados e entregar a coletores credenciados.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e4"><span><strong>Combate ao Desperdício Visível</strong>Avisos amigáveis para conscientizar clientes sobre o desperdício em buffets ou pratos.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e6"><span><strong>Comandas e Recibos Digitais</strong>Adotar comandas eletrônicas e enviar nota fiscal por e-mail ou WhatsApp para poupar papel.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e7"><span><strong>Aeradores nas Torneiras</strong>Instalar adaptadores de vazão nas pias da cozinha e nos banheiros para poupar água.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e9"><span><strong>Descarte de Lâmpadas e Baterias</strong>Separar lâmpadas queimadas e pilhas para destinação em pontos de coleta da cidade.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e11"><span><strong>Rotina Apagando Luz</strong>Procedimento para desligar luzes e aparelhos em estoques, vestiários e ambientes vazios.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e12"><span><strong>Uso Consciente de Embalagens</strong>Perguntar no delivery se o cliente realmente precisa de talheres e guardanapos descartáveis.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e13"><span><strong>Troca Gradual de Descartáveis</strong>Substituir recipientes de plástico por embalagens de papel kraft ou biodegradáveis.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e14"><span><strong>Compra na Feira / Produtor Local</strong>Comprar ingredientes hortifrúti diretamente de feirantes ou agricultores da região.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e15"><span><strong>Compostagem Básica</strong>Encaminhar restos vegetais e cascas cruas para hortas comunitárias ou composteiras locais.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="g3"><span><strong>Equipamentos Inverter / Eficientes</strong>Trocar geladeiras e freezers antigos por modelos com selo Procel A ou tecnologia Inverter.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="g5"><span><strong>Energia Solar (Alugada ou Própria)</strong>Aderir a cooperativas regionais de energia solar para consumir eletricidade 100% limpa.</span></label></li>
             </ul>
-
-            <!-- PILAR 2: SOCIAL (S) -->
-            <h2>S - Social</h2>
-            <p>Ações focadas em segurança alimentar, apoio e saúde dos colaboradores e inclusão.</p>
-
-            <ul>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e5">
-                        <strong>Cardápio Transparente:</strong> Sinalizar claramente ingredientes, pratos vegetarianos/veganos e presença de alergênicos.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="s1">
-                        <strong>Doação do Excedente Limpo:</strong> Parceria com ONGs para doação segura de alimentos preparados que não foram servidos.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="s2">
-                        <strong>Compressas e Apoio Anti-Lesão:</strong> Pausas ativas e orientação postural para cozinheiros e atendentes que passam horas em pé.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="s3">
-                        <strong>Folga de Aniversário ou Benefício:</strong> Oferecer folga no aniversário ou pequenos incentivos de saúde/estudo para os funcionários.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="s4">
-                        <strong>Treinamento Sobre Diversidade:</strong> Orientar a equipe sobre respeito e atendimento inclusivo a todos os perfis de clientes.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="s5">
-                        <strong>Opções Plant-Based no Cardápio:</strong> Desenvolver e promover pratos saborosos 100% à base de plantas para incentivar a redução de carne.
-                    </label>
-                </li>
-            </ul>
-
-            <!-- PILAR 3: GOVERNANÇA (G) -->
-            <h2>G - Governança (Governance)</h2>
-            <p>Ações de controle de estoque, canais de escuta, ética na compra de insumos e certificações.</p>
-
-            <ul>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e8">
-                        <strong>Organização PVPS no Estoque:</strong> Aplicar a regra 'Primeiro que Vence, Primeiro que Sai' para evitar perdas de insumos.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="e10">
-                        <strong>Caixa de Sugestões / Denúncias:</strong> Canal simples (caixinha física ou WhatsApp) para escutar a equipe de forma confidencial.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="g1">
-                        <strong>Planilha de Perdas na Produção:</strong> Pesar e registrar o desperdício diário do pré-preparo para ajustar o volume de compras.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="g2">
-                        <strong>Ovos Cage-Free e Compra Ética:</strong> Priorizar ovos de galinhas livres de gaiola e carnes de fornecedores com certificado de manejo.
-                    </label>
-                </li>
-                <li>
-                    <label>
-                        <input type="checkbox" name="acoes" value="g4">
-                        <strong>Selo ou Certificação Local:</strong> Obter selos municipais de sustentabilidade, qualidade sanitária ou Lixo Zero.
-                    </label>
-                </li>
-            </ul>
-
+        </div>
     </section>
-</body>
-</html>
+
+    <!-- PILAR 2: SOCIAL (S) -->
+    <section class="pilar-panel" id="painel-social" role="tabpanel" aria-labelledby="tab-social" hidden>
+        <header>
+            <h2>Social</h2>
+            <p>Como sua empresa cuida das pessoas?</p>
+        </header>
+
+        <div class="card">
+            <span class="eyebrow">01 — Entenda</span>
+            <h2>O que é?</h2>
+            <p>Ações focadas em segurança alimentar, apoio e saúde dos colaboradores e inclusão.</p>
+        </div>
+
+        <div class="card">
+            <span class="eyebrow">02 — Coloque em prática</span>
+            <h2>Como aplicar?</h2>
+            <ul class="check-list">
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e5"><span><strong>Cardápio Transparente</strong>Sinalizar claramente ingredientes, pratos vegetarianos/veganos e presença de alergênicos.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="s1"><span><strong>Doação do Excedente Limpo</strong>Parceria com ONGs para doação segura de alimentos preparados que não foram servidos.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="s2"><span><strong>Compressas e Apoio Anti-Lesão</strong>Pausas ativas e orientação postural para cozinheiros e atendentes que passam horas em pé.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="s3"><span><strong>Folga de Aniversário ou Benefício</strong>Oferecer folga no aniversário ou pequenos incentivos de saúde/estudo para os funcionários.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="s4"><span><strong>Treinamento Sobre Diversidade</strong>Orientar a equipe sobre respeito e atendimento inclusivo a todos os perfis de clientes.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="s5"><span><strong>Opções Plant-Based no Cardápio</strong>Desenvolver e promover pratos saborosos 100% à base de plantas para incentivar a redução de carne.</span></label></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- PILAR 3: GOVERNANÇA (G) -->
+    <section class="pilar-panel" id="painel-governanca" role="tabpanel" aria-labelledby="tab-governanca" hidden>
+        <header>
+            <h2>Governança</h2>
+            <p>Como sua empresa organiza os processos?</p>
+        </header>
+
+        <div class="card">
+            <span class="eyebrow">01 — Entenda</span>
+            <h2>O que é?</h2>
+            <p>Ações de controle de estoque, canais de escuta, ética na compra de insumos e certificações.</p>
+        </div>
+
+        <div class="card">
+            <span class="eyebrow">02 — Coloque em prática</span>
+            <h2>Como aplicar?</h2>
+            <ul class="check-list">
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e8"><span><strong>Organização PVPS no Estoque</strong>Aplicar a regra 'Primeiro que Vence, Primeiro que Sai' para evitar perdas de insumos.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="e10"><span><strong>Caixa de Sugestões / Denúncias</strong>Canal simples (caixinha física ou WhatsApp) para escutar a equipe de forma confidencial.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="g1"><span><strong>Planilha de Perdas na Produção</strong>Pesar e registrar o desperdício diário do pré-preparo para ajustar o volume de compras.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="g2"><span><strong>Ovos Cage-Free e Compra Ética</strong>Priorizar ovos de galinhas livres de gaiola e carnes de fornecedores com certificado de manejo.</span></label></li>
+                <li><label class="check-item"><input type="checkbox" name="acoes" value="g4"><span><strong>Selo ou Certificação Local</strong>Obter selos municipais de sustentabilidade, qualidade sanitária ou Lixo Zero.</span></label></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- NÍVEIS DE MATURIDADE -->
+    <section class="card">
+        <span class="eyebrow">03 — Evolua</span>
+        <h2>Níveis de maturidade</h2>
+        <ul class="levels">
+            <li><span class="medal bronze">1</span><span><strong>Cozinha Consciente (Bronze)</strong>Meta de até 50 pontos (mínimo de 4 ações baixas)</span></li>
+            <li><span class="medal prata">2</span><span><strong>Gestão Sustentável (Prata)</strong>Meta superior a 90 pontos (mínimo de 7 ações baixas e 3 médias)</span></li>
+            <li><span class="medal ouro">3</span><span><strong>Referência Local (Ouro)</strong>Meta superior a 130 pontos (até 150 pontos no total)</span></li>
+        </ul>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    (function () {
+        var app = document.querySelector('.app');
+        var abas = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+
+        function ativar(pilar, foco) {
+            abas.forEach(function (aba) {
+                var ativa = aba.dataset.pilar === pilar;
+                aba.setAttribute('aria-selected', ativa);
+                aba.tabIndex = ativa ? 0 : -1;
+                document.getElementById('painel-' + aba.dataset.pilar).hidden = !ativa;
+                if (ativa && foco) aba.focus();
+            });
+            app.dataset.pilar = pilar;
+            history.replaceState(null, '', '#' + pilar);
+        }
+
+        abas.forEach(function (aba, i) {
+            aba.addEventListener('click', function () { ativar(aba.dataset.pilar); });
+            aba.addEventListener('keydown', function (e) {
+                var passo = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+                if (passo) ativar(abas[(i + passo + abas.length) % abas.length].dataset.pilar, true);
+            });
+        });
+
+        function pelaUrl() {
+            var pilar = location.hash.slice(1);
+            if (abas.some(function (a) { return a.dataset.pilar === pilar; })) ativar(pilar);
+        }
+        pelaUrl();
+        window.addEventListener('hashchange', pelaUrl);
+    })();
+</script>
+{% endblock %}

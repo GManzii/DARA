@@ -1,32 +1,60 @@
-{% load static %}
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cadastro - DARA</title>
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
-</head>
-<body>
-    <p><a href="{% url 'trocar_perfil' %}">← Trocar Perfil</a></p>
-    <h1>Cadastro Inicial</h1>
+{% block title %}Cadastro{% endblock %}
+{% block app_class %}cadastro{% endblock %}
+{% block bottom_nav %}{% endblock %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <p style="color: green;">{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+{% block topbar %}
+    <header class="cadastro-top">
+        <a href="{% url 'trocar_perfil' %}" class="login-voltar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            Voltar
+        </a>
+        <span class="eyebrow">Bem-vindo à DARA</span>
+        <h1>Sustentabilidade começa com pequenos passos.</h1>
+        <p>Conte um pouco sobre você e sua empresa para personalizarmos sua jornada ESG.</p>
+        <ol class="steps" aria-label="Passo 1 de 3">
+            <li class="ativo"></li>
+            <li></li>
+            <li></li>
+        </ol>
+    </header>
+{% endblock %}
 
-    <form method="POST">
-        {% csrf_token %}
-        
-        {{ user_form.as_p }}
+{% block content %}
+    <section class="cadastro-card">
+        <div class="cadastro-card-head">
+            <h2>Cadastro</h2>
+            <span>Questionário inicial</span>
+        </div>
 
-        <h2>Dados da Empresa</h2>
-        {{ empresa_form.as_p }}
+        <form method="POST" class="form">
+            {% csrf_token %}
+            {{ user_form.non_field_errors }}
+            {{ empresa_form.non_field_errors }}
 
-        <button type="submit">Cadastrar e Continuar</button>
-    </form>
-</body>
-</html>
+            {% include "core/_campo.html" with campo=user_form.nome_completo %}
+            <div class="field-row">
+                {% include "core/_campo.html" with campo=user_form.email rotulo="E-mail" %}
+                {% include "core/_campo.html" with campo=user_form.telefone %}
+            </div>
+            {% include "core/_campo.html" with campo=user_form.senha %}
+            {% include "core/_campo.html" with campo=user_form.confirmar_senha %}
+
+            {% include "core/_campo.html" with campo=empresa_form.nome_empresa %}
+            {% include "core/_campo.html" with campo=empresa_form.segmento %}
+            <div class="field-row">
+                {% include "core/_campo.html" with campo=empresa_form.numero_funcionarios %}
+                {% include "core/_campo.html" with campo=empresa_form.porte %}
+            </div>
+            {% include "core/_campo.html" with campo=empresa_form.cidade_estado %}
+
+            <button type="submit" class="btn btn-bloco btn-cadastro">
+                Cadastrar e continuar
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+        </form>
+    </section>
+
+    <p class="form-footer">Já tem conta? <a href="{% url 'entrar' %}">Entrar</a></p>
+{% endblock %}
