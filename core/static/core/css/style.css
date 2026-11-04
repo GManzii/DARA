@@ -104,11 +104,24 @@ img { max-width: 100%; display: block; }
     color: var(--creme);
 }
 
+.welcome-hero .logo {
+    display: inline-block;
+    width: 150px;
+    max-width: 100%;
+}
+
+.welcome-hero .logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
 .topbar-logo {
     display: block;
     width: 84px;
     height: 24px;
-    background: url("../img/dara-logo.png") left center / contain no-repeat;
+    background: url("../img/dara_logo_branca.svg") left center / contain no-repeat;
 }
 
 .topbar-title {
@@ -207,13 +220,10 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
     color: var(--musgo);
 }
 
-/* a logo é creme; aqui ela é pintada de verde com máscara */
 .drawer-logo {
     width: 88px;
     height: 26px;
-    background: var(--musgo);
-    -webkit-mask: url("../img/dara-logo.png") left center / contain no-repeat;
-    mask: url("../img/dara-logo.png") left center / contain no-repeat;
+    background: url("../img/dara_logo.png") left center / contain no-repeat;
 }
 
 .drawer-user {
@@ -697,9 +707,9 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
 .welcome-logo {
     display: block;
     width: min(240px, 70%);
-    aspect-ratio: 3.43;
+    aspect-ratio: 2.34;
     margin: 0 auto 20px;
-    background: url("../img/dara-logo.png") center / contain no-repeat;
+    background: url("../img/dara_logo_branca.svg") center / contain no-repeat;
 }
 .welcome-tagline { font-size: 1.35rem; font-weight: 600; margin-bottom: 8px; }
 .welcome-text { max-width: 34ch; margin: 0 auto; font-size: 0.92rem; opacity: 0.75; }

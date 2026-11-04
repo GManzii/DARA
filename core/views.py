@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Empresa
 from django.http import JsonResponse
 
+def landing(request):
+    return render(request, 'core/landing.html')
+
 def home(request):
     # Se já escolheu um perfil, direciona para a área correspondente
     perfil = request.session.get('perfil')
