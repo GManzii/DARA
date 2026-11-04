@@ -25,19 +25,16 @@ def home(request):
         return render(request, "core/home.html")
     return render(request, "core/boas_vindas.html")
 
-
-
 def escolher_perfil(request):
     if request.method == 'POST':
         perfil = request.POST.get('perfil')
 
-        if perfil in ['dono', 'funcionario']:
-            request.session['perfil'] = perfil
+        if perfil == 'dono':
+            request.session['perfil'] = 'dono'
+            return redirect('area_dono')
 
-            if perfil == 'dono':
-                return redirect('area_dono')
-            else:
-                return redirect('area_funcionario')
+        elif perfil == 'funcionario':
+            return redirect('cadastro_funcionario')
 
     return redirect('home')
 
@@ -82,31 +79,33 @@ def area_dono(request):
     }
     return render(request, 'core/area_dono.html', context)
 
-@login_required(login_url='entrar')
 def questionario_esg(request):
-    empresa = request.user.empresas.first()
-
     if request.method == 'POST':
-        form = QuestionarioESGForm(request.POST, instance=empresa)
+        form = QuestionarioESGForm(request.POST)
+
         if form.is_valid():
-            # 1. Salva os dados do formulário (incluindo o nome_empresa)
-            empresa_obj = form.save()
+            respostas = form.cleaned_data
 
-            # 2. Associa o usuário logado à lista de donos/gestores da empresa
-            if request.user.is_authenticated:
-                empresa_obj.donos.add(request.user)
+            request.session['respostas_esg'] = respostas
 
-            request.session['questionario_preenchido'] = True
-            messages.success(request, "Questionário salvo com sucesso!")
-            return redirect('home')
+            messages.success(
+                request,
+                "Questionário preenchido! Agora vamos criar sua conta."
+            )
+
+            return redirect('area_dono')
+
     else:
-        form = QuestionarioESGForm(instance=empresa)
+        form = QuestionarioESGForm()
 
-    context = {
-        'form': form,
-        'empresa': empresa
-    }
-    return render(request, 'core/questionario_esg.html', context)
+    return render(
+        request,
+        'core/questionario_esg.html',
+        {'form': form}
+    )
+
+def cadastro_funcionario(request):
+    return render(request, 'core/cadastro_funcionario.html')
 
 def area_funcionario(request):
     return render(request, 'core/area_funcionario.html')

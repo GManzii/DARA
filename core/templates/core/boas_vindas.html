@@ -1,4 +1,5 @@
 {% extends "core/base.html" %}
+{% load static %}
 
 {% block title %}Bem-vindo{% endblock %}
 {% block app_class %}welcome{% endblock %}
@@ -6,8 +7,12 @@
 {% block bottom_nav %}{% endblock %}
 
 {% block content %}
+
+    <a href="{% url 'landing' %}" class="btn-voltar">
+        ← Voltar
+    </a>
     <section class="welcome-hero">
-        <a href="{% url 'boas_vindas' %}" class="logo">
+        <a href="{% url 'escolher_perfil' %}" class="logo">
             <img src="{% static 'core/img/dara_logo_branca.svg' %}" alt="Logo DARA">
         </a>
         <p class="welcome-tagline">ESG na palma da sua mão.</p>
@@ -38,8 +43,4 @@
         <a href="{% url 'entrar' %}" class="btn btn-bloco">Já tenho conta · Entrar</a>
     </section>
 
-    <nav class="welcome-links">
-        <a href="{% url 'about' %}">Sobre nós</a>
-        <a href="{% url 'contact' %}">Fale conosco</a>
-    </nav>
 {% endblock %}

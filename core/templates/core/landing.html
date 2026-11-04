@@ -39,65 +39,83 @@
 
         <!-- APRESENTAÇÃO -->
         <section class="hero" id="inicio">
-
             <div class="hero-content">
 
                 <span class="tagline">
-                    SUSTENTABILIDADE E TRANSFORMAÇÃO
+                    SUSTENTABILIDADE PARA NEGÓCIOS ALIMENTÍCIOS
                 </span>
 
                 <h1>
-                    Transforme seu negócio.
-                    <span>Construa um futuro melhor.</span>
+                    Seu negócio pode crescer com mais
+                    <span>consciência.</span>
                 </h1>
 
                 <p>
-                    Descubra como práticas ambientais, sociais e de
-                    governança podem transformar a maneira como sua
-                    empresa cresce e se desenvolve.
+                    Organize documentos, conheça os princípios ESG e
+                    acompanhe metas para tornar seu negócio mais sustentável,
+                    respeitando a realidade da sua empresa.
                 </p>
 
                 <div class="hero-buttons">
                     <a href="#sobre" class="btn-principal">
                         Conheça o DARA
                     </a>
-
-                    <a href="{% url 'entrar' %}" class="btn-secundario">
-                        Acessar plataforma
-                    </a>
                 </div>
 
             </div>
 
             <div class="hero-image">
-                <!-- Espaço reservado para imagem ou ilustração -->
+                <img
+                    src="{% static 'core/img/pedro.svg' %}"
+                    alt="Pedro, mascote planeta do DARA"
+                    class="mascote-pedro"
+                >
             </div>
-
         </section>
 
 
         <!-- SOBRE O DARA -->
         <section class="sobre-section" id="sobre">
 
-            <div class="section-label">
-                SOBRE O DARA
+            <div class="sobre-container">
+
+                <div class="sobre-titulo">
+                    <span class="sobre-tag">SOBRE O DARA</span>
+
+                    <h2>
+                        Pequenas mudanças podem gerar
+                        <span>grandes transformações.</span>
+                    </h2>
+                </div>
+
+                <div class="sobre-conteudo">
+
+                    <p>
+                        O DARA nasceu para tornar a sustentabilidade
+                        mais acessível aos pequenos e médios negócios
+                        do ramo alimentício.
+                    </p>
+
+                    <p>
+                        Por meio de orientações práticas, organização
+                        de documentos e acompanhamento de metas,
+                        ajudamos gestores e colaboradores a compreender
+                        e incorporar os princípios ESG à rotina da empresa.
+                    </p>
+
+                    <p class="sobre-destaque">
+                        Porque construir um negócio mais consciente
+                        não precisa ser complicado. Precisa começar.
+                    </p>
+
+                    <a href="{% url 'about' %}" class="sobre-link">
+                        Conheça nossa história
+                        <span>→</span>
+                    </a>
+
+                </div>
+
             </div>
-
-            <h2>
-                Pequenas mudanças podem gerar
-                <span>grandes transformações.</span>
-            </h2>
-
-            <p>
-                O DARA nasceu com o propósito de ajudar empresas a
-                compreender, organizar e desenvolver práticas
-                sustentáveis, promovendo uma gestão mais consciente
-                e responsável.
-            </p>
-
-            <a href="{% url 'about' %}" class="link-section">
-                Conheça nossa história →
-            </a>
 
         </section>
 
@@ -105,123 +123,354 @@
         <!-- PILARES ESG -->
         <section class="pilares-section" id="pilares">
 
-            <div class="section-label">
-                CONHEÇA O ESG
-            </div>
+            <div class="pilares-container">
 
-            <h2>
-                Três pilares.
-                <span>Um futuro mais sustentável.</span>
-            </h2>
+                <div class="pilares-cabecalho">
+                    <span class="pilares-tag">CONHEÇA OS PILARES</span>
 
-            <p>
-                O ESG reúne três dimensões fundamentais para uma
-                gestão empresarial responsável.
-            </p>
+                    <h2>
+                        Sustentabilidade em
+                        <span>três dimensões.</span>
+                    </h2>
 
-            <div class="pilares-grid">
-
-                <article class="pilar-card">
-                    <span class="pilar-number">01</span>
-                    <h3>Environmental</h3>
                     <p>
-                        Ambiental: cuidado com os recursos naturais
-                        e redução dos impactos ambientais.
+                        Entenda como os princípios ESG podem fazer parte
+                        da rotina e das decisões do seu negócio.
                     </p>
-                </article>
+                </div>
 
-                <article class="pilar-card">
-                    <span class="pilar-number">02</span>
-                    <h3>Social</h3>
-                    <p>
-                        Social: valorização das pessoas, inclusão,
-                        diversidade e responsabilidade social.
-                    </p>
-                </article>
+                <div class="pilares-grid">
 
-                <article class="pilar-card">
-                    <span class="pilar-number">03</span>
-                    <h3>Governance</h3>
-                    <p>
-                        Governança: transparência, ética e
-                        responsabilidade na gestão.
-                    </p>
-                </article>
+                    <!-- PILAR AMBIENTAL -->
+                    <article class="pilar-card ambiental">
 
-            </div>
+                        <div class="pilar-icone">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 4C10 4 5 8 5 15a5 5 0 0 0 5 5c7 0 10-6 10-16Z"/>
+                                <path d="M4 21c3-6 7-9 12-12"/>
+                            </svg>
+                        </div>
 
-            <a href="{% url 'pilares' %}" class="link-section">
-                Explore os pilares ESG →
-            </a>
+                        <span class="pilar-numero">01</span>
 
-        </section>
+                        <h3>Ambiental</h3>
 
+                        <p>
+                            Incentiva o uso consciente dos recursos naturais,
+                            a redução de desperdícios e uma gestão responsável
+                            dos resíduos produzidos pelo negócio.
+                        </p>
 
-        <!-- ACESSO À PLATAFORMA -->
-        <section class="acesso-section">
+                    </article>
 
-            <div class="section-label">
-                COMECE SUA JORNADA
-            </div>
+                    <!-- PILAR SOCIAL -->
+                    <article class="pilar-card social">
 
-            <h2>
-                Sua empresa pode fazer parte dessa transformação.
-            </h2>
+                        <div class="pilar-icone">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="8" r="3"/>
+                                <path d="M3 20v-1a6 6 0 0 1 12 0v1"/>
+                                <path d="M16 5.2a3 3 0 0 1 0 5.6"/>
+                                <path d="M18 14a5 5 0 0 1 3 4.5V20"/>
+                            </svg>
+                        </div>
 
-            <p>
-                Acesse a plataforma DARA e descubra como desenvolver
-                práticas ESG no seu negócio.
-            </p>
+                        <span class="pilar-numero">02</span>
 
-            <div class="acesso-buttons">
-                <a href="{% url 'area_dono' %}">
-                    Sou gestor
+                        <h3>Social</h3>
+
+                        <p>
+                            Valoriza os colaboradores, promove ambientes
+                            de trabalho seguros, respeita as pessoas e
+                            fortalece a relação com a comunidade.
+                        </p>
+
+                    </article>
+
+                    <!-- PILAR GOVERNANÇA -->
+                    <article class="pilar-card governanca">
+
+                        <div class="pilar-icone">
+                            <svg viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="1.7"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 3 3 7v2h18V7l-9-4Z"/>
+                                <path d="M5 9v9M9 9v9M15 9v9M19 9v9"/>
+                                <path d="M3 20h18M2 22h20"/>
+                            </svg>
+                        </div>
+
+                        <span class="pilar-numero">03</span>
+
+                        <h3>Governança</h3>
+
+                        <p>
+                            Incentiva uma gestão organizada, ética e
+                            transparente, com decisões responsáveis
+                            e processos bem definidos.
+                        </p>
+
+                    </article>
+
+                </div>
+
+                <a href="{% url 'pilares' %}" class="pilares-link">
+                    Explore os três pilares
+                    <span>→</span>
                 </a>
 
-                <a href="{% url 'area_funcionario' %}">
-                    Sou colaborador
-                </a>
             </div>
 
         </section>
 
+        <!-- COMO FUNCIONA -->
+        <section class="funcionamento-section" id="funcionamento">
 
-        <!-- CONTATO -->
-        <section class="contato-section" id="contato">
+            <div class="funcionamento-container">
 
-            <h2>
-                Vamos construir um futuro melhor?
-            </h2>
+                <div class="funcionamento-titulo revelar revelar-esquerda">
+                    <span class="funcionamento-tag">NOSSA METODOLOGIA</span>
 
-            <p>
-                Entre em contato conosco e conheça melhor o projeto DARA.
-            </p>
+                    <h2>
+                        Da intenção à prática,
+                        <span>passo a passo.</span>
+                    </h2>
 
-            <a href="{% url 'contact' %}" class="btn-principal">
-                Fale conosco →
-            </a>
+                    <p>
+                        O DARA acompanha seu negócio em uma jornada de
+                        sustentabilidade construída de acordo com sua realidade.
+                    </p>
+                </div>
+
+                <div class="funcionamento-etapas">
+
+                    <article class="etapa revelar">
+                        <span class="etapa-numero">01.</span>
+
+                        <div class="etapa-conteudo">
+                            <h3>Diagnóstico ESG</h3>
+                            <p>
+                                Conheça a realidade do seu negócio e identifique
+                                as práticas que já existem e os pontos que podem
+                                ser aprimorados nas dimensões ambiental, social
+                                e de governança.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="etapa revelar">
+                        <span class="etapa-numero">02.</span>
+
+                        <div class="etapa-conteudo">
+                            <h3>Plano de ação personalizado</h3>
+                            <p>
+                                Receba orientações alinhadas às necessidades
+                                e possibilidades da sua empresa, com ações
+                                práticas e prioridades para começar.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="etapa revelar">
+                        <span class="etapa-numero">03.</span>
+
+                        <div class="etapa-conteudo">
+                            <h3>Implementação das práticas</h3>
+                            <p>
+                                Coloque o plano em prática com iniciativas
+                                para reduzir desperdícios, otimizar recursos,
+                                valorizar colaboradores e fortalecer a gestão.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="etapa revelar">
+                        <span class="etapa-numero">04.</span>
+
+                        <div class="etapa-conteudo">
+                            <h3>Acompanhamento e evolução</h3>
+                            <p>
+                                Acompanhe o progresso das ações, registre
+                                conquistas e identifique novas oportunidades
+                                para tornar seu negócio cada vez mais consciente.
+                            </p>
+                        </div>
+                    </article>
+
+                </div>
+
+            </div>
 
         </section>
 
+        <!-- COMUNIDADE -->
+        <section class="comunidade-section" id="comunidade">
+
+            <div class="comunidade-container revelar">
+
+                <span class="comunidade-tag">NOSSA COMUNIDADE</span>
+
+                <h2>
+                    A transformação acontece
+                    <span>quando caminhamos juntos.</span>
+                </h2>
+
+                <p>
+                    O DARA acredita que cada experiência pode contribuir
+                    para construir negócios mais conscientes. Este será
+                    um espaço para compartilhar aprendizados, conquistas
+                    e experiências de quem faz parte dessa jornada.
+                </p>
+
+                <div class="comunidade-aviso">
+                    <span class="comunidade-simbolo">✳</span>
+
+                    <div>
+                        <h3>Histórias que ainda serão contadas.</h3>
+                        <p>
+                            Em breve, este espaço reunirá experiências
+                            reais de gestores e colaboradores que utilizam
+                            o DARA.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- CHAMADA FINAL -->
+        <section class="cta-section">
+
+            <div class="cta-container">
+
+                <div class="cta-conteudo revelar revelar-esquerda">
+
+                    <span class="cta-tag">COMECE SUA JORNADA</span>
+
+                    <h2>
+                        Vamos transformar seu negócio
+                        <span>juntos?</span>
+                    </h2>
+
+                    <p>
+                        Cada pequena mudança pode representar um avanço.
+                        Conheça o DARA e descubra como incorporar práticas
+                        ESG à rotina do seu negócio alimentício, respeitando
+                        suas necessidades e possibilidades.
+                    </p>
+
+                    <a href="{% url 'home' %}" class="cta-botao">
+                        Criar minha conta
+                        <span>→</span>
+                    </a>
+
+                </div>
+
+                <div class="cta-ilustracao revelar revelar-direita">
+
+                    <img
+                        src="{% static 'core/img/pedro.svg' %}"
+                        alt="Pedro, mascote planeta do DARA"
+                        class="cta-pedro"
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
     </main>
+
 
 
     <!-- RODAPÉ -->
     <footer class="landing-footer">
 
-        <a href="{% url 'landing' %}" class="logo">
-            DARA
-        </a>
+        <div class="footer-container">
 
-        <p>
-            Transformando negócios através da sustentabilidade.
-        </p>
+            <div class="footer-marca">
 
-        <span>
-            © 2026 DARA. Todos os direitos reservados.
-        </span>
+                <a href="{% url 'landing' %}" class="logo">
+                    <img
+                        src="{% static 'core/img/dara_logo_branca.svg' %}"
+                        alt="Logo DARA"
+                    >
+                </a>
+
+                <p>
+                    Sustentabilidade acessível para negócios do ramo alimentício.
+                </p>
+
+            </div>
+
+            <div class="footer-links">
+
+                <a href="{% url 'about' %}">Sobre o DARA</a>
+                <a href="{% url 'pilares' %}">Pilares ESG</a>
+                <a href="#funcionamento">Como funciona</a>
+                <a href="{% url 'contact' %}">Fale conosco</a>
+
+            </div>
+
+            <div class="footer-acesso">
+
+                <a href="{% url 'entrar' %}">Entrar</a>
+                <a href="{% url 'home' %}">Criar minha conta</a>
+
+            </div>
+
+        </div>
+
+        <div class="footer-final">
+            <span>© 2026 DARA. Todos os direitos reservados.</span>
+            <span>Uma jornada de cada vez.</span>
+        </div>
 
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const elementos = document.querySelectorAll(".revelar");
+
+            if (!("IntersectionObserver" in window)) {
+                elementos.forEach(function (elemento) {
+                    elemento.classList.add("visivel");
+                });
+                return;
+            }
+
+            document.body.classList.add("animacoes-ativas");
+
+            const observador = new IntersectionObserver(
+                function (entradas, observer) {
+
+                    entradas.forEach(function (entrada) {
+
+                        if (entrada.isIntersecting) {
+                            entrada.target.classList.add("visivel");
+                            observer.unobserve(entrada.target);
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+            elementos.forEach(function (elemento) {
+                observador.observe(elemento);
+            });
+
+        });
+    </script>
 
 </body>
 </html>
