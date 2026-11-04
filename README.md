@@ -158,12 +158,12 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
 </details>
  <details>
 <summary> Entrega 4 </summary>
-_Em andamento._
-</details>
 
 #### Print bug tracker
 ![Print do bug tracker](imagens/imagem2.png)
----
+
+</details>
+
 
 ### Membros:
 | Nome | E-mail |
