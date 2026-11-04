@@ -42,6 +42,51 @@ class Empresa(models.Model):
         blank=True, 
         null=True
     )
+    @property
+    def pontuacao_total(self):
+        pontos = 0
+
+        # 🟢 Ações Baixas (exemplo: 5 pontos cada)
+        acoes_baixas = [
+            self.esg_01_higiene_manipulacao,
+            self.esg_02_separacao_lixo,
+            self.esg_03_coleta_oleo,
+            self.esg_04_combate_desperdicio,
+            self.esg_05_cardapio_transparente,
+            self.esg_06_recibos_digitais,
+            self.esg_07_aeradores_torneiras,
+            self.esg_08_organizacao_pvps,
+            self.esg_09_descarte_lampadas_baterias,
+            self.esg_10_caixa_sugestoes,
+            self.esg_11_apagando_luz,
+            self.esg_12_uso_consciente_embalagens,
+        ]
+        pontos += sum(5 for marcada in acoes_baixas if marcada)
+
+        # 🟡 Ações Médias (7 pontos cada)
+        acoes_medias = [
+            self.esg_13_doacao_excedente,
+            self.esg_14_troca_descartaveis,
+            self.esg_15_apoio_anti_lesao,
+            self.esg_16_compra_produtor_local,
+            self.esg_17_planilha_perdas,
+            self.esg_18_compostagem_basica,
+            self.esg_19_folga_aniversario_bem_estar,
+            self.esg_20_treinamento_diversidade,
+        ]
+        pontos += sum(7 for marcada in acoes_medias if marcada)
+
+        # 🔴 Ações Altas (6 pontos cada)
+        acoes_altas = [
+            self.esg_21_ovos_cage_free_compra_etica,
+            self.esg_22_equipamentos_inverter,
+            self.esg_23_opcoes_plant_based,
+            self.esg_24_selo_certificacao_local,
+            self.esg_25_energia_solar,
+        ]
+        pontos += sum(6 for marcada in acoes_altas if marcada)
+
+        return pontos
 
     # Opções para os campos de seleção
     PORTE_CHOICES = [

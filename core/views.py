@@ -108,6 +108,7 @@ def questionario_esg(request):
     }
     return render(request, 'core/questionario_esg.html', context)
 
+
 def area_funcionario(request):
     return render(request, 'core/area_funcionario.html')
 
