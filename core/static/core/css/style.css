@@ -104,6 +104,19 @@ img { max-width: 100%; display: block; }
     color: var(--creme);
 }
 
+.welcome-hero .logo {
+    display: inline-block;
+    width: 150px;
+    max-width: 100%;
+}
+
+.welcome-hero .logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
 .topbar-logo {
     display: block;
     width: 84px;

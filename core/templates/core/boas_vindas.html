@@ -7,7 +7,9 @@
 
 {% block content %}
     <section class="welcome-hero">
-        <span class="welcome-logo" role="img" aria-label="DARA"></span>
+        <a href="{% url 'boas_vindas' %}" class="logo">
+            <img src="{% static 'core/img/dara_logo.png' %}" alt="Logo DARA">
+        </a>
         <p class="welcome-tagline">ESG na palma da sua mão.</p>
         <p class="welcome-text">Práticas ambientais, sociais e de governança de um jeito simples para pequenas e médias empresas do ramo alimentício.</p>
     </section>

@@ -4,7 +4,8 @@ from . import views
 from .forms import EntrarForm
 
 urlpatterns = [
-    path("", views.home, name="home"),
+    path("", views.landing, name="landing"),
+    path("inicio/", views.home, name="home"),
     path('entrar/', auth_views.LoginView.as_view(
         template_name='core/entrar.html',
         authentication_form=EntrarForm,

@@ -1,0 +1,227 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="DARA - Conheça nossas soluções e descubra como aplicar práticas ESG na sua empresa.">
+
+    <title>DARA | Transformando negócios</title>
+
+    <link rel="stylesheet" href="{% static 'core/css/landing.css' %}">
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+    <header class="landing-header">
+        <a href="{% url 'landing' %}" class="logo">
+            <img src="{% static 'core/img/dara_logo.png' %}" alt="Logo DARA">
+        </a>
+
+        <nav class="landing-nav">
+            <a href="{% url 'about' %}">Sobre</a>
+            <a href="{% url 'contact' %}">Fale conosco</a>
+            <a href="{% url 'pilares' %}">ESG Pilares</a>
+        </nav>
+
+        <div class="header-buttons">
+            <a href="{% url 'entrar' %}" class="btn-entrar">Entrar</a>
+            <a href="{% url 'home' %}" class="btn-cadastro">Cadastre-se</a>
+        </div>
+    </header>
+
+
+    <main>
+
+        <!-- APRESENTAÇÃO -->
+        <section class="hero" id="inicio">
+
+            <div class="hero-content">
+
+                <span class="tagline">
+                    SUSTENTABILIDADE E TRANSFORMAÇÃO
+                </span>
+
+                <h1>
+                    Transforme seu negócio.
+                    <span>Construa um futuro melhor.</span>
+                </h1>
+
+                <p>
+                    Descubra como práticas ambientais, sociais e de
+                    governança podem transformar a maneira como sua
+                    empresa cresce e se desenvolve.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#sobre" class="btn-principal">
+                        Conheça o DARA
+                    </a>
+
+                    <a href="{% url 'entrar' %}" class="btn-secundario">
+                        Acessar plataforma
+                    </a>
+                </div>
+
+            </div>
+
+            <div class="hero-image">
+                <!-- Espaço reservado para imagem ou ilustração -->
+            </div>
+
+        </section>
+
+
+        <!-- SOBRE O DARA -->
+        <section class="sobre-section" id="sobre">
+
+            <div class="section-label">
+                SOBRE O DARA
+            </div>
+
+            <h2>
+                Pequenas mudanças podem gerar
+                <span>grandes transformações.</span>
+            </h2>
+
+            <p>
+                O DARA nasceu com o propósito de ajudar empresas a
+                compreender, organizar e desenvolver práticas
+                sustentáveis, promovendo uma gestão mais consciente
+                e responsável.
+            </p>
+
+            <a href="{% url 'about' %}" class="link-section">
+                Conheça nossa história →
+            </a>
+
+        </section>
+
+
+        <!-- PILARES ESG -->
+        <section class="pilares-section" id="pilares">
+
+            <div class="section-label">
+                CONHEÇA O ESG
+            </div>
+
+            <h2>
+                Três pilares.
+                <span>Um futuro mais sustentável.</span>
+            </h2>
+
+            <p>
+                O ESG reúne três dimensões fundamentais para uma
+                gestão empresarial responsável.
+            </p>
+
+            <div class="pilares-grid">
+
+                <article class="pilar-card">
+                    <span class="pilar-number">01</span>
+                    <h3>Environmental</h3>
+                    <p>
+                        Ambiental: cuidado com os recursos naturais
+                        e redução dos impactos ambientais.
+                    </p>
+                </article>
+
+                <article class="pilar-card">
+                    <span class="pilar-number">02</span>
+                    <h3>Social</h3>
+                    <p>
+                        Social: valorização das pessoas, inclusão,
+                        diversidade e responsabilidade social.
+                    </p>
+                </article>
+
+                <article class="pilar-card">
+                    <span class="pilar-number">03</span>
+                    <h3>Governance</h3>
+                    <p>
+                        Governança: transparência, ética e
+                        responsabilidade na gestão.
+                    </p>
+                </article>
+
+            </div>
+
+            <a href="{% url 'pilares' %}" class="link-section">
+                Explore os pilares ESG →
+            </a>
+
+        </section>
+
+
+        <!-- ACESSO À PLATAFORMA -->
+        <section class="acesso-section">
+
+            <div class="section-label">
+                COMECE SUA JORNADA
+            </div>
+
+            <h2>
+                Sua empresa pode fazer parte dessa transformação.
+            </h2>
+
+            <p>
+                Acesse a plataforma DARA e descubra como desenvolver
+                práticas ESG no seu negócio.
+            </p>
+
+            <div class="acesso-buttons">
+                <a href="{% url 'area_dono' %}">
+                    Sou gestor
+                </a>
+
+                <a href="{% url 'area_funcionario' %}">
+                    Sou colaborador
+                </a>
+            </div>
+
+        </section>
+
+
+        <!-- CONTATO -->
+        <section class="contato-section" id="contato">
+
+            <h2>
+                Vamos construir um futuro melhor?
+            </h2>
+
+            <p>
+                Entre em contato conosco e conheça melhor o projeto DARA.
+            </p>
+
+            <a href="{% url 'contact' %}" class="btn-principal">
+                Fale conosco →
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <!-- RODAPÉ -->
+    <footer class="landing-footer">
+
+        <a href="{% url 'landing' %}" class="logo">
+            DARA
+        </a>
+
+        <p>
+            Transformando negócios através da sustentabilidade.
+        </p>
+
+        <span>
+            © 2026 DARA. Todos os direitos reservados.
+        </span>
+
+    </footer>
+
+</body>
+</html>
