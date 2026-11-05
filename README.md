@@ -159,8 +159,13 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
  <details>
 <summary> Entrega 4 </summary>
 
+[CONTRIBUTING](https://github.com/GManzii/Projeto-2--grupo-6/blob/main/CONTRIBUTING.md)
+
 #### Print bug tracker
 ![Print do bug tracker](imagens/imagem2.png)
+
+#### Print da sprint
+![Print do bug tracker](imagens/print_sprint_4.png)
 
 </details>
 
