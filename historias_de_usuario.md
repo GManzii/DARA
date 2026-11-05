@@ -37,11 +37,11 @@
 
 ---
 
-## 3. Aba Educativa
+## 3. Checklist de metas
 
-**Como** dono da empresa ou funcionário,  
-**quero** ter acesso a uma aba que explique o que são práticas ESG e disponibilize treinamentos e materiais práticos para novos funcionários,  
-**para** que todos da empresa tenham consciência e um objetivo em comum quanto às práticas ESG.
+**Como** dono da empresa,  
+**quero** ter acesso a uma aba que me mostre as minhas metas e me permita marcá-las como já concluídas,  
+**para** que eu possa acompanhar o meu progresso na aplicação de práticas ESG.
 
 ---
 
@@ -59,29 +59,19 @@
 
 ---
 
-## 5. Assistente Pedro
+## 5. Landing page
 
-**Como** funcionário,  
-**quero** ter um meio de assistência que tire minhas dúvidas a qualquer momento,  
-**para** ter mais liberdade e facilidade para entender e realizar meu trabalho.
-
----
-
-## 6. Comunidades
-
-**Como** dono da empresa,  
-**quero** utilizar uma ferramenta que possa me conectar com outras empresas que estão passando pelo mesmo processo de implementação de práticas ESG,  
-**para** trocar experiências e aprender com empresas que enfrentam desafios semelhantes aos meus.
+**Como** Usuário,  
+**quero** conhecer mais da empresa e o que ela propõe antes de fazer o meu cadastro,  
+**para** avaliar se tal plataforma é a mais adequada para o meu empreendimento.
 
 ---
 
-## Resumo das funcionalidades
+## 6. Escolher perfil
 
-| História de usuário | Funcionalidade principal |
-|---|---|
-| Questionário inicial | Diagnóstico das práticas ESG da empresa |
-| Aba Perfil | Acompanhamento de documentos, metas, estatísticas e informações da empresa |
-| Aba Educativa | Conteúdos e treinamentos sobre práticas ESG |
-| Três pilares ESG | Metas, explicações e orientações para Ambiental, Social e Governança |
-| Assistente Pedro | Assistência para tirar dúvidas dos funcionários |
-| Comunidades | Conexão e troca de experiências entre empresas |
+**Como** Usuário da plataforma,  
+**quero** poder escolher me cadastrar como dono do empreendimento ou funcionário,  
+**para** ter acesso apenas ao que será de bom uso para o meu dia a dia como trabalhador.
+
+---
+
