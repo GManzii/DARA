@@ -59,15 +59,15 @@
 
 ---
 
-## 5. Assistente Pedro
+## 5. Acessar cadastro funcionário
 
 **Como** funcionário,  
-**quero** ter um meio de assistência que tire minhas dúvidas a qualquer momento,  
+**quero** ter acesso aos materiais da minha empresa e abas de conversa entre outros funcionários e meu chefe,  
 **para** ter mais liberdade e facilidade para entender e realizar meu trabalho.
 
 ---
 
-## 6. Comunidades
+## 6. 
 
 **Como** dono da empresa,  
 **quero** utilizar uma ferramenta que possa me conectar com outras empresas que estão passando pelo mesmo processo de implementação de práticas ESG,  
@@ -75,13 +75,3 @@
 
 ---
 
-## Resumo das funcionalidades
-
-| História de usuário | Funcionalidade principal |
-|---|---|
-| Questionário inicial | Diagnóstico das práticas ESG da empresa |
-| Aba Perfil | Acompanhamento de documentos, metas, estatísticas e informações da empresa |
-| Aba Educativa | Conteúdos e treinamentos sobre práticas ESG |
-| Três pilares ESG | Metas, explicações e orientações para Ambiental, Social e Governança |
-| Assistente Pedro | Assistência para tirar dúvidas dos funcionários |
-| Comunidades | Conexão e troca de experiências entre empresas |
