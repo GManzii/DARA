@@ -290,6 +290,7 @@ def pilares(request):
     # Prepara as ações para cada pilar
     context = {
         'pode_editar': empresa is not None,
+        'empresa': empresa,
     }
 
     for nome_pilar, acoes in pilares_acoes.items():
