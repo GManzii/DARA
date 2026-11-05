@@ -46,6 +46,9 @@ jobs:
           done
           cat django.log
           exit 1
+          
+      - name: Run Django tests
+        run: python manage.py test core -v 2
 
       - name: Run E2E tests
         run: python -m pytest tests/e2e/ -v --browser chromium

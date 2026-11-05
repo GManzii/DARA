@@ -22,42 +22,41 @@ class ChecklistE2ETest(LiveServerTestCase):
         self.empresa.donos.add(self.usuario)
 
     def test_checklist_persiste_e_atualiza_pontuacao(self):
+        from django.contrib.sessions.backends.db import SessionStore
+        from django.contrib.auth import (
+            SESSION_KEY,
+            BACKEND_SESSION_KEY,
+            HASH_SESSION_KEY,
+        )
 
+        # Create the Django authentication session first
+        session = SessionStore()
+        session[SESSION_KEY] = str(self.usuario.pk)
+        session[BACKEND_SESSION_KEY] = (
+            "django.contrib.auth.backends.ModelBackend"
+        )
+        session[HASH_SESSION_KEY] = (
+            self.usuario.get_session_auth_hash()
+        )
+        session.save()
+
+        # Now start Playwright
         with sync_playwright() as playwright:
             browser = playwright.chromium.launch(headless=True)
             context = browser.new_context()
+
+            context.add_cookies([{
+                "name": "sessionid",
+                "value": session.session_key,
+                "url": self.live_server_url,
+            }])
+
             page = context.new_page()
 
             try:
-                # Authenticate using Django's session mechanism
-                from django.contrib.sessions.backends.db import SessionStore
-                from django.contrib.auth import (
-                    SESSION_KEY,
-                    BACKEND_SESSION_KEY,
-                    HASH_SESSION_KEY,
-                )
-
-                session = SessionStore()
-                session[SESSION_KEY] = str(self.usuario.pk)
-                session[BACKEND_SESSION_KEY] = (
-                    "django.contrib.auth.backends.ModelBackend"
-                )
-                session[HASH_SESSION_KEY] = (
-                    self.usuario.get_session_auth_hash()
-                )
-                session.save()
-
-                # Add the session cookie to the browser
-                context.add_cookies([{
-                    "name": "sessionid",
-                    "value": session.session_key,
-                    "url": self.live_server_url,
-                }])
-
                 # Open ESG checklist
                 page.goto(f"{self.live_server_url}/pilares/")
 
-                # Select the first ESG action
                 checkbox = page.locator(
                     'input[name="esg_01_higiene_manipulacao"]'
                 )
@@ -70,7 +69,6 @@ class ChecklistE2ETest(LiveServerTestCase):
                     "(form) => form.requestSubmit()"
                 )
 
-                # Wait for the save request to complete
                 page.wait_for_load_state("networkidle")
 
                 # Reload and verify persistence
@@ -81,9 +79,14 @@ class ChecklistE2ETest(LiveServerTestCase):
                 )
                 expect(checkbox).to_be_checked()
 
-                # Verify the score in the database
-                self.empresa.refresh_from_db()
-                self.assertEqual(self.empresa.pontuacao_total, 5)
+                # Verify score displayed in the browser
+                expect(
+                    page.get_by_text("Pontuação Total: 5 pontos")
+                ).to_be_visible()
 
             finally:
                 browser.close()
+
+        # Query Django's database after Playwright has stopped
+        self.empresa.refresh_from_db()
+        self.assertEqual(self.empresa.pontuacao_total, 5)
