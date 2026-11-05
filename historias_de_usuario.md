@@ -67,11 +67,11 @@
 
 ---
 
-## 6. 
+## 6. Escolher perfil
 
-**Como** dono da empresa,  
-**quero** utilizar uma ferramenta que possa me conectar com outras empresas que estão passando pelo mesmo processo de implementação de práticas ESG,  
-**para** trocar experiências e aprender com empresas que enfrentam desafios semelhantes aos meus.
+**Como** Usuário da plataforma,  
+**quero** poder escolher me cadastrar como dono do empreendimento ou funcionário,  
+**para** ter acesso apenas ao que será de bom uso para o meu dia a dia como trabalhador.
 
 ---
 
