@@ -107,6 +107,7 @@ def questionario_esg(request):
 def cadastro_funcionario(request):
     return render(request, 'core/cadastro_funcionario.html')
 
+
 def area_funcionario(request):
     return render(request, 'core/area_funcionario.html')
 
