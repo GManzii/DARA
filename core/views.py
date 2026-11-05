@@ -90,10 +90,10 @@ def questionario_esg(request):
 
             messages.success(
                 request,
-                "Questionário preenchido! Agora vamos criar sua conta."
+                "Questionário preenchido, Bem vindo à sua conta!."
             )
 
-            return redirect('area_dono')
+            return redirect('home')
 
     else:
         form = QuestionarioESGForm()
