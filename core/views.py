@@ -34,6 +34,7 @@ def escolher_perfil(request):
             return redirect('area_dono')
 
         elif perfil == 'funcionario':
+            request.session['perfil'] = 'funcionario'
             return redirect('cadastro_funcionario')
 
     return redirect('home')
