@@ -37,11 +37,11 @@
 
 ---
 
-## 3. Aba Educativa
+## 3. Checklist de metas
 
-**Como** dono da empresa ou funcionário,  
-**quero** ter acesso a uma aba que explique o que são práticas ESG e disponibilize treinamentos e materiais práticos para novos funcionários,  
-**para** que todos da empresa tenham consciência e um objetivo em comum quanto às práticas ESG.
+**Como** dono da empresa,  
+**quero** ter acesso a uma aba que me mostre as minhas metas e me permita marcá-las como já concluídas,  
+**para** que eu possa acompanhar o meu progresso na aplicação de práticas ESG.
 
 ---
 
