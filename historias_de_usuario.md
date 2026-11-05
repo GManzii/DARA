@@ -59,11 +59,11 @@
 
 ---
 
-## 5. Acessar cadastro funcionário
+## 5. Landing page
 
-**Como** funcionário,  
-**quero** ter acesso aos materiais da minha empresa e abas de conversa entre outros funcionários e meu chefe,  
-**para** ter mais liberdade e facilidade para entender e realizar meu trabalho.
+**Como** Usuário,  
+**quero** conhecer mais da empresa e o que ela propõe antes de fazer o meu cadastro,  
+**para** avaliar se tal plataforma é a mais adequada para o meu empreendimento.
 
 ---
 
