@@ -162,6 +162,48 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
 
 [CONTRIBUTING](https://github.com/GManzii/Projeto-2--grupo-6/blob/main/CONTRIBUTING.md)
 
+### Histórias implementadas
+
+**POST-IT 01 — Perfil (bela)**
+
+**História de usuário**
+
+Como gestor do sistema, quero visualizar o perfil da empresa com as informações consolidadas e métricas gerais, para acompanhar o progresso e o status da organização.
+
+**Critérios de aceitação**
+
+* O sistema exibe os dados do usuário e da empresa cadastrada.
+* O sistema apresenta os cartões de visão geral (número de funcionários, documentos, metas e comunidades).
+* Apenas usuários autenticados conseguem acessar a página de perfil.
+
+---
+
+**POST-IT 02 — Ajustar checklist das metas (Laís)**
+
+**História de usuário**
+
+Como usuário do sistema, quero visualizar e gerenciar o checklist de metas ESG da empresa, para acompanhar a evolução das tarefas concluídas e pendentes.
+
+**Critérios de aceitação**
+
+* O sistema exibe a lista de metas organizadas com caixas de seleção (checklists).
+* O status de cada meta pode ser atualizado pelo usuário.
+* O progresso é refletido dinamicamente no painel de acompanhamento.
+
+---
+
+**POST-IT 03 — Login/cadastre-se duplo/landing page (Bete)**
+
+**História de usuário**
+
+Como visitante do sistema, quero ter um fluxo intuitivo de entrada na landing page com caminhos claros para login e cadastro, para acessar o ambiente correto (dono ou colaborador).
+
+**Critérios de aceitação**
+
+* A página inicial (landing page) oferece as opções explícitas de entrada para gerente e colaborador.
+* O sistema valida as credenciais no banco de dados e direciona o usuário para o perfil ou para a tela de cadastro se não for encontrado.
+* A navegação entre login e cadastro ocorre de forma fluida sem perda de contexto.
+
 #### Print bug tracker
 ![Print do bug tracker](imagens/imagem2.png)
 
