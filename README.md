@@ -164,6 +164,10 @@ Como dono, quero personalizar o sistema para as necessidades da minha empresa, p
 
 ### Histórias implementadas
 
+<table>
+<tr>
+<td>
+ 
 **POST-IT 01 — Perfil (bela)**
 
 **História de usuário**
@@ -176,7 +180,10 @@ Como gestor do sistema, quero visualizar o perfil da empresa com as informaçõe
 * O sistema apresenta os cartões de visão geral (número de funcionários, documentos, metas e comunidades).
 * Apenas usuários autenticados conseguem acessar a página de perfil.
 
----
+</td>
+</tr>
+<tr>
+<td>
 
 **POST-IT 02 — Ajustar checklist das metas (Laís)**
 
@@ -190,7 +197,10 @@ Como usuário do sistema, quero visualizar e gerenciar o checklist de metas ESG 
 * O status de cada meta pode ser atualizado pelo usuário.
 * O progresso é refletido dinamicamente no painel de acompanhamento.
 
----
+</td>
+</tr>
+<tr>
+<td>
 
 **POST-IT 03 — Login/cadastre-se duplo/landing page (Bete)**
 
@@ -203,6 +213,10 @@ Como visitante do sistema, quero ter um fluxo intuitivo de entrada na landing pa
 * A página inicial (landing page) oferece as opções explícitas de entrada para gerente e colaborador.
 * O sistema valida as credenciais no banco de dados e direciona o usuário para o perfil ou para a tela de cadastro se não for encontrado.
 * A navegação entre login e cadastro ocorre de forma fluida sem perda de contexto.
+
+</td>
+</tr>
+</table>
 
 #### Print bug tracker
 ![Print do bug tracker](imagens/imagem2.png)
