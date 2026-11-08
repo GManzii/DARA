@@ -224,6 +224,10 @@ Como visitante do sistema, quero ter um fluxo intuitivo de entrada na landing pa
 #### Print da sprint
 ![Print do bug tracker](imagens/print_sprint_4.png)
 
+### Screencasts
+
+- Demonstração do deploy: [Assista no Youtube](https://youtu.be/1P7a4KD8uUU?si=XkZnQPX2qCM4HZhn)
+
 </details>
 
 
