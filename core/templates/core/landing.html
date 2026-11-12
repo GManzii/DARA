@@ -1,4 +1,3 @@
-
 {% load static %}
 
 <!DOCTYPE html>
@@ -387,6 +386,75 @@
     </main>
 
 
+    <!-- WIDGET FLUTUANTE DO PEDRO BOLA -->
+    <div class="pedro-widget-container" id="pedroWidget">
+        
+        <!-- Chat Placeholder -->
+        <div class="pedro-chat-box" id="pedroChatBox">
+            <div class="pedro-chat-header">
+                <span>Pedro | DARA IA</span>
+                <button id="pedroFecharChat" type="button">&times;</button>
+            </div>
+            <div class="pedro-chat-body">
+                <p>👋 Olá! Eu sou o Pedro. Em breve estarei pronto para ajudar com as metas ESG do seu negócio!</p>
+            </div>
+    </div>
+    <!-- Botão Pedro Bola (Fidelidade Geométrica ao Original) -->
+    <button class="pedro-avatar-btn" id="pedroAvatarBtn" aria-label="Abrir assistente Pedro" type="button">
+        <svg id="pedro-svg" viewBox="0 0 100 100" width="100%" height="100%">
+            <defs>
+                <!-- Recorte do Planeta -->
+                <clipPath id="pedro-bola-clip">
+                    <circle cx="50" cy="50" r="50" />
+                </clipPath>
+            </defs>
+
+            <!-- Corpo Planeta (Azul Pedro) -->
+            <circle cx="50" cy="50" r="50" fill="#3B54A5" />
+
+            <!-- Continentes (Verde-folha com curvas do original) -->
+            <g clip-path="url(#pedro-bola-clip)" fill="#428230">
+                <!-- Continente Topo/Cabeça -->
+                <path d="M 22 -5 C 40 22 75 20 90 -5 Z" />
+
+                <!-- Continente Esquerda -->
+                <path d="M -5 32 C 30 42 32 75 12 100 L -5 100 Z" />
+
+                <!-- Continente Inferior Direito -->
+                <path d="M 105 52 C 72 65 78 95 88 105 L 105 105 Z" />
+            </g>
+
+            <!-- Olho Esquerdo (Esclera Branca Ampliada) -->
+            <circle cx="33" cy="38" r="15" fill="#FFFFFF" />
+
+            <!-- Pupila Esquerda com Brilho Cortado na Borda -->
+            <g id="pupila-esquerda" class="pupila">
+                <clipPath id="clip-pupila-esq">
+                    <circle cx="33" cy="38" r="11.5" />
+                </clipPath>
+                <circle cx="33" cy="38" r="11.5" fill="#000000" />
+                <!-- Brilho cortado na borda superior esquerda da pupila -->
+                <circle cx="27.5" cy="32.5" r="3.5" fill="#FFFFFF" clip-path="url(#clip-pupila-esq)" />
+            </g>
+
+            <!-- Olho Direito (Esclera Branca Ampliada) -->
+            <circle cx="67" cy="38" r="15" fill="#FFFFFF" />
+
+            <!-- Pupila Direita com Brilho Cortado na Borda -->
+            <g id="pupila-direita" class="pupila">
+                <clipPath id="clip-pupila-dir">
+                    <circle cx="67" cy="38" r="11.5" />
+                </clipPath>
+                <circle cx="67" cy="38" r="11.5" fill="#000000" />
+                <!-- Brilho cortado na borda superior esquerda da pupila -->
+                <circle cx="61.5" cy="32.5" r="3.5" fill="#FFFFFF" clip-path="url(#clip-pupila-dir)" />
+            </g>
+
+            <!-- Sorriso (Pequeno e compacto logo abaixo dos olhos) -->
+            <path d="M 46 54 Q 50 58 54 54" stroke="#000000" stroke-width="3.5" fill="none" stroke-linecap="round" />
+        </svg>
+    </button>
+    </div>
 
     <!-- RODAPÉ -->
     <footer class="landing-footer">
@@ -433,41 +501,74 @@
 
     </footer>
 
+
+    <!-- SCRIPTS -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 
+            /* 1. ANIMAÇÕES DE ROLAGEM */
             const elementos = document.querySelectorAll(".revelar");
 
             if (!("IntersectionObserver" in window)) {
                 elementos.forEach(function (elemento) {
                     elemento.classList.add("visivel");
                 });
-                return;
+            } else {
+                document.body.classList.add("animacoes-ativas");
+
+                const observador = new IntersectionObserver(
+                    function (entradas, observer) {
+                        entradas.forEach(function (entrada) {
+                            if (entrada.isIntersecting) {
+                                entrada.target.classList.add("visivel");
+                                observer.unobserve(entrada.target);
+                            }
+                        });
+                    },
+                    { threshold: 0.15 }
+                );
+
+                elementos.forEach(function (elemento) {
+                    observador.observe(elemento);
+                });
             }
 
-            document.body.classList.add("animacoes-ativas");
+            /* 2. RASTREAMENTO DOS OLHOS DO PEDRO */
+            const pupilas = document.querySelectorAll(".pupila");
+            const avatarBtn = document.getElementById("pedroAvatarBtn");
+            const chatBox = document.getElementById("pedroChatBox");
+            const fecharChatBtn = document.getElementById("pedroFecharChat");
 
-            const observador = new IntersectionObserver(
-                function (entradas, observer) {
+            if (pupilas.length > 0) {
+                document.addEventListener("mousemove", function (e) {
+                    pupilas.forEach(function (pupila) {
+                        const rect = pupila.getBoundingClientRect();
+                        const centroX = rect.left + rect.width / 2;
+                        const centroY = rect.top + rect.height / 2;
 
-                    entradas.forEach(function (entrada) {
+                        const angulo = Math.atan2(e.clientY - centroY, e.clientX - centroX);
+                        const raioMaximo = 3.5;
 
-                        if (entrada.isIntersecting) {
-                            entrada.target.classList.add("visivel");
-                            observer.unobserve(entrada.target);
-                        }
+                        const moveX = Math.cos(angulo) * raioMaximo;
+                        const moveY = Math.sin(angulo) * raioMaximo;
 
+                        pupila.style.transform = `translate(${moveX}px, ${moveY}px)`;
                     });
+                });
+            }
 
-                },
-                {
-                    threshold: 0.15
-                }
-            );
+            /* 3. ABRIR E FECHAR CHAT */
+            if (avatarBtn && chatBox) {
+                avatarBtn.addEventListener("click", function () {
+                    chatBox.classList.toggle("ativo");
+                });
+            }
 
-            elementos.forEach(function (elemento) {
-                observador.observe(elemento);
-            });
+            if (fecharChatBtn && chatBox) {
+                fecharChatBtn.addEventListener("click", function () {
+                    chatBox.classList.remove("ativo");
+                });
+            }
 
         });
     </script>

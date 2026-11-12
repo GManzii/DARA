@@ -1,4 +1,22 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap");
+
+/* =====================================
+   0. VARIÁVEIS DE CORES DO DARA
+===================================== */
+:root {
+    --verde-principal: #293E2B;
+    --verde-hover: #405B40;
+    --verde-escuro: #38462C;
+    --verde-pilar: #A3A261;
+    --dourado: #D6A45D;
+    --dourado-hover: #E6BB7F;
+    --laranja-destaque: #B55B23;
+    --creme-bg: #F4F0E6;
+    --creme-secao: #F7EED8;
+    --texto-escuro: #30352D;
+    --azul-pedro: #3C58B3;
+}
+
 /* =====================================
    1. CONFIGURAÇÕES GERAIS
 ===================================== */
@@ -16,7 +34,7 @@ html {
 body {
     background-color: #F7EED8;
     color: #30352D;
-    font-family: Arial, sans-serif;
+    font-family: "Raleway", sans-serif;
 }
 
 a {
@@ -24,225 +42,33 @@ a {
     color: inherit;
 }
 
-
 /* =====================================
    2. CABEÇALHO
 ===================================== */
 
-
 .landing-header {
     width: 100%;
-    min-height: 110px;
-    padding: 15px 8%;
+    height: 95px;
+    min-height: 95px;
+    padding: 8px 8%;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 30px;
 
-    background-color: #F4F0E6;
-}
-
-/* LOGO */
-
-.logo img {
-    display: block;
-    width: 150px;
-    max-height: 75px;
-    height: auto;
-    object-fit: contain;
+    background-color: var(--creme-bg);
 }
 
 .logo {
-    color: #293E2B;
+    display: block;
+    flex-shrink: 0;
+    width: 150px;
+    color: var(--verde-principal);
     font-size: 30px;
     font-weight: 800;
     letter-spacing: 3px;
 }
-
-/* MENU */
-
-.landing-nav {
-    display: flex;
-    align-items: center;
-    gap: 45px;
-}
-
-.landing-nav a {
-    font-size: 14px;
-    font-weight: 600;
-    color: #30352D;
-
-    transition: color 0.3s ease;
-}
-
-.landing-nav a:hover {
-    color: #A4773F;
-}
-
-/* BOTÃO ENTRAR */
-
-.btn-entrar {
-    padding: 12px 28px;
-
-    background-color: #293E2B;
-    color: #F4F0E6;
-
-    border-radius: 30px;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    transition: 0.3s ease;
-}
-
-.btn-entrar:hover {
-    background-color: #405B40;
-    transform: translateY(-2px);
-}
-
-
-/* =====================================
-   3. PRIMEIRA SEÇÃO - HERO
-===================================== */
-
-.hero {
-    min-height: 650px;
-    padding: 100px 8%;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 50px;
-
-    background-color: #293E2B;
-    color: #F4F0E6;
-}
-
-.hero-content {
-    max-width: 650px;
-}
-
-/* ETIQUETA */
-
-.tagline {
-    display: inline-block;
-
-    margin-bottom: 25px;
-
-    color: #D6A45D;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 3px;
-}
-
-/* TÍTULO */
-
-.hero h1 {
-    font-size: clamp(42px, 5vw, 68px);
-    line-height: 1.1;
-    font-weight: 700;
-
-    margin-bottom: 25px;
-}
-
-.hero h1 span {
-    color: #D6A45D;
-}
-
-/* DESCRIÇÃO */
-
-.hero-content p {
-    max-width: 530px;
-
-    color: #D9DFD4;
-    font-size: 17px;
-    line-height: 1.8;
-
-    margin-bottom: 35px;
-}
-
-/* BOTÕES */
-
-.hero-buttons {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-}
-
-.btn-principal {
-    display: inline-block;
-
-    padding: 15px 28px;
-
-    background-color: #D6A45D;
-    color: #293E2B;
-
-    border-radius: 30px;
-
-    font-weight: 700;
-    font-size: 14px;
-
-    transition: 0.3s ease;
-}
-
-.btn-principal:hover {
-    background-color: #E6BB7F;
-    transform: translateY(-3px);
-}
-
-.btn-secundario {
-    display: inline-block;
-
-    padding: 14px 25px;
-
-    border: 1px solid #F4F0E6;
-    border-radius: 30px;
-
-    color: #F4F0E6;
-    font-size: 14px;
-    font-weight: 600;
-
-    transition: 0.3s ease;
-}
-
-.btn-secundario:hover {
-    background-color: #F4F0E6;
-    color: #293E2B;
-}
-
-/* BOTÕES DO CABEÇALHO */
-
-.header-buttons {
-    display: flex;
-    align-items: center;
-    gap: 25px; /* Aumenta o espaço entre os botões */
-}
-
-.btn-cadastro {
-    display: inline-block;
-
-    padding: 12px 28px;
-
-    background-color: transparent;
-    color: #293E2B;
-
-    border: 2px solid #293E2B; /* Adiciona uma borda */
-    border-radius: 30px;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    transition: 0.3s ease;
-}
-
-.btn-cadastro:hover {
-    background-color: #293E2B;
-    color: #F4F0E6;
-    transform: translateY(-2px);
-}
-
-/* CONTROLE DO TAMANHO DA LOGO */
 
 .landing-header .logo img,
 .landing-footer .logo img {
@@ -253,40 +79,131 @@ a {
     object-fit: contain;
     display: block;
 }
-/* TAMANHO DA LOGO */
 
-.landing-header .logo {
-    display: block;
-    flex-shrink: 0;
-    width: 150px;
+.landing-nav {
+    display: flex;
+    align-items: center;
+    gap: 45px;
 }
 
-.landing-header .logo img {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 70px;
-    object-fit: contain;
+.landing-nav a {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--texto-escuro);
+    transition: color 0.3s ease;
 }
 
-/* Redução da altura do cabeçalho */
-.landing-header {
-    height: 95px;
-    min-height: 95px;
-    padding: 8px 8%;
-    box-sizing: border-box;
+.landing-nav a:hover {
+    color: #A4773F;
 }
 
-/* Ajuste proporcional da logo */
-.landing-header .logo img {
-    max-height: 65px;
-    width: 150px;
-    object-fit: contain;
+.header-buttons {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.btn-entrar {
+    padding: 12px 28px;
+    background-color: var(--verde-principal);
+    color: var(--creme-bg);
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-entrar:hover {
+    background-color: var(--verde-hover);
+    transform: translateY(-2px);
+}
+
+.btn-cadastro {
+    display: inline-block;
+    padding: 12px 28px;
+    background-color: transparent;
+    color: var(--verde-principal);
+    border: 2px solid var(--verde-principal);
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.btn-cadastro:hover {
+    background-color: var(--verde-principal);
+    color: var(--creme-bg);
+    transform: translateY(-2px);
 }
 
 /* =====================================
-   MASCOTE PEDRO - HERO
+   3. PRIMEIRA SEÇÃO - HERO
 ===================================== */
+
+.hero {
+    min-height: 650px;
+    padding: 100px 8%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 50px;
+    background-color: var(--verde-principal);
+    color: var(--creme-bg);
+}
+
+.hero-content {
+    max-width: 650px;
+}
+
+.tagline {
+    display: inline-block;
+    margin-bottom: 25px;
+    color: var(--dourado);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+.hero h1 {
+    font-size: clamp(42px, 5vw, 68px);
+    line-height: 1.1;
+    font-weight: 700;
+    margin-bottom: 25px;
+}
+
+.hero h1 span {
+    color: var(--dourado);
+}
+
+.hero-content p {
+    max-width: 530px;
+    color: #D9DFD4;
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 35px;
+}
+
+.hero-buttons {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.btn-principal {
+    display: inline-block;
+    padding: 15px 28px;
+    background-color: var(--dourado);
+    color: var(--verde-principal);
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: 0.3s ease;
+}
+
+.btn-principal:hover {
+    background-color: var(--dourado-hover);
+    transform: translateY(-3px);
+}
 
 .hero-image {
     flex: 1;
@@ -302,28 +219,12 @@ a {
     max-width: 430px;
     height: auto;
     object-fit: contain;
-
     animation: flutuar 4s ease-in-out infinite;
 }
 
-/* Movimento suave de flutuação */
-
 @keyframes flutuar {
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-18px);
-    }
-}
-
-/* Respeita a preferência por movimento reduzido */
-
-@media (prefers-reduced-motion: reduce) {
-    .mascote-pedro {
-        animation: none;
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-18px); }
 }
 
 /* =====================================
@@ -333,98 +234,74 @@ a {
 .sobre-section {
     position: relative;
     overflow: hidden;
-
     padding: 100px 8%;
-
-    background-color: #F7EED8;
-    color: #38462C;
+    background-color: var(--creme-secao);
+    color: var(--verde-escuro);
 }
 
 .sobre-container {
     max-width: 1200px;
     margin: 0 auto;
-
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     gap: 70px;
 }
 
-/* ETIQUETA */
-
 .sobre-tag {
     display: inline-block;
-
     margin-bottom: 25px;
     padding: 9px 20px;
-
     background-color: #CABDA6;
     color: #631A22;
-
     border-radius: 30px;
-
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
 }
 
-/* TÍTULO */
-
 .sobre-titulo h2 {
     max-width: 520px;
-
     font-size: clamp(32px, 4vw, 48px);
     line-height: 1.2;
-
-    color: #38462C;
+    color: var(--verde-escuro);
 }
 
 .sobre-titulo h2 span {
-    color: #B55B23;
+    color: var(--laranja-destaque);
 }
-
-/* CONTEÚDO */
 
 .sobre-conteudo {
     padding-left: 35px;
-    border-left: 2px solid #A3A261;
+    border-left: 2px solid var(--verde-pilar);
 }
 
 .sobre-conteudo p {
     margin-bottom: 20px;
-
-    color: #38462C;
+    color: var(--verde-escuro);
     font-size: 16px;
     line-height: 1.8;
 }
-
-/* FRASE DE DESTAQUE */
 
 .sobre-conteudo .sobre-destaque {
     color: #631A22;
     font-weight: 700;
 }
 
-/* LINK */
-
 .sobre-link {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-
     margin-top: 12px;
     padding-bottom: 7px;
-
-    color: #38462C;
+    color: var(--verde-escuro);
     font-weight: 700;
-
-    border-bottom: 2px solid #B55B23;
-
+    border-bottom: 2px solid var(--laranja-destaque);
     transition: 0.3s ease;
 }
 
 .sobre-link span {
-    color: #B55B23;
+    color: var(--laranja-destaque);
     font-size: 22px;
     transition: transform 0.3s ease;
 }
@@ -433,41 +310,20 @@ a {
     transform: translateX(5px);
 }
 
-/* RESPONSIVIDADE */
-
-@media (max-width: 768px) {
-
-    .sobre-section {
-        padding: 70px 8%;
-    }
-
-    .sobre-container {
-        grid-template-columns: 1fr;
-        gap: 35px;
-    }
-
-    .sobre-conteudo {
-        padding-left: 20px;
-    }
-
-}
-
 /* =====================================
    5. PILARES ESG
 ===================================== */
 
 .pilares-section {
     padding: 100px 8%;
-    background-color: #F4F0E6;
-    color: #38462C;
+    background-color: var(--creme-bg);
+    color: var(--verde-escuro);
 }
 
 .pilares-container {
     max-width: 1200px;
     margin: 0 auto;
 }
-
-/* CABEÇALHO */
 
 .pilares-cabecalho {
     max-width: 650px;
@@ -479,12 +335,9 @@ a {
     display: inline-block;
     margin-bottom: 20px;
     padding: 9px 20px;
-
     background-color: #CABDA6;
     color: #631A22;
-
     border-radius: 30px;
-
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
@@ -492,14 +345,13 @@ a {
 
 .pilares-cabecalho h2 {
     margin-bottom: 18px;
-
-    color: #38462C;
+    color: var(--verde-escuro);
     font-size: clamp(32px, 4vw, 46px);
     line-height: 1.2;
 }
 
 .pilares-cabecalho h2 span {
-    color: #B55B23;
+    color: var(--laranja-destaque);
 }
 
 .pilares-cabecalho p {
@@ -507,8 +359,6 @@ a {
     font-size: 16px;
     line-height: 1.7;
 }
-
-/* CARTÕES */
 
 .pilares-grid {
     display: grid;
@@ -519,13 +369,9 @@ a {
 .pilar-card {
     position: relative;
     padding: 35px 28px;
-
     min-height: 320px;
-
     border-radius: 18px;
-
-    transition: transform 0.3s ease,
-                box-shadow 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .pilar-card:hover {
@@ -533,35 +379,28 @@ a {
     box-shadow: 0 12px 28px rgba(48, 53, 45, 0.12);
 }
 
-/* CORES DOS PILARES */
-
 .pilar-card.ambiental {
-    background-color: #A3A261;
-    color: #F7EED8;
+    background-color: var(--verde-pilar);
+    color: var(--creme-secao);
 }
 
 .pilar-card.social {
-    background-color: #B55B23;
-    color: #F7EED8;
+    background-color: var(--laranja-destaque);
+    color: var(--creme-secao);
 }
 
 .pilar-card.governanca {
     background-color: #631A22;
-    color: #F7EED8;
+    color: var(--creme-secao);
 }
-
-/* ÍCONES */
 
 .pilar-icone {
     width: 58px;
     height: 58px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     margin-bottom: 25px;
-
     border: 1px solid rgba(247, 238, 216, 0.7);
     border-radius: 50%;
 }
@@ -571,20 +410,14 @@ a {
     height: 30px;
 }
 
-/* NÚMEROS */
-
 .pilar-numero {
     display: block;
     margin-bottom: 8px;
-
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
-
     opacity: 0.8;
 }
-
-/* TEXTOS */
 
 .pilar-card h3 {
     margin-bottom: 15px;
@@ -596,26 +429,20 @@ a {
     line-height: 1.8;
 }
 
-/* LINK */
-
 .pilares-link {
     display: flex;
     width: fit-content;
-
     align-items: center;
     gap: 12px;
-
     margin: 45px auto 0;
     padding-bottom: 7px;
-
-    color: #38462C;
+    color: var(--verde-escuro);
     font-weight: 700;
-
-    border-bottom: 2px solid #B55B23;
+    border-bottom: 2px solid var(--laranja-destaque);
 }
 
 .pilares-link span {
-    color: #B55B23;
+    color: var(--laranja-destaque);
     font-size: 22px;
     transition: transform 0.3s ease;
 }
@@ -624,43 +451,19 @@ a {
     transform: translateX(5px);
 }
 
-/* RESPONSIVIDADE */
-
-@media (max-width: 900px) {
-    .pilares-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 600px) {
-    .pilares-section {
-        padding: 70px 8%;
-    }
-
-    .pilares-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .pilar-card {
-        min-height: auto;
-    }
-}
-
-
 /* =====================================
    6. COMO FUNCIONA
 ===================================== */
 
 .funcionamento-section {
     padding: 110px 8%;
-    background-color: #F7EED8;
-    color: #30352D;
+    background-color: var(--creme-secao);
+    color: var(--texto-escuro);
 }
 
 .funcionamento-container {
     max-width: 1250px;
     margin: 0 auto;
-
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 90px;
@@ -677,8 +480,7 @@ a {
 .cta-tag {
     display: inline-block;
     margin-bottom: 24px;
-
-    color: #B55B23;
+    color: var(--laranja-destaque);
     font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
@@ -691,7 +493,7 @@ a {
 }
 
 .funcionamento-titulo h2 span {
-    color: #B55B23;
+    color: var(--laranja-destaque);
 }
 
 .funcionamento-titulo p {
@@ -710,7 +512,6 @@ a {
     display: grid;
     grid-template-columns: 105px 1fr;
     gap: 25px;
-
     padding: 30px 0;
     border-bottom: 1px solid #CABDA6;
 }
@@ -735,15 +536,14 @@ a {
     line-height: 1.65;
 }
 
-
 /* =====================================
    7. COMUNIDADE
 ===================================== */
 
 .comunidade-section {
     padding: 110px 8%;
-    background-color: #F4F0E6;
-    color: #30352D;
+    background-color: var(--creme-bg);
+    color: var(--texto-escuro);
 }
 
 .comunidade-container {
@@ -755,19 +555,17 @@ a {
 .comunidade-container h2 {
     max-width: 850px;
     margin: 0 auto 25px;
-
     font-size: clamp(36px, 5vw, 58px);
     line-height: 1.15;
 }
 
 .comunidade-container h2 span {
-    color: #B55B23;
+    color: var(--laranja-destaque);
 }
 
 .comunidade-container > p {
     max-width: 750px;
     margin: 0 auto;
-
     font-size: 17px;
     line-height: 1.8;
 }
@@ -776,19 +574,17 @@ a {
     max-width: 760px;
     margin: 55px auto 0;
     padding: 35px;
-
     display: flex;
     align-items: center;
     gap: 25px;
-
     text-align: left;
-    background-color: #F7EED8;
+    background-color: var(--creme-secao);
     border: 1px solid #CABDA6;
     border-radius: 12px;
 }
 
 .comunidade-simbolo {
-    color: #B55B23;
+    color: var(--laranja-destaque);
     font-size: 42px;
 }
 
@@ -803,21 +599,19 @@ a {
     line-height: 1.6;
 }
 
-
 /* =====================================
    8. CHAMADA FINAL
 ===================================== */
 
 .cta-section {
     padding: 90px 8%;
-    background-color: #F7EED8;
-    color: #30352D;
+    background-color: var(--creme-secao);
+    color: var(--texto-escuro);
 }
 
 .cta-container {
     max-width: 1200px;
     margin: 0 auto;
-
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
     align-items: center;
@@ -827,19 +621,17 @@ a {
 .cta-conteudo h2 {
     max-width: 650px;
     margin-bottom: 25px;
-
     font-size: clamp(38px, 5vw, 60px);
     line-height: 1.12;
 }
 
 .cta-conteudo h2 span {
-    color: #A3A261;
+    color: var(--verde-pilar);
 }
 
 .cta-conteudo p {
     max-width: 580px;
     margin-bottom: 35px;
-
     font-size: 17px;
     line-height: 1.8;
 }
@@ -848,21 +640,16 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 18px;
-
     padding: 16px 28px;
-
     background-color: #631A22;
-    color: #F7EED8;
-
+    color: var(--creme-secao);
     border-radius: 30px;
     font-weight: 700;
-
-    transition: transform 0.3s ease,
-                background-color 0.3s ease;
+    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .cta-botao:hover {
-    background-color: #B55B23;
+    background-color: var(--laranja-destaque);
     transform: translateY(-3px);
 }
 
@@ -884,21 +671,19 @@ a {
     animation: flutuar 4s ease-in-out infinite;
 }
 
-
 /* =====================================
    9. RODAPÉ
 ===================================== */
 
 .landing-footer {
     padding: 55px 8% 25px;
-    background-color: #38462C;
-    color: #F7EED8;
+    background-color: var(--verde-escuro);
+    color: var(--creme-secao);
 }
 
 .footer-container {
     max-width: 1200px;
     margin: 0 auto 40px;
-
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -907,14 +692,6 @@ a {
 
 .footer-marca {
     max-width: 300px;
-}
-
-.landing-footer .logo img {
-    width: 150px;
-    max-width: 150px;
-    height: auto;
-    max-height: 65px;
-    object-fit: contain;
 }
 
 .footer-marca p {
@@ -938,29 +715,23 @@ a {
 
 .footer-links a:hover,
 .footer-acesso a:hover {
-    color: #A3A261;
+    color: var(--verde-pilar);
 }
 
 .footer-final {
     max-width: 1200px;
     margin: 0 auto;
     padding-top: 22px;
-
     display: flex;
     justify-content: space-between;
     gap: 20px;
-
     border-top: 1px solid rgba(247, 238, 216, 0.3);
-
     font-size: 12px;
 }
-
 
 /* =====================================
    10. ANIMAÇÕES DE ROLAGEM
 ===================================== */
-
-/* Os elementos continuam visíveis caso o JavaScript não carregue. */
 
 .revelar {
     opacity: 1;
@@ -970,115 +741,157 @@ a {
 .animacoes-ativas .revelar {
     opacity: 0;
     transform: translateY(35px);
-
-    transition:
-        opacity 0.8s ease,
-        transform 0.8s ease;
+    transition: opacity 0.8s ease, transform 0.8s ease;
 }
 
-.animacoes-ativas .revelar-esquerda {
-    transform: translateX(-40px);
-}
-
-.animacoes-ativas .revelar-direita {
-    transform: translateX(40px);
-}
-
+.animacoes-ativas .revelar-esquerda { transform: translateX(-40px); }
+.animacoes-ativas .revelar-direita { transform: translateX(40px); }
 .animacoes-ativas .revelar.visivel {
     opacity: 1;
     transform: translate(0, 0);
 }
 
-/* Atrasos para as etapas aparecerem em sequência. */
-
-.etapa:nth-child(2) {
-    transition-delay: 0.12s;
-}
-
-.etapa:nth-child(3) {
-    transition-delay: 0.24s;
-}
-
-.etapa:nth-child(4) {
-    transition-delay: 0.36s;
-}
-
+.etapa:nth-child(2) { transition-delay: 0.12s; }
+.etapa:nth-child(3) { transition-delay: 0.24s; }
+.etapa:nth-child(4) { transition-delay: 0.36s; }
 
 /* =====================================
    11. RESPONSIVIDADE
 ===================================== */
 
 @media (max-width: 900px) {
-
-    .funcionamento-container {
-        grid-template-columns: 1fr;
-        gap: 55px;
-    }
-
-    .funcionamento-titulo {
-        position: static;
-    }
-
-    .cta-container {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .cta-conteudo h2,
-    .cta-conteudo p {
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .footer-container {
-        flex-wrap: wrap;
-    }
+    .funcionamento-container { grid-template-columns: 1fr; gap: 55px; }
+    .funcionamento-titulo { position: static; }
+    .cta-container { grid-template-columns: 1fr; text-align: center; }
+    .cta-conteudo h2, .cta-conteudo p { margin-left: auto; margin-right: auto; }
+    .footer-container { flex-wrap: wrap; }
 }
 
 @media (max-width: 600px) {
-
-    .funcionamento-section,
-    .comunidade-section,
-    .cta-section {
-        padding: 70px 7%;
-    }
-
-    .etapa {
-        grid-template-columns: 65px 1fr;
-        gap: 15px;
-    }
-
-    .etapa-numero {
-        font-size: 28px;
-    }
-
-    .etapa-conteudo h3 {
-        font-size: 20px;
-    }
-
-    .comunidade-aviso {
-        padding: 24px;
-        align-items: flex-start;
-    }
-
-    .footer-container {
-        flex-direction: column;
-    }
-
-    .footer-final {
-        flex-direction: column;
-    }
+    .funcionamento-section, .comunidade-section, .cta-section { padding: 70px 7%; }
+    .etapa { grid-template-columns: 65px 1fr; gap: 15px; }
+    .etapa-numero { font-size: 28px; }
+    .etapa-conteudo h3 { font-size: 20px; }
+    .comunidade-aviso { padding: 24px; align-items: flex-start; }
+    .footer-container, .footer-final { flex-direction: column; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .animacoes-ativas .revelar { opacity: 1; transform: none; transition: none; }
+    .cta-pedro, .mascote-pedro { animation: none; }
+}
 
-    .animacoes-ativas .revelar {
-        opacity: 1;
-        transform: none;
-        transition: none;
+/* =====================================
+   12. WIDGET FLUTUANTE DO PEDRO (PEDRO BOLA)
+===================================== */
+
+.pedro-widget-container {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.pedro-avatar-btn {
+    background: transparent;
+    border: none;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    overflow: hidden; /* Corta a imagem no formato circular perfeito */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pedro-avatar-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+.pedro-avatar-btn svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* ESTILOS INTERNOS DO SVG VIA VARIÁVEIS */
+.pedro-estrela { fill: var(--dourado); }
+.pedro-corpo { fill: var(--azul-pedro); }
+.pedro-continentes { fill: var(--verde-pilar); }
+.pedro-esclera { fill: #FFFFFF; }
+.pedro-pupila-centro { fill: var(--texto-escuro); }
+.pedro-pupila-brilho { fill: #FFFFFF; }
+.pedro-boca {
+    stroke: var(--texto-escuro);
+    stroke-width: 3px;
+    fill: none;
+    stroke-linecap: round;
+}
+
+.pupila {
+    transition: transform 0.05s linear;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+/* CAIXA DE CHAT PLACEHOLDER */
+
+.pedro-chat-box {
+    display: none;
+    width: 280px;
+    background-color: var(--creme-secao);
+    border: 2px solid var(--verde-principal);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    animation: pedroPopUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.pedro-chat-box.ativo {
+    display: block;
+}
+
+.pedro-chat-header {
+    background-color: var(--verde-principal);
+    color: var(--creme-bg);
+    padding: 10px 15px;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pedro-chat-header button {
+    background: none;
+    border: none;
+    color: var(--creme-bg);
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.pedro-chat-body {
+    padding: 15px;
+    color: var(--texto-escuro);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+@keyframes pedroPopUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.95);
     }
-
-    .cta-pedro {
-        animation: none;
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
