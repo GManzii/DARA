@@ -1,16 +1,40 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .forms import ContatoForm, EmpresaForm, UsuarioDonoForm, QuestionarioESGForm
+from .forms import (
+    ContatoForm,
+    EmpresaForm,
+    UsuarioDonoForm,
+    QuestionarioESGForm,
+    UsuarioFuncionarioForm
+)
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Empresa
+from .models import Empresa, Funcionario
+from django.db import transaction
 from django.http import JsonResponse
+from django.contrib.auth.views import LoginView
+from django.urls import reverse
+
+class LoginPersonalizadoView(LoginView):
+
+    def get_success_url(self):
+
+        usuario = self.request.user
+
+        # Verifica se é funcionário
+        if hasattr(usuario, 'perfil_funcionario'):
+            return reverse('area_funcionario')
+
+        # Dono ou outro usuário autenticado
+        return reverse('home')
 
 def landing(request):
     return render(request, 'core/landing.html')
 
 def home(request):
+    if request.user.is_authenticated and hasattr(request.user, 'perfil_funcionario'):
+        return redirect('area_funcionario')
     # Se já escolheu um perfil, direciona para a área correspondente
     perfil = request.session.get('perfil')
 
@@ -105,10 +129,89 @@ def questionario_esg(request):
     )
 
 def cadastro_funcionario(request):
-    return render(request, 'core/cadastro_funcionario.html')
 
+    # Impede que um usuário já autenticado crie outra conta
+    if request.user.is_authenticated:
+        if hasattr(request.user, 'perfil_funcionario'):
+            return redirect('area_funcionario')
+
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = UsuarioFuncionarioForm(request.POST)
+
+        if form.is_valid():
+            dados = form.cleaned_data
+
+            # Localiza a empresa pelo código de convite
+            empresa = Empresa.objects.get(
+                codigo_convite=dados['codigo_convite']
+            )
+
+            try:
+                with transaction.atomic():
+
+                    # Cria a conta do funcionário
+                    usuario = User.objects.create_user(
+                        username=dados['email'],
+                        email=dados['email'],
+                        password=dados['senha'],
+                        first_name=dados['nome_completo']
+                    )
+
+                    # Vincula o funcionário à empresa
+                    Funcionario.objects.create(
+                        usuario=usuario,
+                        empresa=empresa
+                    )
+
+                # Realiza o login automaticamente
+                login(request, usuario)
+
+                messages.success(
+                    request,
+                    f"Cadastro realizado! Você agora faz parte da equipe da {empresa.nome_empresa}."
+                )
+
+                return redirect('area_funcionario')
+
+            except Exception:
+                messages.error(
+                    request,
+                    "Não foi possível concluir o cadastro. Tente novamente."
+                )
+
+    else:
+        form = UsuarioFuncionarioForm()
+
+    return render(
+        request,
+        'core/cadastro_funcionario.html',
+        {'form': form}
+    )
+
+@login_required(login_url='entrar')
 def area_funcionario(request):
-    return render(request, 'core/area_funcionario.html')
+
+    if not hasattr(request.user, 'perfil_funcionario'):
+        messages.error(
+            request,
+            "Esta área é exclusiva para funcionários."
+        )
+        return redirect('home')
+
+    funcionario = request.user.perfil_funcionario
+
+    contexto = {
+        'funcionario': funcionario,
+        'empresa': funcionario.empresa,
+    }
+
+    return render(
+        request,
+        'core/area_funcionario.html',
+        contexto
+    )
 
 
 def about(request):

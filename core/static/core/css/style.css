@@ -1147,3 +1147,30 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
     .app.cadastro .app-main { max-width: 720px; padding: 56px 48px; }
     .cadastro-card { margin-top: 0; padding: 40px 36px; }
 }
+
+
+/* =========================================
+   11. Layout em tela cheia no computador
+========================================= */
+
+@media (min-width: 768px) {
+    :root {
+        --respiro: clamp(24px, 4vw, 72px);
+    }
+
+    .app {
+        width: 100%;
+        max-width: none;
+        min-height: 100vh;
+        min-height: 100dvh;
+        margin: 0;
+    }
+
+    .app-main {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding-left: var(--respiro);
+        padding-right: var(--respiro);
+    }
+}

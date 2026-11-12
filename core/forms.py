@@ -14,43 +14,6 @@ class ContatoForm(forms.ModelForm):
             'tipo': forms.Select(attrs={'class': 'form-select'}),
             'mensagem': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Escreva sua mensagem...'}),
         }
-# 2. Cadastro do dono
-class UsuarioDonoForm(forms.ModelForm):
-    nome_completo = forms.CharField(
-        max_length=150,
-        label="Nome Completo",
-        widget=forms.TextInput(attrs={'placeholder': 'Seu nome completo'})
-    )
-    telefone = forms.CharField(
-        max_length=20,
-        label="Telefone",
-        widget=forms.TextInput(attrs={'placeholder': '(xx) xxxxx-xxxx'})
-    )
-    senha = forms.CharField(
-        label="Definir Senha",
-        widget=forms.PasswordInput(attrs={'placeholder': 'Sua senha'})
-    )
-    confirmar_senha = forms.CharField(
-        label="Confirmar Senha",
-        widget=forms.PasswordInput(attrs={'placeholder': 'Repita sua senha'})
-    )
-
-    class Meta:
-        model = User
-        fields = ['email']
-        widgets = {
-            'email': forms.EmailInput(attrs={'placeholder': 'seuemail@exemplo.com'}),
-        }
-
-    # Validação para garantir que as senhas são iguais
-    def clean(self):
-        cleaned_data = super().clean()
-        senha = cleaned_data.get("senha")
-        confirmar_senha = cleaned_data.get("confirmar_senha")
-
-        if senha and confirmar_senha and senha != confirmar_senha:
-            raise forms.ValidationError("As senhas não coincidem.")
-        return cleaned_data
 
 # 3. Questionário do cadastro da empresa (dono)
 class EmpresaForm(forms.ModelForm):
@@ -95,7 +58,7 @@ class QuestionarioESGForm(forms.ModelForm):
             'esg_24_selo_certificacao_local',
             'esg_25_energia_solar',
         ]
-
+#form do dono
 class UsuarioDonoForm(forms.ModelForm):
     nome_completo = forms.CharField(
         max_length=150,
@@ -139,6 +102,79 @@ class UsuarioDonoForm(forms.ModelForm):
         if senha and confirmar_senha and senha != confirmar_senha:
             raise forms.ValidationError("As senhas não coincidem.")
         return cleaned_data
+
+#form do funcionario
+class UsuarioFuncionarioForm(forms.ModelForm):
+    nome_completo = forms.CharField(
+        max_length=150,
+        label="Nome Completo",
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Seu nome completo'}
+        )
+    )
+
+    senha = forms.CharField(
+        label="Definir Senha",
+        widget=forms.PasswordInput(
+            attrs={'placeholder': 'Sua senha'}
+        )
+    )
+
+    confirmar_senha = forms.CharField(
+        label="Confirmar Senha",
+        widget=forms.PasswordInput(
+            attrs={'placeholder': 'Repita sua senha'}
+        )
+    )
+
+    codigo_convite = forms.CharField(
+        max_length=12,
+        label="Código da Empresa",
+        widget=forms.TextInput(
+            attrs={'placeholder': 'Digite o código fornecido pela empresa'}
+        )
+    )
+
+    class Meta:
+        model = User
+        fields = ['email']
+        widgets = {
+            'email': forms.EmailInput(
+                attrs={'placeholder': 'seuemail@exemplo.com'}
+            ),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        if User.objects.filter(username=email).exists():
+            raise forms.ValidationError(
+                "Este e-mail já está cadastrado no sistema."
+            )
+
+        return email
+
+    def clean_codigo_convite(self):
+        codigo = self.cleaned_data.get('codigo_convite').strip().upper()
+
+        if not Empresa.objects.filter(codigo_convite=codigo).exists():
+            raise forms.ValidationError(
+                "Código de empresa inválido. Confira com seu gestor."
+            )
+
+        return codigo
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        senha = cleaned_data.get("senha")
+        confirmar_senha = cleaned_data.get("confirmar_senha")
+
+        if senha and confirmar_senha and senha != confirmar_senha:
+            raise forms.ValidationError("As senhas não coincidem.")
+
+        return cleaned_data
+
 # 5. Login com conta existente (o username é o e-mail)
 class EntrarForm(AuthenticationForm):
     username = forms.EmailField(

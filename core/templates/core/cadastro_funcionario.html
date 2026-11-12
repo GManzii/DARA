@@ -1,16 +1,84 @@
- 
-{% extends "base.html" %}
+
+{% extends "core/base.html" %}
+
+{% block title %}Cadastro de colaborador{% endblock %}
 
 {% block content %}
-<section class="aviso-funcionario">
-    <h1>Cadastro de funcionário</h1>
+
+<section class="card cadastro-funcionario">
+
+    <span class="eyebrow">Faça parte da DARA</span>
+
+    <h1>Cadastro de colaborador</h1>
 
     <p>
-        Estamos desenvolvendo essa funcionalidade!
-        Em breve, você poderá realizar seu cadastro como funcionário
-        e acessar sua área na plataforma DARA.
+        Preencha seus dados e informe o código de convite
+        fornecido pela sua empresa para acessar a plataforma.
     </p>
 
-    <a href="{% url 'landing' %}">Voltar ao início</a>
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-error">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            {{ form.nome_completo.label_tag }}
+            {{ form.nome_completo }}
+            {% for erro in form.nome_completo.errors %}
+                <small class="field-error">{{ erro }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% for erro in form.email.errors %}
+                <small class="field-error">{{ erro }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.senha.label_tag }}
+            {{ form.senha }}
+            {% for erro in form.senha.errors %}
+                <small class="field-error">{{ erro }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.confirmar_senha.label_tag }}
+            {{ form.confirmar_senha }}
+            {% for erro in form.confirmar_senha.errors %}
+                <small class="field-error">{{ erro }}</small>
+            {% endfor %}
+        </div>
+
+        <div class="form-group">
+            {{ form.codigo_convite.label_tag }}
+            {{ form.codigo_convite }}
+            {% for erro in form.codigo_convite.errors %}
+                <small class="field-error">{{ erro }}</small>
+            {% endfor %}
+            <small>
+                Solicite o código de convite ao responsável pela sua empresa.
+            </small>
+        </div>
+
+        <button type="submit" class="btn btn-bloco">
+            Criar minha conta
+        </button>
+
+    </form>
+
+    <div class="form-footer">
+        Já possui uma conta?
+        <a href="{% url 'entrar' %}">Entrar</a>
+    </div>
+
 </section>
+
 {% endblock %}

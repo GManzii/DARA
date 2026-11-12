@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import secrets
+import string
 
 
 class MensagemContato(models.Model):
@@ -35,6 +37,12 @@ class Empresa(models.Model):
         User, 
         related_name='empresas',
         verbose_name="Donos / Gestores"
+    )
+    codigo_convite = models.CharField(
+        max_length=12,
+        unique=True,
+        blank=True,
+        verbose_name="Código de convite"
     )
     telefone = models.CharField(
         max_length=20, 
@@ -207,3 +215,47 @@ class Empresa(models.Model):
         default=False,
         verbose_name="Uso de Energia Solar: Cooperativas de energia solar ou geração própria 100% limpa"
     )
+    def save(self, *args, **kwargs):
+        if not self.codigo_convite:
+            caracteres = string.ascii_uppercase + string.digits
+
+            while True:
+                codigo = ''.join(
+                    secrets.choice(caracteres) for _ in range(8)
+                )
+
+                if not Empresa.objects.filter(
+                    codigo_convite=codigo
+                ).exists():
+                    self.codigo_convite = codigo
+                    break
+
+        super().save(*args, **kwargs)
+
+class Funcionario(models.Model):
+    usuario = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="perfil_funcionario",
+        verbose_name="Usuário"
+    )
+
+    empresa = models.ForeignKey(
+        Empresa,
+        on_delete=models.CASCADE,
+        related_name="funcionarios",
+        verbose_name="Empresa"
+    )
+
+    data_cadastro = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name="Data de cadastro"
+    )
+
+    class Meta:
+        verbose_name = "Funcionário"
+        verbose_name_plural = "Funcionários"
+        ordering = ["usuario__first_name"]
+
+    def __str__(self):
+        return f"{self.usuario.get_full_name()} - {self.empresa.nome_empresa}"

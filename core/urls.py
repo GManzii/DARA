@@ -6,11 +6,13 @@ from .forms import EntrarForm
 urlpatterns = [
     path("", views.landing, name="landing"),
     path("inicio/", views.home, name="home"),
-    path('entrar/', auth_views.LoginView.as_view(
-        template_name='core/entrar.html',
-        authentication_form=EntrarForm,
-        redirect_authenticated_user=True,
-    ), name='entrar'),
+    path('entrar/', views.LoginPersonalizadoView.as_view(
+            template_name='core/entrar.html',
+            authentication_form=EntrarForm,
+            redirect_authenticated_user=True,
+        ),
+        name='entrar'
+    ),
     path('sair/', auth_views.LogoutView.as_view(), name='sair'),
     path('escolher-perfil/', views.escolher_perfil, name='escolher_perfil'),
     path('dono/', views.area_dono, name='area_dono'),
