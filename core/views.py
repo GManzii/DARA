@@ -90,7 +90,7 @@ def questionario_esg(request):
 
             messages.success(
                 request,
-                "Questionário preenchido, Bem vindo à sua conta!."
+                "Questionário preenchido, Bem vindo à sua conta!"
             )
 
             return redirect('home')
