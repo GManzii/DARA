@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+{% block title %}Integrantes{% endblock %}
+
+{% block topbar %}
+    {% include "core/_topbar_voltar.html" with titulo=conversa.nome %}
+{% endblock %}
+
+{% block content %}
+    <section class="greeting">
+        <span class="eyebrow">{{ conversa.nome }}</span>
+        <h1>Integrantes</h1>
+        <p class="conversas-sub">{{ integrantes|length }} pessoa{{ integrantes|length|pluralize }} neste chat.</p>
+    </section>
+
+    <ul class="conversa-lista">
+        {% for i in integrantes %}
+        <li class="conversa-item">
+            <span class="conversa-avatar avatar-integrante" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+            </span>
+            <span class="conversa-texto">
+                <strong>{{ i.nome }}</strong>
+                <small>{% if i.gerente %}Gerente{% else %}Funcionário{% endif %}</small>
+            </span>
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
