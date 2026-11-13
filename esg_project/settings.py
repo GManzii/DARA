@@ -121,6 +121,9 @@ LOGOUT_REDIRECT_URL = 'home'
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# Anexos e áudios enviados nas conversas (servidos por uma view que checa o acesso)
+MEDIA_ROOT = BASE_DIR / 'media'
+
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 

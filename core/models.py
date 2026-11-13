@@ -259,3 +259,85 @@ class Funcionario(models.Model):
 
     def __str__(self):
         return f"{self.usuario.get_full_name()} - {self.empresa.nome_empresa}"
+
+class Conversa(models.Model):
+    """Uma conversa da aba "Conversas": o chat com o Pedro ou um grupo da empresa."""
+
+    TIPO_PEDRO = 'pedro'
+    TIPO_GRUPO = 'grupo'
+    TIPO_CHOICES = [
+        (TIPO_PEDRO, 'Pedro (assistente)'),
+        (TIPO_GRUPO, 'Grupo da empresa'),
+    ]
+
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, verbose_name="Tipo")
+    nome = models.CharField(max_length=100, verbose_name="Nome")
+    # Só os grupos pertencem a uma empresa; o chat com o Pedro é individual.
+    empresa = models.ForeignKey(
+        Empresa,
+        on_delete=models.CASCADE,
+        related_name="conversas",
+        null=True,
+        blank=True,
+        verbose_name="Empresa",
+    )
+    participantes = models.ManyToManyField(
+        User,
+        related_name="conversas",
+        verbose_name="Participantes",
+    )
+    # Gerente (dono) que criou o grupo
+    criador = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="conversas_criadas",
+        verbose_name="Criado por",
+    )
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Conversa"
+        verbose_name_plural = "Conversas"
+
+    def __str__(self):
+        return self.nome
+
+
+class Mensagem(models.Model):
+    conversa = models.ForeignKey(
+        Conversa,
+        on_delete=models.CASCADE,
+        related_name="mensagens",
+    )
+    # autor vazio = mensagem enviada pelo Pedro
+    autor = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="mensagens_enviadas",
+    )
+    # O texto pode ficar vazio quando a mensagem é só um anexo ou um áudio
+    texto = models.TextField(max_length=1000, blank=True, verbose_name="Mensagem")
+
+    TIPO_ANEXO_CHOICES = [
+        ('audio', 'Áudio'),
+        ('imagem', 'Imagem'),
+        ('arquivo', 'Arquivo'),
+    ]
+    anexo = models.FileField(upload_to="conversas/%Y/%m/", blank=True, verbose_name="Anexo")
+    anexo_nome = models.CharField(max_length=255, blank=True)
+    anexo_tipo = models.CharField(max_length=10, choices=TIPO_ANEXO_CHOICES, blank=True)
+    anexo_mime = models.CharField(max_length=100, blank=True)
+
+    criada_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Mensagem"
+        verbose_name_plural = "Mensagens"
+        ordering = ["criada_em", "id"]
+
+    def __str__(self):
+        return f"{self.conversa} · {self.texto[:30] or self.anexo_nome}"
