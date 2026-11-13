@@ -186,3 +186,25 @@ class EntrarForm(AuthenticationForm):
         strip=False,
         widget=forms.PasswordInput(attrs={'placeholder': 'Sua senha'})
     )
+class DocumentoForm(forms.ModelForm):
+    class Meta:
+        model = Documento
+        fields = [
+            'codigo_referencia',
+            'titulo',
+            'tipo',
+            'pilar',
+            'status',
+            'data_validade',
+            'observacoes',
+            'arquivo',
+        ]
+        widgets = {
+            'codigo_referencia': forms.TextInput(attrs={'placeholder': 'Ex: CTR-2026-01'}),
+            'titulo': forms.TextInput(attrs={'placeholder': 'Ex: Política de Gestão de Resíduos Sólidos'}),
+            'data_validade': forms.DateInput(attrs={'type': 'date'}),
+            'observacoes': forms.Textarea(attrs={
+                'rows': 2,
+                'placeholder': 'Descreva brevemente o objetivo, fornecedor ou meta ESG vinculada...'
+            }),
+        }

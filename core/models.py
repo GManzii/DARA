@@ -1,7 +1,11 @@
+import os
+from datetime import timedelta
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 import secrets
 import string
+
 
 
 class MensagemContato(models.Model):
@@ -259,3 +263,64 @@ class Funcionario(models.Model):
 
     def __str__(self):
         return f"{self.usuario.get_full_name()} - {self.empresa.nome_empresa}"
+class Documento(models.Model):
+    PILARES = [
+        ('E', 'Ambiental (E)'),
+        ('S', 'Social (S)'),
+        ('G', 'Governança (G)'),
+    ]
+
+    TIPOS = [
+        ('CONTRATO', 'Contrato / Acordo ESG'),
+        ('PRATICA', 'Evidência de Prática / Ação'),
+        ('POLITICA', 'Política Interna / Código'),
+        ('LICENCA', 'Licença / Certificação'),
+        ('RELATORIO', 'Relatório de Sustentabilidade'),
+    ]
+
+    STATUS_CHOICES = [
+        ('VIGENTE', 'Aprovado / Vigente'),
+        ('REVISAO', 'Em Revisão'),
+        ('ARQUIVADO', 'Arquivado'),
+    ]
+
+    empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name='documentos')
+    enviado_por = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    codigo_referencia = models.CharField(max_length=40, blank=True, verbose_name="Código Interno (ex: POL-001)")
+    titulo = models.CharField(max_length=200, verbose_name="Título do Documento")
+    tipo = models.CharField(max_length=20, choices=TIPOS, default='PRATICA', verbose_name="Categoria")
+    pilar = models.CharField(max_length=1, choices=PILARES, default='E', verbose_name="Pilar ESG")
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='VIGENTE', verbose_name="Status")
+    observacoes = models.TextField(blank=True, verbose_name="Resumo / Escopo (opcional)")
+    arquivo = models.FileField(upload_to='documentos_esg/%Y/%m/')
+    data_validade = models.DateField(null=True, blank=True, verbose_name="Data de Validade (opcional)")
+    data_envio = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def extensao(self):
+        ext = os.path.splitext(self.arquivo.name)[1].replace('.', '').upper()
+        return ext or 'ARQ'
+
+    @property
+    def tamanho_formatado(self):
+        try:
+            tamanho = self.arquivo.size
+            if tamanho < 1024 * 1024:
+                return f"{tamanho / 1024:.0f} KB"
+            return f"{tamanho / (1024 * 1024):.1f} MB"
+        except Exception:
+            return "—"
+
+    @property
+    def status_validade(self):
+        if not self.data_validade:
+            return 'permanente'
+        hoje = timezone.now().date()
+        if self.data_validade < hoje:
+            return 'vencido'
+        if self.data_validade <= hoje + timedelta(days=30):
+            return 'atencao'
+        return 'vigente'
+
+    def __str__(self):
+        return f"{self.titulo} ({self.get_tipo_display()})"
