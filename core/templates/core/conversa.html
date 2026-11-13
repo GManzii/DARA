@@ -1,0 +1,239 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}{{ conversa.nome }}{% endblock %}
+{% block app_class %}chat{% endblock %}
+
+{# O campo de mensagem ocupa o lugar do menu inferior #}
+{% block bottom_nav %}{% endblock %}
+
+{% block content %}
+    <header class="chat-cabecalho">
+        <a href="{% url 'conversas' %}" class="icon-btn chat-voltar" aria-label="Voltar para conversas">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </a>
+        {% if eh_pedro %}
+            <img class="conversa-avatar" src="{% static 'core/img/pedro.svg' %}" alt="">
+        {% else %}
+            <span class="conversa-avatar conversa-avatar-grupo" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5A6.5 6.5 0 0 1 21.5 20"/></svg>
+            </span>
+        {% endif %}
+        <div>
+            <h1>{{ conversa.nome }}</h1>
+            {% if not eh_pedro %}
+                <a href="{% url 'conversa_integrantes' conversa.pk %}" class="chat-integrantes">ver {{ total_integrantes }} integrante{{ total_integrantes|pluralize }}</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <section class="chat-mensagens" id="mensagens" aria-live="polite">
+        {% for m in mensagens %}
+        <div class="msg {% if m.minha %}msg-minha{% else %}msg-outro{% endif %}">
+            {% if not m.minha %}
+                {% if m.obj.autor %}
+                    <span class="msg-avatar cor-{{ m.cor }}" title="{{ m.obj.autor.get_full_name|default:m.obj.autor.username }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+                    </span>
+                {% else %}
+                    <img class="msg-avatar" src="{% static 'core/img/pedro.svg' %}" alt="Pedro">
+                {% endif %}
+            {% endif %}
+            <div class="msg-balao">
+                {% if not m.minha and m.obj.autor %}
+                    <span class="msg-autor">{{ m.obj.autor.get_full_name|default:m.obj.autor.username }}</span>
+                {% endif %}
+                {% if m.obj.anexo %}
+                    {% if m.obj.anexo_tipo == 'audio' %}
+                        <audio controls preload="metadata" src="{% url 'mensagem_anexo' m.obj.pk %}"></audio>
+                    {% elif m.obj.anexo_tipo == 'imagem' %}
+                        <a href="{% url 'mensagem_anexo' m.obj.pk %}" target="_blank" rel="noopener">
+                            <img class="msg-imagem" src="{% url 'mensagem_anexo' m.obj.pk %}" alt="{{ m.obj.anexo_nome }}">
+                        </a>
+                    {% else %}
+                        <a class="msg-arquivo" href="{% url 'mensagem_anexo' m.obj.pk %}" download>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+                            <span>{{ m.obj.anexo_nome }}</span>
+                        </a>
+                    {% endif %}
+                {% endif %}
+                {% if m.obj.texto %}<span class="msg-texto">{{ m.obj.texto|linebreaksbr }}</span>{% endif %}
+                <time>{{ m.hora }}</time>
+            </div>
+        </div>
+        {% empty %}
+            {% if not eh_pedro %}<p class="chat-vazio">Nenhuma mensagem ainda. Comece a conversa!</p>{% endif %}
+        {% endfor %}
+    </section>
+
+    {% if not eh_pedro %}
+    <div class="chat-anexo-previa" id="anexo-previa" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11-9.2 9.2a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>
+        <span id="anexo-nome"></span>
+        <button type="button" class="icon-btn" id="anexo-remover" aria-label="Remover anexo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+    </div>
+
+    <form method="post" class="chat-envio" id="form-chat" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="anexo" id="anexo" hidden>
+
+        <button type="button" class="icon-btn" id="btn-anexar" aria-label="Anexar arquivo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21.4 11-9.2 9.2a5.5 5.5 0 0 1-7.8-7.8l9.2-9.2a3.7 3.7 0 0 1 5.2 5.2l-9.2 9.2a1.8 1.8 0 0 1-2.6-2.6l8.5-8.5"/></svg>
+        </button>
+
+        <label class="visually-hidden" for="texto">Mensagem</label>
+        <input type="text" id="texto" name="texto" placeholder="Mensagem" maxlength="1000" autocomplete="off">
+
+        <div class="chat-gravando" id="gravando" hidden>
+            <span class="ponto" aria-hidden="true"></span>
+            <span>Gravando <time id="gravando-tempo">0:00</time></span>
+            <button type="button" class="icon-btn" id="btn-cancelar-audio" aria-label="Cancelar gravação">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>
+            </button>
+        </div>
+
+        <button type="button" class="icon-btn" id="btn-mic" aria-label="Gravar áudio">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4"/></svg>
+        </button>
+        <button type="submit" class="icon-btn" id="btn-enviar" aria-label="Enviar mensagem">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+        </button>
+    </form>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    // Abre a conversa já rolada até a última mensagem
+    var caixa = document.getElementById('mensagens');
+    if (caixa) caixa.scrollTop = caixa.scrollHeight;
+
+    var form = document.getElementById('form-chat');
+    if (!form) return;   // chat com o Pedro não tem campo de envio
+
+    var MAX = 10 * 1024 * 1024;   // 10 MB, o mesmo limite do servidor
+    var texto = document.getElementById('texto');
+    var arquivo = document.getElementById('anexo');
+    var btnAnexar = document.getElementById('btn-anexar');
+    var previa = document.getElementById('anexo-previa');
+    var previaNome = document.getElementById('anexo-nome');
+    var btnRemover = document.getElementById('anexo-remover');
+    var btnMic = document.getElementById('btn-mic');
+    var gravando = document.getElementById('gravando');
+    var tempoEl = document.getElementById('gravando-tempo');
+    var btnCancelar = document.getElementById('btn-cancelar-audio');
+
+    /* ---------------- Anexos ---------------- */
+    function limparAnexo() {
+        arquivo.value = '';
+        previa.hidden = true;
+    }
+    btnAnexar.addEventListener('click', function () { arquivo.click(); });
+    arquivo.addEventListener('change', function () {
+        var f = arquivo.files[0];
+        if (!f) { limparAnexo(); return; }
+        if (f.size > MAX) {
+            alert('O arquivo é maior que 10 MB.');
+            limparAnexo();
+            return;
+        }
+        previaNome.textContent = f.name;
+        previa.hidden = false;
+    });
+    btnRemover.addEventListener('click', limparAnexo);
+
+    /* ---------------- Áudio (microfone) ---------------- */
+    var gravador = null, pedacos = [], stream = null, relogio = null, comecou = 0;
+
+    function formatar(seg) {
+        return Math.floor(seg / 60) + ':' + ('0' + (seg % 60)).slice(-2);
+    }
+    function mostrarGravando(ligado) {
+        gravando.hidden = !ligado;
+        texto.hidden = ligado;
+        btnMic.hidden = ligado;
+        btnAnexar.disabled = ligado;
+    }
+    function encerrarStream() {
+        clearInterval(relogio);
+        if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+        stream = null;
+    }
+
+    btnMic.addEventListener('click', function () {
+        if (!navigator.mediaDevices || !window.MediaRecorder) {
+            alert('Seu navegador não permite gravar áudio. Em celulares e fora do localhost, o site precisa abrir em https.');
+            return;
+        }
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(function (s) {
+            stream = s;
+            var tipos = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4', 'audio/ogg;codecs=opus'];
+            var escolhido = tipos.filter(function (t) { return MediaRecorder.isTypeSupported(t); })[0];
+            gravador = new MediaRecorder(s, escolhido ? { mimeType: escolhido } : undefined);
+            pedacos = [];
+            gravador.ondataavailable = function (e) { if (e.data.size) pedacos.push(e.data); };
+            gravador.start();
+            comecou = Date.now();
+            tempoEl.textContent = '0:00';
+            relogio = setInterval(function () {
+                tempoEl.textContent = formatar(Math.round((Date.now() - comecou) / 1000));
+            }, 500);
+            mostrarGravando(true);
+        }).catch(function () {
+            alert('Não foi possível usar o microfone. Verifique a permissão do navegador.');
+        });
+    });
+
+    btnCancelar.addEventListener('click', function () {
+        if (gravador && gravador.state === 'recording') {
+            gravador.onstop = encerrarStream;
+            gravador.stop();
+        }
+        pedacos = [];
+        mostrarGravando(false);
+    });
+
+    function enviarAudio(blob) {
+        var tipo = blob.type || 'audio/webm';
+        var ext = tipo.indexOf('mp4') > -1 ? 'm4a' : tipo.indexOf('ogg') > -1 ? 'ogg' : 'webm';
+        var dados = new FormData();
+        dados.append('csrfmiddlewaretoken', form.querySelector('[name=csrfmiddlewaretoken]').value);
+        dados.append('texto', '');
+        dados.append('anexo', blob, 'audio.' + ext);
+        fetch(form.action || window.location.href, {
+            method: 'POST', body: dados, credentials: 'same-origin'
+        }).then(function (r) {
+            if (!r.ok) throw new Error();
+            window.location.reload();
+        }).catch(function () {
+            alert('Não foi possível enviar o áudio. Tente de novo.');
+            mostrarGravando(false);
+        });
+    }
+
+    /* ---------------- Envio ---------------- */
+    form.addEventListener('submit', function (e) {
+        if (gravador && gravador.state === 'recording') {
+            e.preventDefault();
+            gravador.onstop = function () {
+                encerrarStream();
+                var blob = new Blob(pedacos, { type: gravador.mimeType || 'audio/webm' });
+                if (!blob.size) {
+                    alert('Não consegui gravar nada. Tente de novo.');
+                    mostrarGravando(false);
+                    return;
+                }
+                enviarAudio(blob);
+            };
+            gravador.stop();
+            return;
+        }
+        // nada para enviar: não faz nada
+        if (!texto.value.trim() && !arquivo.files.length) e.preventDefault();
+    });
+})();
+</script>
+{% endblock %}

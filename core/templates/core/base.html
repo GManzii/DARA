@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#2f4228">
     <title>{% block title %}DARA{% endblock %} - DARA</title>
     <link rel="icon" href="{% static 'core/img/dara_logo.png' %}">
-    <link rel="stylesheet" href="{% static 'core/css/style.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'core/css/style.css' %}?v=7">
 </head>
 <body>
 
@@ -43,6 +43,12 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
             Pilares
         </a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'conversas' %}" {% if url_atual == 'conversas' or url_atual == 'conversa_detalhe' or url_atual == 'nova_conversa' or url_atual == 'conversa_integrantes' %}aria-current="page"{% endif %}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Conversas
+        </a>
+        {% endif %}
         <a href="{% url 'perfil' %}" {% if url_atual == 'perfil' %}aria-current="page"{% endif %}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
             Perfil
@@ -99,6 +105,7 @@
     <ul class="drawer-links">
         <li><a href="{% url 'area_funcionario' %}">Início</a></li>
         <li><a href="{% url 'pilares' %}">Pilares ESG</a></li>
+        <li><a href="{% url 'conversas' %}">Conversas</a></li>
         <li><a href="{% url 'about' %}">Sobre nós</a></li>
         <li><a href="{% url 'contact' %}">Fale conosco</a></li>
     </ul>
@@ -121,6 +128,10 @@
         </a></li>
 
         {% if user.is_authenticated %}
+            <li><a href="{% url 'conversas' %}">
+                Conversas
+            </a></li>
+
             <li><a href="{% url 'questionario_esg' %}">
                 Questionário ESG
             </a></li>
