@@ -2,8 +2,7 @@ from django import forms
 from .models import Empresa, MensagemContato
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-
-# 1. Formulário para Fale Conosco 
+from .models import Empresa, Funcionario, Documento 
 class ContatoForm(forms.ModelForm):
     class Meta:
         model = MensagemContato
