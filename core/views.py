@@ -6,15 +6,19 @@ from .forms import (
     EmpresaForm,
     UsuarioDonoForm,
     QuestionarioESGForm,
-    UsuarioFuncionarioForm
+    UsuarioFuncionarioForm,
+    NovaConversaForm,
 )
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Empresa, Funcionario
+from .models import Empresa, Funcionario, Conversa, Mensagem
 from django.db import transaction
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, FileResponse, Http404
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
+from django.shortcuts import get_object_or_404
+from django.utils import timezone
+import os
 
 class LoginPersonalizadoView(LoginView):
 
@@ -457,3 +461,250 @@ def perfil(request):
         'total_comunidades': 0,
     }
     return render(request, 'core/perfil.html', context)
+
+# ---------------------------------------------------------------------------
+# Conversas
+# ---------------------------------------------------------------------------
+
+TAMANHO_MAX_ANEXO = 10 * 1024 * 1024  # 10 MB
+IMAGENS_SEGURAS = {'image/png', 'image/jpeg', 'image/gif', 'image/webp'}
+
+
+def _empresa_do_usuario(usuario):
+    """Empresa do usuário, seja ele funcionário ou dono. None se não tiver."""
+    if hasattr(usuario, 'perfil_funcionario'):
+        return usuario.perfil_funcionario.empresa
+    return usuario.empresas.first()
+
+
+def _eh_gerente(usuario):
+    """Gerente = dono da empresa (quem pode criar chats)."""
+    return (
+        not hasattr(usuario, 'perfil_funcionario')
+        and usuario.empresas.exists()
+    )
+
+
+def _garantir_pedro(usuario):
+    """Todo usuário tem o seu chat com o Pedro (fica em branco por enquanto)."""
+    if not Conversa.objects.filter(
+        tipo=Conversa.TIPO_PEDRO, participantes=usuario
+    ).exists():
+        pedro = Conversa.objects.create(tipo=Conversa.TIPO_PEDRO, nome='Pedro')
+        pedro.participantes.add(usuario)
+
+
+def _hora_curta(momento):
+    """'agora', 'HH:MM' (hoje) ou 'dd/mm' (outros dias)."""
+    momento = timezone.localtime(momento)
+    agora = timezone.localtime()
+    if (agora - momento).total_seconds() < 60:
+        return 'agora'
+    if momento.date() == agora.date():
+        return momento.strftime('%H:%M')
+    return momento.strftime('%d/%m')
+
+
+def _previa(mensagem):
+    if mensagem is None:
+        return 'Nenhuma mensagem ainda'
+    if mensagem.texto:
+        return mensagem.texto
+    if mensagem.anexo_tipo == 'audio':
+        return 'Mensagem de áudio'
+    if mensagem.anexo_tipo == 'imagem':
+        return 'Imagem'
+    return f'Arquivo: {mensagem.anexo_nome}'
+
+
+@login_required(login_url='entrar')
+def conversas(request):
+    _garantir_pedro(request.user)
+
+    itens = []
+    for conversa in request.user.conversas.all():
+        ultima = conversa.mensagens.order_by('-criada_em', '-id').first()
+        itens.append({
+            'conversa': conversa,
+            'previa': _previa(ultima),
+            'hora': _hora_curta(ultima.criada_em) if ultima else '',
+            'ordem': ultima.criada_em if ultima else conversa.criada_em,
+        })
+    # Quem mexeu por último aparece primeiro
+    itens.sort(key=lambda i: i['ordem'], reverse=True)
+
+    return render(request, 'core/conversas.html', {
+        'itens': itens,
+        'pode_criar': _eh_gerente(request.user),
+    })
+
+
+@login_required(login_url='entrar')
+def nova_conversa(request):
+    if not _eh_gerente(request.user):
+        messages.error(request, "Só o gerente da empresa pode criar chats.")
+        return redirect('conversas')
+
+    empresa = _empresa_do_usuario(request.user)
+
+    if request.method == 'POST':
+        form = NovaConversaForm(
+            request.POST, empresa=empresa, criador=request.user
+        )
+        if form.is_valid():
+            with transaction.atomic():
+                conversa = Conversa.objects.create(
+                    tipo=Conversa.TIPO_GRUPO,
+                    nome=form.cleaned_data['nome'].strip(),
+                    empresa=empresa,
+                    criador=request.user,
+                )
+                conversa.participantes.add(request.user)
+                conversa.participantes.add(*form.cleaned_data['integrantes'])
+            messages.success(request, "Chat criado!")
+            return redirect('conversa_detalhe', pk=conversa.pk)
+    else:
+        form = NovaConversaForm(empresa=empresa, criador=request.user)
+
+    return render(request, 'core/nova_conversa.html', {
+        'form': form,
+        'empresa': empresa,
+        'sem_candidatos': not form.fields['integrantes'].queryset.exists(),
+    })
+
+
+def _salvar_mensagem(request, conversa):
+    texto = request.POST.get('texto', '').strip()[:1000]
+    arquivo = request.FILES.get('anexo')
+
+    if not texto and not arquivo:
+        return
+
+    dados = {'conversa': conversa, 'autor': request.user, 'texto': texto}
+
+    if arquivo:
+        if arquivo.size > TAMANHO_MAX_ANEXO:
+            messages.error(request, "O arquivo é maior que 10 MB.")
+            return
+        mime = (arquivo.content_type or '').split(';')[0].strip().lower()
+        if mime.startswith('audio/'):
+            tipo = 'audio'
+        elif mime in IMAGENS_SEGURAS:
+            tipo = 'imagem'
+        else:
+            tipo, mime = 'arquivo', 'application/octet-stream'
+        dados.update(
+            anexo=arquivo,
+            anexo_nome=os.path.basename(arquivo.name)[:255],
+            anexo_tipo=tipo,
+            anexo_mime=mime,
+        )
+
+    Mensagem.objects.create(**dados)
+
+
+@login_required(login_url='entrar')
+def conversa_detalhe(request, pk):
+    conversa = get_object_or_404(request.user.conversas, pk=pk)
+    eh_pedro = conversa.tipo == Conversa.TIPO_PEDRO
+
+    if request.method == 'POST':
+        # O chat com o Pedro ainda não envia nada (será feito por outra pessoa)
+        if not eh_pedro:
+            _salvar_mensagem(request, conversa)
+        return redirect('conversa_detalhe', pk=conversa.pk)
+
+    mensagens = [
+        {
+            'obj': m,
+            'minha': m.autor_id == request.user.id,
+            'hora': timezone.localtime(m.criada_em).strftime('%H:%M'),
+            # 3 cores de avatar, como no protótipo
+            'cor': (m.autor_id or 0) % 3,
+        }
+        for m in conversa.mensagens.select_related('autor')
+    ]
+
+    return render(request, 'core/conversa.html', {
+        'conversa': conversa,
+        'eh_pedro': eh_pedro,
+        'mensagens': mensagens,
+        'total_integrantes': conversa.participantes.count(),
+    })
+
+
+@login_required(login_url='entrar')
+def conversa_integrantes(request, pk):
+    conversa = get_object_or_404(
+        request.user.conversas, pk=pk, tipo=Conversa.TIPO_GRUPO
+    )
+    donos = set(conversa.empresa.donos.values_list('id', flat=True)) if conversa.empresa else set()
+
+    integrantes = [
+        {
+            'nome': u.get_full_name() or u.username,
+            'gerente': u.id in donos,
+        }
+        for u in conversa.participantes.order_by('first_name', 'username')
+    ]
+
+    return render(request, 'core/conversa_integrantes.html', {
+        'conversa': conversa,
+        'integrantes': integrantes,
+        'voltar': reverse('conversa_detalhe', args=[conversa.pk]),
+    })
+
+
+@login_required(login_url='entrar')
+def mensagem_anexo(request, pk):
+    """Entrega o anexo só para quem participa da conversa."""
+    mensagem = get_object_or_404(
+        Mensagem.objects.filter(conversa__participantes=request.user), pk=pk
+    )
+    if not mensagem.anexo:
+        raise Http404
+
+    mime = mensagem.anexo_mime or 'application/octet-stream'
+
+    try:
+        arquivo = mensagem.anexo.open('rb')
+    except FileNotFoundError:
+        raise Http404
+
+    if mensagem.anexo_tipo == 'audio':
+        # Os navegadores (Safari principalmente) pedem o áudio em pedaços (Range)
+        with arquivo:
+            dados = arquivo.read()
+        total = len(dados)
+        inicio, fim, status = 0, total - 1, 200
+        faixa = request.headers.get('Range', '')
+        if faixa.startswith('bytes=') and total:
+            try:
+                a, b = faixa[6:].split(',')[0].split('-', 1)
+                if a == '':
+                    inicio = max(total - int(b), 0)
+                else:
+                    inicio = int(a)
+                    fim = min(int(b), total - 1) if b else total - 1
+                if inicio > fim or inicio >= total:
+                    resposta = HttpResponse(status=416)
+                    resposta['Content-Range'] = f'bytes */{total}'
+                    return resposta
+                status = 206
+            except ValueError:
+                inicio, fim, status = 0, total - 1, 200
+        resposta = HttpResponse(dados[inicio:fim + 1], status=status, content_type=mime)
+        resposta['Accept-Ranges'] = 'bytes'
+        if status == 206:
+            resposta['Content-Range'] = f'bytes {inicio}-{fim}/{total}'
+    else:
+        resposta = FileResponse(
+            arquivo,
+            content_type=mime,
+            as_attachment=(mensagem.anexo_tipo != 'imagem'),
+            filename=mensagem.anexo_nome or None,
+        )
+
+    resposta['X-Content-Type-Options'] = 'nosniff'
+    resposta['Cache-Control'] = 'private, max-age=3600'
+    return resposta

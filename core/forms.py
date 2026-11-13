@@ -186,3 +186,31 @@ class EntrarForm(AuthenticationForm):
         strip=False,
         widget=forms.PasswordInput(attrs={'placeholder': 'Sua senha'})
     )
+
+
+# 5. Criação de chat em grupo (feita pelo gerente)
+class NovaConversaForm(forms.Form):
+    nome = forms.CharField(
+        label="Nome do chat",
+        max_length=100,
+        widget=forms.TextInput(attrs={'placeholder': 'Ex.: Rede ESG na prática'}),
+    )
+    integrantes = forms.ModelMultipleChoiceField(
+        label="Integrantes",
+        queryset=User.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        error_messages={
+            'required': 'Escolha pelo menos um integrante.',
+            'invalid_choice': 'Escolha integrantes da sua empresa.',
+        },
+    )
+
+    def __init__(self, *args, empresa, criador, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Só quem é da empresa pode ser escolhido (menos o próprio criador, que entra sempre)
+        ids = set(empresa.donos.values_list('id', flat=True))
+        ids |= set(empresa.funcionarios.values_list('usuario_id', flat=True))
+        ids.discard(criador.id)
+        campo = self.fields['integrantes']
+        campo.queryset = User.objects.filter(id__in=ids).order_by('first_name', 'username')
+        campo.label_from_instance = lambda u: u.get_full_name() or u.username
