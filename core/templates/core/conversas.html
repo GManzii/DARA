@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Conversas{% endblock %}
+
+{% block content %}
+    <section class="greeting">
+        <span class="eyebrow">Mensagens</span>
+        <h1>Conversas</h1>
+        <p class="conversas-sub">Continue de onde parou.</p>
+    </section>
+
+    {% if pode_criar %}
+        <a href="{% url 'nova_conversa' %}" class="btn btn-laranja btn-bloco">Nova conversa</a>
+    {% endif %}
+
+    <ul class="conversa-lista">
+        {% for item in itens %}
+        <li>
+            <a href="{% url 'conversa_detalhe' item.conversa.pk %}" class="conversa-item">
+                {% if item.conversa.tipo == 'pedro' %}
+                    <img class="conversa-avatar" src="{% static 'core/img/pedro.svg' %}" alt="">
+                {% else %}
+                    <span class="conversa-avatar conversa-avatar-grupo" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5A6.5 6.5 0 0 1 21.5 20"/></svg>
+                    </span>
+                {% endif %}
+                <span class="conversa-texto">
+                    <strong>{{ item.conversa.nome }}</strong>
+                    <small>{{ item.previa|truncatechars:40 }}</small>
+                </span>
+                <time class="conversa-hora">{{ item.hora }}</time>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    {% if not pode_criar and itens|length < 2 %}
+        <p class="conversas-sub">Quando o gerente adicionar você a um chat, ele aparece aqui.</p>
+    {% endif %}
+{% endblock %}
