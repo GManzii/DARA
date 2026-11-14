@@ -251,6 +251,10 @@ class Funcionario(models.Model):
         auto_now_add=True,
         verbose_name="Data de cadastro"
     )
+    acesso_comunidade = models.BooleanField(
+        default=False,
+        verbose_name="Acesso à Comunidade DARA"
+    )
 
     class Meta:
         verbose_name = "Funcionário"
