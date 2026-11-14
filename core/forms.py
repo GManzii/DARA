@@ -2,8 +2,7 @@ from django import forms
 from .models import Empresa, MensagemContato
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
-
-# 1. Formulário para Fale Conosco 
+from .models import Empresa, Funcionario, Documento 
 class ContatoForm(forms.ModelForm):
     class Meta:
         model = MensagemContato
@@ -214,3 +213,25 @@ class NovaConversaForm(forms.Form):
         campo = self.fields['integrantes']
         campo.queryset = User.objects.filter(id__in=ids).order_by('first_name', 'username')
         campo.label_from_instance = lambda u: u.get_full_name() or u.username
+class DocumentoForm(forms.ModelForm):
+    class Meta:
+        model = Documento
+        fields = [
+            'codigo_referencia',
+            'titulo',
+            'tipo',
+            'pilar',
+            'status',
+            'data_validade',
+            'observacoes',
+            'arquivo',
+        ]
+        widgets = {
+            'codigo_referencia': forms.TextInput(attrs={'placeholder': 'Ex: CTR-2026-01'}),
+            'titulo': forms.TextInput(attrs={'placeholder': 'Ex: Política de Gestão de Resíduos Sólidos'}),
+            'data_validade': forms.DateInput(attrs={'type': 'date'}),
+            'observacoes': forms.Textarea(attrs={
+                'rows': 2,
+                'placeholder': 'Descreva brevemente o objetivo, fornecedor ou meta ESG vinculada...'
+            }),
+        }

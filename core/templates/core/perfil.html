@@ -3,7 +3,8 @@
 {% block title %}Perfil{% endblock %}
 
 {% block content %}
-<div class="perfil-grid">
+<!-- PAINEL 1: VISÃO GERAL DO PERFIL -->
+<div class="perfil-grid" id="painel-resumo">
 
     <!-- 1. Card do Perfil do Utilizador -->
     <section class="card card-user-profile">
@@ -18,7 +19,7 @@
         </div>
     </section>
 
-    <!-- 2. Card da Empresa (Mostra o nome exato salvo) -->
+    <!-- 2. Card da Empresa -->
     <section class="card card-company">
         <div class="company-info">
             <span class="eyebrow">Sua empresa</span>
@@ -58,7 +59,7 @@
             <span class="stat-value">{{ total_funcionarios|default:0 }} &rarr;</span>
         </a>
 
-        <a href="#" class="stat-item">
+        <a href="javascript:void(0);" onclick="alternarDocumentos(true); return false;" class="stat-item">
             <span class="stat-label">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
                 Documentos e relatórios
@@ -91,4 +92,250 @@
     </section>
 
 </div>
+
+<!-- PAINEL 2: REPOSITÓRIO CORPORATIVO DE DOCUMENTOS ESG -->
+<div id="painel-documentos">
+
+    <div class="docs-topbar">
+        <div>
+            <span class="eyebrow">Governança &amp; Compliance</span>
+            <h2>Repositório de Documentos e Contratos</h2>
+            <p>Centralize contratos, políticas internas, licenças e evidências auditáveis de práticas ESG.</p>
+        </div>
+        <div class="docs-actions-top">
+            <button type="button" class="btn-dara-outline" onclick="alternarDocumentos(false)">
+                &larr; Voltar ao Perfil
+            </button>
+            <button type="button" class="btn-dara-primary" onclick="toggleDrawerUpload()">
+                + Novo Documento
+            </button>
+        </div>
+    </div>
+
+    <!-- Indicadores Rápidos (KPIs) -->
+    <div class="docs-kpi-grid">
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Acervo Total</span>
+            <div class="doc-kpi-value">{{ total_documentos }}</div>
+            <span class="doc-kpi-sub">Arquivos registrados</span>
+        </div>
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Em Conformidade</span>
+            <div class="doc-kpi-value">{{ docs_vigentes }}</div>
+            <span class="doc-kpi-sub">Vigentes e ativos</span>
+        </div>
+        <div class="doc-kpi-card alerta">
+            <span class="doc-kpi-label">Atenção / Validade</span>
+            <div class="doc-kpi-value">{{ docs_alerta }}</div>
+            <span class="doc-kpi-sub">Vencidos ou &le; 30 dias</span>
+        </div>
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Cobertura ESG</span>
+            <div class="doc-kpi-value" style="font-size: 18px; padding-top: 6px;">
+                E: {{ count_e }} &nbsp;|&nbsp; S: {{ count_s }} &nbsp;|&nbsp; G: {{ count_g }}
+            </div>
+            <span class="doc-kpi-sub">Distribuição por pilar</span>
+        </div>
+    </div>
+
+    <!-- Gaveta de Upload de Novo Documento -->
+    <div id="drawer-upload" class="doc-upload-drawer {% if doc_form.errors %}aberto{% endif %}">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="color: #33482b; margin: 0;">Registrar Nova Evidência ou Contrato</h3>
+            <button type="button" onclick="toggleDrawerUpload()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #6b685f;">&times;</button>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="enviar_documento" value="1">
+
+            <div class="doc-form-row-3">
+                <div class="doc-form-group">
+                    <label for="id_codigo_referencia">Código Interno</label>
+                    {{ doc_form.codigo_referencia }}
+                </div>
+                <div class="doc-form-group">
+                    <label for="id_titulo">Título Oficial do Documento *</label>
+                    {{ doc_form.titulo }}
+                </div>
+                <div class="doc-form-group">
+                    <label for="id_pilar">Pilar ESG *</label>
+                    {{ doc_form.pilar }}
+                </div>
+            </div>
+
+            <div class="doc-form-row-2">
+                <div class="doc-form-group">
+                    <label for="id_tipo">Categoria *</label>
+                    {{ doc_form.tipo }}
+                </div>
+                <div class="doc-form-group">
+                    <label for="id_status">Status de Governança</label>
+                    {{ doc_form.status }}
+                </div>
+                <div class="doc-form-group">
+                    <label for="id_data_validade">Data de Validade (opcional)</label>
+                    {{ doc_form.data_validade }}
+                </div>
+            </div>
+
+            <div class="doc-form-group" style="margin-bottom: 14px;">
+                <label for="id_observacoes">Resumo Executivo / Escopo</label>
+                {{ doc_form.observacoes }}
+            </div>
+
+            <div class="doc-form-group" style="margin-bottom: 18px;">
+                <label for="id_arquivo">Arquivo (PDF, DOCX, XLSX, PNG/JPG) *</label>
+                {{ doc_form.arquivo }}
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn-dara-primary">Salvar no Repositório</button>
+                <button type="button" class="btn-dara-outline" onclick="toggleDrawerUpload()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Card Principal com Busca, Filtros e Tabela -->
+    <section class="card">
+        <div class="docs-toolbar">
+            <div class="docs-search-box">
+                <input type="text" id="busca-docs" onkeyup="aplicarFiltrosDocs()" placeholder="Buscar por título, código ou resumo...">
+            </div>
+
+            <div class="docs-filter-group" id="filtros-tipo">
+                <button type="button" class="doc-chip ativo" onclick="selecionarTipo('TODOS', this)">Todos</button>
+                <button type="button" class="doc-chip" onclick="selecionarTipo('CONTRATO', this)">Contratos</button>
+                <button type="button" class="doc-chip" onclick="selecionarTipo('PRATICA', this)">Práticas</button>
+                <button type="button" class="doc-chip" onclick="selecionarTipo('POLITICA', this)">Políticas</button>
+                <button type="button" class="doc-chip" onclick="selecionarTipo('LICENCA', this)">Licenças</button>
+                <button type="button" class="doc-chip" onclick="selecionarTipo('RELATORIO', this)">Relatórios</button>
+            </div>
+
+            <div class="docs-filter-group" id="filtros-pilar">
+                <button type="button" class="doc-chip ativo" onclick="selecionarPilar('TODOS', this)">E+S+G</button>
+                <button type="button" class="doc-chip" onclick="selecionarPilar('E', this)">Ambiental (E)</button>
+                <button type="button" class="doc-chip" onclick="selecionarPilar('S', this)">Social (S)</button>
+                <button type="button" class="doc-chip" onclick="selecionarPilar('G', this)">Governança (G)</button>
+            </div>
+        </div>
+
+        {% if documentos %}
+            <div class="docs-table-wrap">
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Documento / Referência</th>
+                            <th>Categoria</th>
+                            <th>Pilar</th>
+                            <th>Vigência / Status</th>
+                            <th>Auditoria</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for doc in documentos %}
+                            <tr class="doc-row"
+                                data-tipo="{{ doc.tipo }}"
+                                data-pilar="{{ doc.pilar }}"
+                                data-busca="{{ doc.titulo|lower }} {{ doc.codigo_referencia|lower }} {{ doc.observacoes|lower }}">
+                                <td>
+                                    <div>
+                                        <span class="file-ext-badge">{{ doc.extensao }}</span>
+                                        {% if doc.codigo_referencia %}
+                                            <small style="color: #c86428; font-weight: 700;">[{{ doc.codigo_referencia }}]</small>
+                                        {% endif %}
+                                        <strong style="color: #2c2c2c;">{{ doc.titulo }}</strong>
+                                    </div>
+                                    {% if doc.observacoes %}
+                                        <div style="font-size: 12.5px; color: #6b685f; margin-top: 4px; max-width: 380px;">
+                                            {{ doc.observacoes|truncatechars:95 }}
+                                        </div>
+                                    {% endif %}
+                                </td>
+                                <td>{{ doc.get_tipo_display }}</td>
+                                <td>
+                                    <span class="pilar-pill pilar-{{ doc.pilar }}">{{ doc.get_pilar_display }}</span>
+                                </td>
+                                <td>
+                                    {% if doc.status_validade == 'vencido' %}
+                                        <span class="validade-badge val-vencido">Vencido ({{ doc.data_validade|date:"d/m/Y" }})</span>
+                                    {% elif doc.status_validade == 'atencao' %}
+                                        <span class="validade-badge val-atencao">Vence em {{ doc.data_validade|date:"d/m/Y" }}</span>
+                                    {% elif doc.status_validade == 'vigente' %}
+                                        <span class="validade-badge val-vigente">Vigente até {{ doc.data_validade|date:"d/m/Y" }}</span>
+                                    {% else %}
+                                        <span class="validade-badge val-permanente">{{ doc.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <small style="color: #6b685f; display: block;">{{ doc.data_envio|date:"d/m/Y" }} • {{ doc.tamanho_formatado }}</small>
+                                    <small style="color: #8c877c;">Por {{ doc.enviado_por.username|default:"Sistema" }}</small>
+                                </td>
+                                <td>
+                                    <div class="doc-row-actions">
+                                        <a href="{{ doc.arquivo.url }}" target="_blank" class="doc-link-abrir">Abrir</a>
+                                        <a href="{{ doc.arquivo.url }}" download class="doc-link-baixar">Baixar</a>
+                                        <a href="{% url 'excluir_documento' doc.id %}" onclick="return confirm('Deseja realmente excluir este documento do repositório?');" class="doc-link-excluir">Excluir</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 36px 16px;">
+                <p style="color: #33482b; font-weight: 600; font-size: 16px; margin-bottom: 6px;">Nenhum documento ou contrato registrado</p>
+                <p style="color: #6b685f; font-size: 14px; margin-bottom: 18px;">Clique em <strong>+ Novo Documento</strong> acima para adicionar políticas, licenças ou evidências ESG.</p>
+                <button type="button" class="btn-dara-primary" onclick="toggleDrawerUpload()">+ Adicionar Primeiro Documento</button>
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+
+<script>
+    let filtroTipoAtual = 'TODOS';
+    let filtroPilarAtual = 'TODOS';
+
+    function alternarDocumentos(mostrarDocs) {
+        document.getElementById('painel-resumo').style.display = mostrarDocs ? 'none' : '';
+        document.getElementById('painel-documentos').style.display = mostrarDocs ? 'block' : 'none';
+    }
+
+    function toggleDrawerUpload() {
+        document.getElementById('drawer-upload').classList.toggle('aberto');
+    }
+
+    function selecionarTipo(tipo, btn) {
+        filtroTipoAtual = tipo;
+        document.querySelectorAll('#filtros-tipo .doc-chip').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        aplicarFiltrosDocs();
+    }
+
+    function selecionarPilar(pilar, btn) {
+        filtroPilarAtual = pilar;
+        document.querySelectorAll('#filtros-pilar .doc-chip').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        aplicarFiltrosDocs();
+    }
+
+    function aplicarFiltrosDocs() {
+        const termo = document.getElementById('busca-docs').value.toLowerCase().trim();
+        document.querySelectorAll('.doc-row').forEach(row => {
+            const bateTipo = (filtroTipoAtual === 'TODOS' || row.dataset.tipo === filtroTipoAtual);
+            const batePilar = (filtroPilarAtual === 'TODOS' || row.dataset.pilar === filtroPilarAtual);
+            const bateBusca = (!termo || row.dataset.busca.includes(termo));
+            row.style.display = (bateTipo && batePilar && bateBusca) ? '' : 'none';
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        if ("{{ aba_ativa }}" === "documentos") {
+            alternarDocumentos(true);
+        }
+    });
+</script>
 {% endblock %}

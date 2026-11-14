@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import (
@@ -8,15 +8,15 @@ from .forms import (
     QuestionarioESGForm,
     UsuarioFuncionarioForm,
     NovaConversaForm,
+    DocumentoForm,
 )
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from .models import Empresa, Funcionario, Conversa, Mensagem
+from .models import Empresa, Funcionario, Conversa, Mensagem, Documento
 from django.db import transaction
 from django.http import JsonResponse, HttpResponse, FileResponse, Http404
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 import os
 
@@ -450,13 +450,46 @@ def trocar_perfil(request):
 @login_required(login_url='entrar')
 def perfil(request):
     # Usa 'donos' porque a relação no models.py é ManyToMany
-    empresa = request.user.empresas.first() 
+    empresa = request.user.empresas.first()
+    aba_ativa = request.GET.get('aba', 'visao_geral')
+
+    if request.method == 'POST' and 'enviar_documento' in request.POST:
+        doc_form = DocumentoForm(request.POST, request.FILES)
+        if doc_form.is_valid() and empresa:
+            doc = doc_form.save(commit=False)
+            doc.empresa = empresa
+            doc.enviado_por = request.user
+            doc.save()
+            messages.success(request, "Documento registrado no repositório corporativo!")
+            return redirect('/perfil/?aba=documentos')
+        else:
+            aba_ativa = 'documentos'
+    else:
+        doc_form = DocumentoForm()
+
+    documentos = list(empresa.documentos.all().order_by('-data_envio')) if empresa else []
+
+    # Indicadores executivos de conformidade
+    total_documentos = len(documentos)
+    docs_vigentes = sum(1 for d in documentos if d.status == 'VIGENTE' and d.status_validade != 'vencido')
+    docs_alerta = sum(1 for d in documentos if d.status_validade in ('vencido', 'atencao'))
+    count_e = sum(1 for d in documentos if d.pilar == 'E')
+    count_s = sum(1 for d in documentos if d.pilar == 'S')
+    count_g = sum(1 for d in documentos if d.pilar == 'G')
 
     context = {
         'usuario': request.user,
         'empresa': empresa,
-        'total_funcionarios': 0,
-        'total_documentos': 0,
+        'aba_ativa': aba_ativa,
+        'doc_form': doc_form,
+        'documentos': documentos,
+        'total_funcionarios': Funcionario.objects.filter(empresa=empresa).count() if empresa else 0,
+        'total_documentos': total_documentos,
+        'docs_vigentes': docs_vigentes,
+        'docs_alerta': docs_alerta,
+        'count_e': count_e,
+        'count_s': count_s,
+        'count_g': count_g,
         'total_metas': 0,
         'total_comunidades': 0,
     }
@@ -708,3 +741,12 @@ def mensagem_anexo(request, pk):
     resposta['X-Content-Type-Options'] = 'nosniff'
     resposta['Cache-Control'] = 'private, max-age=3600'
     return resposta
+
+@login_required(login_url='entrar')
+def excluir_documento(request, doc_id):
+    empresa = request.user.empresas.first()
+    documento = get_object_or_404(Documento, id=doc_id, empresa=empresa)
+    documento.arquivo.delete(save=False)
+    documento.delete()
+    messages.success(request, "Documento removido do repositório.")
+    return redirect('/perfil/?aba=documentos')

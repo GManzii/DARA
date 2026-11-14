@@ -1404,3 +1404,317 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
 }
 @keyframes pulsar { 50% { opacity: 0.25; } }
 @media (prefers-reduced-motion: reduce) { .chat-gravando .ponto { animation: none; } }
+/* =========================================================
+   REPOSITÓRIO CORPORATIVO DE DOCUMENTOS ESG (PERFIL)
+   ========================================================= */
+#painel-documentos {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 48px;
+    display: none;
+}
+
+.docs-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.docs-topbar h2 {
+    color: #33482b;
+    font-size: 26px;
+    margin: 4px 0 2px;
+}
+
+.docs-topbar p {
+    color: #6b685f;
+    font-size: 14px;
+    margin: 0;
+}
+
+.docs-actions-top {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn-dara-outline {
+    background: #faf7f0;
+    color: #33482b;
+    border: 1.5px solid #33482b;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-dara-outline:hover {
+    background: #33482b;
+    color: #faf7f0;
+}
+
+.btn-dara-primary {
+    background: #c86428;
+    color: #ffffff;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.btn-dara-primary:hover {
+    opacity: 0.92;
+}
+
+/* KPIs de Conformidade */
+.docs-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.doc-kpi-card {
+    background: #faf7f0;
+    border-radius: 14px;
+    padding: 18px 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    border-left: 4px solid #33482b;
+}
+
+.doc-kpi-card.alerta {
+    border-left-color: #c86428;
+}
+
+.doc-kpi-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6b685f;
+    font-weight: 600;
+}
+
+.doc-kpi-value {
+    font-size: 26px;
+    font-weight: 700;
+    color: #33482b;
+    margin: 6px 0 4px;
+}
+
+.doc-kpi-sub {
+    font-size: 12px;
+    color: #7a766c;
+}
+
+/* Gaveta de Upload */
+.doc-upload-drawer {
+    background: #faf7f0;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e5dec9;
+    display: none;
+}
+
+.doc-upload-drawer.aberto {
+    display: block;
+}
+
+.doc-form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.doc-form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.doc-form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #33482b;
+    margin-bottom: 5px;
+}
+
+.doc-form-group input,
+.doc-form-group select,
+.doc-form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d5ccb8;
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+/* Barra de Busca e Filtros */
+.docs-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #e8e1cf;
+}
+
+.docs-search-box {
+    flex: 1;
+    min-width: 240px;
+    max-width: 360px;
+}
+
+.docs-search-box input {
+    width: 100%;
+    padding: 9px 14px;
+    border: 1px solid #d5ccb8;
+    border-radius: 20px;
+    background: #ffffff;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.docs-filter-group {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.doc-chip {
+    background: #ede6d6;
+    color: #33482b;
+    border: none;
+    padding: 6px 13px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.doc-chip.ativo {
+    background: #33482b;
+    color: #faf7f0;
+}
+
+/* Tabela Corporativa */
+.docs-table-wrap {
+    overflow-x: auto;
+}
+
+.docs-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.docs-table th {
+    padding: 12px 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: #6b685f;
+    border-bottom: 2px solid #e5dec9;
+}
+
+.docs-table td {
+    padding: 14px 10px;
+    border-bottom: 1px solid #ece5d3;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.docs-table tr:hover td {
+    background: rgba(51, 72, 43, 0.03);
+}
+
+.file-ext-badge {
+    display: inline-block;
+    background: #33482b;
+    color: #faf7f0;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 7px;
+    border-radius: 6px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.pilar-pill {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pilar-E { background: #e3f0e1; color: #264d20; }
+.pilar-S { background: #f9ebe2; color: #a84e18; }
+.pilar-G { background: #e6ebf2; color: #283e5c; }
+
+.validade-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.val-vigente { background: #e6f0e4; color: #2e5a27; }
+.val-atencao { background: #fff4e5; color: #b25e09; }
+.val-vencido { background: #fdecea; color: #b71c1c; }
+.val-permanente { background: #ede6d6; color: #555147; }
+
+.doc-row-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.doc-link-abrir {
+    color: #33482b;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.doc-link-baixar {
+    color: #c86428;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.doc-link-excluir {
+    color: #b71c1c;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+@media (max-width: 900px) {
+    .docs-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .doc-form-row-3,
+    .doc-form-row-2 {
+        grid-template-columns: 1fr;
+    }
+}
