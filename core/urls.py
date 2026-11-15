@@ -25,5 +25,6 @@ urlpatterns = [
     path('trocar-perfil/', views.trocar_perfil, name='trocar_perfil'),
     path('perfil/', views.perfil, name='perfil'),
     path('documentos/excluir/<int:doc_id>/', views.excluir_documento, name='excluir_documento'),
+    path('funcionarios/remover/<int:func_id>/', views.remover_funcionario, name='remover_funcionario'),
     path('pilares/', views.pilares, name='pilares'),
 ]

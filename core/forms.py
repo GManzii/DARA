@@ -207,3 +207,24 @@ class DocumentoForm(forms.ModelForm):
                 'placeholder': 'Descreva brevemente o objetivo, fornecedor ou meta ESG vinculada...'
             }),
         }
+class CadastroFuncionarioGestorForm(forms.Form):
+    nome_completo = forms.CharField(
+        max_length=150,
+        label="Nome Completo",
+        widget=forms.TextInput(attrs={'placeholder': 'Ex: Mariana Costa'})
+    )
+    email = forms.EmailField(
+        label="E-mail Corporativo / Login",
+        widget=forms.EmailInput(attrs={'placeholder': 'mariana@empresa.com'})
+    )
+    senha = forms.CharField(
+        label="Senha Provisória",
+        min_length=6,
+        widget=forms.PasswordInput(attrs={'placeholder': 'Mínimo de 6 caracteres'})
+    )
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email').strip().lower()
+        if User.objects.filter(username=email).exists():
+            raise forms.ValidationError("Este e-mail já está cadastrado na plataforma.")
+        return email

@@ -51,7 +51,7 @@
 
     <!-- 4. Lista de Atalhos e Métricas Dinâmicas -->
     <section class="card card-stats-list">
-        <a href="{% url 'area_funcionario' %}" class="stat-item">
+        <a href="javascript:void(0);" onclick="alternarPainel('funcionarios'); return false;" class="stat-item">
             <span class="stat-label">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5A6.5 6.5 0 0 1 21.5 20"/></svg>
                 Funcionários cadastrados
@@ -59,7 +59,7 @@
             <span class="stat-value">{{ total_funcionarios|default:0 }} &rarr;</span>
         </a>
 
-        <a href="javascript:void(0);" onclick="alternarDocumentos(true); return false;" class="stat-item">
+        <a href="javascript:void(0);" onclick="alternarPainel('documentos'); return false;" class="stat-item">
             <span class="stat-label">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
                 Documentos e relatórios
@@ -103,10 +103,10 @@
             <p>Centralize contratos, políticas internas, licenças e evidências auditáveis de práticas ESG.</p>
         </div>
         <div class="docs-actions-top">
-            <button type="button" class="btn-dara-outline" onclick="alternarDocumentos(false)">
+            <button type="button" class="btn-dara-outline" onclick="alternarPainel('resumo')">
                 &larr; Voltar ao Perfil
             </button>
-            <button type="button" class="btn-dara-primary" onclick="toggleDrawerUpload()">
+            <button type="button" class="btn-dara-primary" onclick="toggleDrawer('drawer-upload')">
                 + Novo Documento
             </button>
         </div>
@@ -142,7 +142,7 @@
     <div id="drawer-upload" class="doc-upload-drawer {% if doc_form.errors %}aberto{% endif %}">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h3 style="color: #33482b; margin: 0;">Registrar Nova Evidência ou Contrato</h3>
-            <button type="button" onclick="toggleDrawerUpload()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #6b685f;">&times;</button>
+            <button type="button" onclick="toggleDrawer('drawer-upload')" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #6b685f;">&times;</button>
         </div>
 
         <form method="POST" enctype="multipart/form-data">
@@ -191,7 +191,7 @@
 
             <div style="display: flex; gap: 10px;">
                 <button type="submit" class="btn-dara-primary">Salvar no Repositório</button>
-                <button type="button" class="btn-dara-outline" onclick="toggleDrawerUpload()">Cancelar</button>
+                <button type="button" class="btn-dara-outline" onclick="toggleDrawer('drawer-upload')">Cancelar</button>
             </div>
         </form>
     </div>
@@ -269,7 +269,7 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <small style="color: #6b685f; display: block;">{{ doc.data_envio|date:"d/m/Y" }} • {{ doc.tamanho_formatado }}</small>
+                                    <small style="color: #6b685f; display: block;">{{ doc.data_envio|date:"d/m/Y" }} &bull; {{ doc.tamanho_formatado }}</small>
                                     <small style="color: #8c877c;">Por {{ doc.enviado_por.username|default:"Sistema" }}</small>
                                 </td>
                                 <td>
@@ -288,7 +288,183 @@
             <div style="text-align: center; padding: 36px 16px;">
                 <p style="color: #33482b; font-weight: 600; font-size: 16px; margin-bottom: 6px;">Nenhum documento ou contrato registrado</p>
                 <p style="color: #6b685f; font-size: 14px; margin-bottom: 18px;">Clique em <strong>+ Novo Documento</strong> acima para adicionar políticas, licenças ou evidências ESG.</p>
-                <button type="button" class="btn-dara-primary" onclick="toggleDrawerUpload()">+ Adicionar Primeiro Documento</button>
+                <button type="button" class="btn-dara-primary" onclick="toggleDrawer('drawer-upload')">+ Adicionar Primeiro Documento</button>
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+
+<!-- PAINEL 3: GESTÃO CORPORATIVA DE FUNCIONÁRIOS -->
+<div id="painel-funcionarios">
+
+    <div class="docs-topbar">
+        <div>
+            <span class="eyebrow">Pilar Social &amp; Engajamento</span>
+            <h2>Funcionários Cadastrados</h2>
+            <p>Gerencie o acesso da equipe, acompanhe adesões e compartilhe o código de convite da empresa.</p>
+        </div>
+        <div class="docs-actions-top">
+            <button type="button" class="btn-dara-outline" onclick="alternarPainel('resumo')">
+                &larr; Voltar ao Perfil
+            </button>
+            <button type="button" class="btn-dara-primary" onclick="toggleDrawer('drawer-funcionario')">
+                + Novo Funcionário
+            </button>
+        </div>
+    </div>
+
+    <!-- Banner de Código de Convite da Empresa -->
+    {% if empresa and empresa.codigo_convite %}
+    <div class="invite-banner-card">
+        <div class="invite-banner-info">
+            <h3>Código de Convite Corporativo</h3>
+            <p>Compartilhe este código para que seus colaboradores criem suas próprias contas vinculadas à <strong>{{ empresa.nome_empresa }}</strong>.</p>
+        </div>
+        <div class="invite-code-box">
+            <span class="invite-code-text" id="codigo-convite-texto">{{ empresa.codigo_convite }}</span>
+            <button type="button" class="btn-copy-code" id="btn-copiar-convite" onclick="copiarCodigoConvite()">
+                Copiar Código
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- KPIs da Equipe -->
+    <div class="docs-kpi-grid">
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Equipe Cadastrada</span>
+            <div class="doc-kpi-value">{{ total_funcionarios }}</div>
+            <span class="doc-kpi-sub">Colaboradores vinculados</span>
+        </div>
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Contas Ativas</span>
+            <div class="doc-kpi-value">{{ funcionarios_ativos }}</div>
+            <span class="doc-kpi-sub">Com acesso liberado</span>
+        </div>
+        <div class="doc-kpi-card alerta">
+            <span class="doc-kpi-label">Novos (30 dias)</span>
+            <div class="doc-kpi-value">{{ funcionarios_recentes }}</div>
+            <span class="doc-kpi-sub">Adesões recentes</span>
+        </div>
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Porte Declarado</span>
+            <div class="doc-kpi-value" style="font-size: 18px; padding-top: 6px;">
+                {{ empresa.get_numero_funcionarios_display|default:"—" }}
+            </div>
+            <span class="doc-kpi-sub">Faixa operacional</span>
+        </div>
+    </div>
+
+    <!-- Gaveta de Cadastro Direto de Funcionário -->
+    <div id="drawer-funcionario" class="doc-upload-drawer {% if func_form.errors %}aberto{% endif %}">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="color: #33482b; margin: 0;">Cadastrar Novo Colaborador</h3>
+            <button type="button" onclick="toggleDrawer('drawer-funcionario')" style="background: none; border: none; font-size: 20px; cursor: pointer; color: #6b685f;">&times;</button>
+        </div>
+
+        {% if func_form.errors %}
+            <div style="background: #fdecea; color: #b71c1c; padding: 10px 14px; border-radius: 8px; margin-bottom: 14px; font-size: 13px;">
+                {{ func_form.errors }}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="cadastrar_funcionario" value="1">
+
+            <div class="doc-form-row-2">
+                <div class="doc-form-group">
+                    <label for="id_nome_completo">Nome Completo *</label>
+                    {{ func_form.nome_completo }}
+                </div>
+                <div class="doc-form-group">
+                    <label for="id_email">E-mail de Acesso *</label>
+                    {{ func_form.email }}
+                </div>
+                <div class="doc-form-group">
+                    <label for="id_senha">Senha Provisória *</label>
+                    {{ func_form.senha }}
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 16px;">
+                <button type="submit" class="btn-dara-primary">Criar Acesso do Colaborador</button>
+                <button type="button" class="btn-dara-outline" onclick="toggleDrawer('drawer-funcionario')">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Card de Listagem da Equipe -->
+    <section class="card">
+        <div class="docs-toolbar">
+            <div class="docs-search-box">
+                <input type="text" id="busca-funcionarios" onkeyup="filtrarFuncionarios()" placeholder="Buscar colaborador por nome ou e-mail...">
+            </div>
+            <div style="font-size: 13px; color: #6b685f;">
+                Total exibido: <strong>{{ total_funcionarios }}</strong> colaborador(es)
+            </div>
+        </div>
+
+        {% if funcionarios %}
+            <div class="docs-table-wrap">
+                <table class="docs-table">
+                    <thead>
+                        <tr>
+                            <th>Colaborador</th>
+                            <th>Data de Cadastro</th>
+                            <th>Último Acesso</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for func in funcionarios %}
+                            <tr class="func-row"
+                                data-busca="{{ func.usuario.get_full_name|lower }} {{ func.usuario.email|lower }}">
+                                <td>
+                                    <div class="func-user-cell">
+                                        <div class="func-avatar-mini">
+                                            {{ func.usuario.first_name|default:func.usuario.username|slice:":1"|upper }}
+                                        </div>
+                                        <div>
+                                            <strong style="color: #2c2c2c;">{{ func.usuario.get_full_name|default:func.usuario.username }}</strong><br>
+                                            <small style="color: #6b685f;">{{ func.usuario.email }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ func.data_cadastro|date:"d/m/Y" }}</td>
+                                <td>
+                                    {% if func.usuario.last_login %}
+                                        {{ func.usuario.last_login|date:"d/m/Y H:i" }}
+                                    {% else %}
+                                        <small style="color: #8c877c;">Aguardando 1º acesso</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if func.usuario.is_active %}
+                                        <span class="validade-badge val-vigente">Ativo</span>
+                                    {% else %}
+                                        <span class="validade-badge val-vencido">Inativo</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'remover_funcionario' func.id %}"
+                                       onclick="return confirm('Deseja realmente remover o acesso deste colaborador?');"
+                                       class="doc-link-excluir">
+                                        Remover acesso
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 36px 16px;">
+                <p style="color: #33482b; font-weight: 600; font-size: 16px; margin-bottom: 6px;">Nenhum funcionário cadastrado ainda</p>
+                <p style="color: #6b685f; font-size: 14px; margin-bottom: 18px;">Cadastre diretamente pelo botão acima ou envie o código <strong>{{ empresa.codigo_convite }}</strong> para sua equipe.</p>
+                <button type="button" class="btn-dara-primary" onclick="toggleDrawer('drawer-funcionario')">+ Cadastrar Primeiro Colaborador</button>
             </div>
         {% endif %}
     </section>
@@ -299,13 +475,23 @@
     let filtroTipoAtual = 'TODOS';
     let filtroPilarAtual = 'TODOS';
 
-    function alternarDocumentos(mostrarDocs) {
-        document.getElementById('painel-resumo').style.display = mostrarDocs ? 'none' : '';
-        document.getElementById('painel-documentos').style.display = mostrarDocs ? 'block' : 'none';
+    function alternarPainel(destino) {
+        document.getElementById('painel-resumo').style.display = (destino === 'resumo') ? '' : 'none';
+        document.getElementById('painel-documentos').style.display = (destino === 'documentos') ? 'block' : 'none';
+        document.getElementById('painel-funcionarios').style.display = (destino === 'funcionarios') ? 'block' : 'none';
     }
 
-    function toggleDrawerUpload() {
-        document.getElementById('drawer-upload').classList.toggle('aberto');
+    function toggleDrawer(drawerId) {
+        document.getElementById(drawerId).classList.toggle('aberto');
+    }
+
+    function copiarCodigoConvite() {
+        const codigo = document.getElementById('codigo-convite-texto').innerText.trim();
+        const btn = document.getElementById('btn-copiar-convite');
+        navigator.clipboard.writeText(codigo).then(() => {
+            btn.innerText = 'Copiado!';
+            setTimeout(() => { btn.innerText = 'Copiar Código'; }, 2000);
+        });
     }
 
     function selecionarTipo(tipo, btn) {
@@ -332,9 +518,17 @@
         });
     }
 
+    function filtrarFuncionarios() {
+        const termo = document.getElementById('busca-funcionarios').value.toLowerCase().trim();
+        document.querySelectorAll('.func-row').forEach(row => {
+            row.style.display = (!termo || row.dataset.busca.includes(termo)) ? '' : 'none';
+        });
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
-        if ("{{ aba_ativa }}" === "documentos") {
-            alternarDocumentos(true);
+        const aba = "{{ aba_ativa }}";
+        if (aba === "documentos" || aba === "funcionarios") {
+            alternarPainel(aba);
         }
     });
 </script>
