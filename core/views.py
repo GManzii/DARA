@@ -9,27 +9,19 @@ from .forms import (
     UsuarioDonoForm,
     QuestionarioESGForm,
     UsuarioFuncionarioForm,
-<<<<<<< HEAD
     DocumentoForm,
-    CadastroFuncionarioGestorForm
-=======
+    CadastroFuncionarioGestorForm,
     NovaConversaForm,
-    DocumentoForm,
->>>>>>> 5301cb9d5b783ba3902b2f029765da0cd254fc57
 )
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .models import Empresa, Funcionario, Conversa, Mensagem, Documento
 from django.db import transaction
-from django.http import JsonResponse, HttpResponse, FileResponse, Http404
+from django.http import JsonResponse, HttpResponse, FileResponse
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
-<<<<<<< HEAD
-=======
-from django.utils import timezone
 import os
 
->>>>>>> 5301cb9d5b783ba3902b2f029765da0cd254fc57
 class LoginPersonalizadoView(LoginView):
 
     def get_success_url(self):
@@ -545,8 +537,6 @@ def perfil(request):
     }
     return render(request, 'core/perfil.html', context)
 
-<<<<<<< HEAD
-=======
 # ---------------------------------------------------------------------------
 # Conversas
 # ---------------------------------------------------------------------------
@@ -794,7 +784,6 @@ def mensagem_anexo(request, pk):
     resposta['Cache-Control'] = 'private, max-age=3600'
     return resposta
 
->>>>>>> 5301cb9d5b783ba3902b2f029765da0cd254fc57
 @login_required(login_url='entrar')
 def excluir_documento(request, doc_id):
     empresa = request.user.empresas.first()
@@ -803,7 +792,6 @@ def excluir_documento(request, doc_id):
     documento.delete()
     messages.success(request, "Documento removido do repositório.")
     return redirect('/perfil/?aba=documentos')
-<<<<<<< HEAD
 
 
 @login_required(login_url='entrar')
@@ -814,5 +802,3 @@ def remover_funcionario(request, func_id):
     funcionario.usuario.delete()
     messages.success(request, f"Acesso de {nome} removido da equipe.")
     return redirect('/perfil/?aba=funcionarios')
-=======
->>>>>>> 5301cb9d5b783ba3902b2f029765da0cd254fc57

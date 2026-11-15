@@ -1718,7 +1718,6 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
         grid-template-columns: 1fr;
     }
 }
-<<<<<<< HEAD
 /* =========================================================
    PAINEL CORPORATIVO DE FUNCIONÁRIOS (PERFIL)
    ========================================================= */
@@ -1809,5 +1808,3 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
     flex-shrink: 0;
     border: 1px solid #d5ccb8;
 }
-=======
->>>>>>> 5301cb9d5b783ba3902b2f029765da0cd254fc57
