@@ -1,0 +1,50 @@
+{% extends "core/base.html" %}
+
+{% block title %}Nova conversa{% endblock %}
+
+{% block topbar %}
+    {% url 'conversas' as url_conversas %}
+    {% include "core/_topbar_voltar.html" with titulo="Nova conversa" voltar=url_conversas %}
+{% endblock %}
+
+{% block content %}
+<div class="split">
+    <section class="card hero">
+        <span class="eyebrow">Equipe</span>
+        <h1>Criar chat</h1>
+        <p>Dê um nome ao chat e escolha quem vai participar.</p>
+    </section>
+
+    <section class="card">
+        {% if sem_candidatos %}
+            <p>Sua empresa ainda não tem funcionários cadastrados. Peça para eles se cadastrarem com o código de convite <strong>{{ empresa.codigo_convite }}</strong> e depois volte aqui.</p>
+        {% else %}
+        <form method="post" class="form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            {% with campo=form.nome %}
+                {% include "core/_campo.html" %}
+            {% endwith %}
+
+            <div class="field">
+                <label>{{ form.integrantes.label }}</label>
+                <ul class="check-list">
+                    {% for opcao in form.integrantes %}
+                        <li>
+                            <label class="check-item" for="{{ opcao.id_for_label }}">
+                                {{ opcao.tag }}
+                                <span>{{ opcao.choice_label }}</span>
+                            </label>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {{ form.integrantes.errors }}
+            </div>
+
+            <button type="submit" class="btn btn-laranja btn-bloco">Criar chat</button>
+        </form>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

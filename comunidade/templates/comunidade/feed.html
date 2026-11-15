@@ -1,0 +1,42 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Comunidade{% endblock %}
+
+{% block app_class %}app-comunidade{% endblock %}
+
+{% block content %}
+
+<div class="comunidade-container">
+
+    <!-- Coluna esquerda: perfil -->
+    <aside class="comunidade-perfil">
+        <h2>Meu perfil</h2>
+        <p>Informações do colaborador</p>
+    </aside>
+
+    <!-- Coluna central: feed -->
+    <main class="comunidade-feed">
+        <h1>Comunidade DARA</h1>
+
+        <div class="feed-publicacoes">
+            <p>As publicações aparecerão aqui.</p>
+        </div>
+    </main>
+
+    <!-- Coluna direita: destaques -->
+    <aside class="comunidade-destaques">
+        <h2>Comunidade em destaque</h2>
+
+        <section>
+            <h3>Empresas participantes</h3>
+        </section>
+
+        <section>
+            <h3>Discussões recentes</h3>
+        </section>
+    </aside>
+
+</div>
+
+{% endblock %}

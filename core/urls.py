@@ -27,4 +27,9 @@ urlpatterns = [
     path('documentos/excluir/<int:doc_id>/', views.excluir_documento, name='excluir_documento'),
     path('funcionarios/remover/<int:func_id>/', views.remover_funcionario, name='remover_funcionario'),
     path('pilares/', views.pilares, name='pilares'),
+    path('conversas/', views.conversas, name='conversas'),
+    path('conversas/nova/', views.nova_conversa, name='nova_conversa'),
+    path('conversas/<int:pk>/', views.conversa_detalhe, name='conversa_detalhe'),
+    path('conversas/<int:pk>/integrantes/', views.conversa_integrantes, name='conversa_integrantes'),
+    path('conversas/anexo/<int:pk>/', views.mensagem_anexo, name='mensagem_anexo'),
 ]

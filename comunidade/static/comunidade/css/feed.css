@@ -1,0 +1,66 @@
+/* =====================================
+   COMUNIDADE DARA
+===================================== */
+@import url("/static/comunidade/css/feed.css");
+
+.app-comunidade {
+    --largura-app: 1440px;
+}
+/* =====================================
+   ESTRUTURA PRINCIPAL
+===================================== */
+
+.comunidade-container {
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto;
+
+    display: grid;
+    grid-template-columns: 260px minmax(0, 1fr) 280px;
+    gap: 24px;
+
+    align-items: start;
+}
+
+.comunidade-perfil,
+.comunidade-feed,
+.comunidade-destaques {
+    background: var(--creme);
+    border-radius: var(--raio-medio);
+    padding: 24px;
+    box-shadow: var(--sombra);
+}
+
+.comunidade-feed {
+    min-width: 0;
+}
+
+.comunidade-destaques section {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--linha);
+}
+
+/* =====================================
+   RESPONSIVIDADE
+===================================== */
+
+@media (max-width: 1000px) {
+    .comunidade-container {
+        grid-template-columns: 220px minmax(0, 1fr);
+    }
+
+    .comunidade-destaques {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 650px) {
+    .comunidade-container {
+        grid-template-columns: 1fr;
+    }
+
+    .comunidade-perfil,
+    .comunidade-destaques {
+        grid-column: auto;
+    }
+}
