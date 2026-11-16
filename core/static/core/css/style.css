@@ -28,7 +28,7 @@
     --raio-medio: 20px;
     --raio-pill: 999px;
     --sombra: 0 10px 30px rgba(47, 66, 40, 0.10);
-    --largura-app: 560px;
+    --largura-app: 100%;
     --barra: 76px;
 
     /* cor do pilar ativo (muda nas telas de pilar) */
@@ -80,7 +80,8 @@ img { max-width: 100%; display: block; }
    -------------------------------------------------------------------------- */
 .app {
     position: relative;
-    max-width: var(--largura-app);
+    width: 100%;
+    max-width: none;
     min-height: 100vh;
     margin: 0 auto;
     background: var(--areia);
