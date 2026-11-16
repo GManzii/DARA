@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -7,17 +9,17 @@ from .forms import (
     UsuarioDonoForm,
     QuestionarioESGForm,
     UsuarioFuncionarioForm,
-    NovaConversaForm,
     DocumentoForm,
+    CadastroFuncionarioGestorForm,
+    NovaConversaForm,
 )
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from .models import Empresa, Funcionario, Conversa, Mensagem, Documento
 from django.db import transaction
-from django.http import JsonResponse, HttpResponse, FileResponse, Http404
+from django.http import JsonResponse, HttpResponse, FileResponse
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
-from django.utils import timezone
 import os
 
 class LoginPersonalizadoView(LoginView):
@@ -449,10 +451,13 @@ def trocar_perfil(request):
 
 @login_required(login_url='entrar')
 def perfil(request):
-    # Usa 'donos' porque a relação no models.py é ManyToMany
     empresa = request.user.empresas.first()
     aba_ativa = request.GET.get('aba', 'visao_geral')
 
+    doc_form = DocumentoForm()
+    func_form = CadastroFuncionarioGestorForm()
+
+    # 1. Envio de Documento ESG
     if request.method == 'POST' and 'enviar_documento' in request.POST:
         doc_form = DocumentoForm(request.POST, request.FILES)
         if doc_form.is_valid() and empresa:
@@ -464,12 +469,38 @@ def perfil(request):
             return redirect('/perfil/?aba=documentos')
         else:
             aba_ativa = 'documentos'
-    else:
-        doc_form = DocumentoForm()
 
+    # 2. Cadastro Direto de Funcionário pelo Gestor
+    elif request.method == 'POST' and 'cadastrar_funcionario' in request.POST:
+        func_form = CadastroFuncionarioGestorForm(request.POST)
+        if func_form.is_valid() and empresa:
+            nome = func_form.cleaned_data['nome_completo'].strip()
+            partes_nome = nome.split(' ', 1)
+            primeiro_nome = partes_nome[0]
+            sobrenome = partes_nome[1] if len(partes_nome) > 1 else ''
+            email = func_form.cleaned_data['email']
+            senha = func_form.cleaned_data['senha']
+
+            with transaction.atomic():
+                novo_usuario = User.objects.create_user(
+                    username=email,
+                    email=email,
+                    password=senha,
+                    first_name=primeiro_nome,
+                    last_name=sobrenome
+                )
+                Funcionario.objects.create(
+                    usuario=novo_usuario,
+                    empresa=empresa
+                )
+
+            messages.success(request, f"Colaborador(a) {nome} cadastrado(a) com sucesso!")
+            return redirect('/perfil/?aba=funcionarios')
+        else:
+            aba_ativa = 'funcionarios'
+
+    # Dados e KPIs de Documentos
     documentos = list(empresa.documentos.all().order_by('-data_envio')) if empresa else []
-
-    # Indicadores executivos de conformidade
     total_documentos = len(documentos)
     docs_vigentes = sum(1 for d in documentos if d.status == 'VIGENTE' and d.status_validade != 'vencido')
     docs_alerta = sum(1 for d in documentos if d.status_validade in ('vencido', 'atencao'))
@@ -477,19 +508,30 @@ def perfil(request):
     count_s = sum(1 for d in documentos if d.pilar == 'S')
     count_g = sum(1 for d in documentos if d.pilar == 'G')
 
+    # Dados e KPIs de Funcionários
+    funcionarios = list(empresa.funcionarios.select_related('usuario').all()) if empresa else []
+    total_funcionarios = len(funcionarios)
+    funcionarios_ativos = sum(1 for f in funcionarios if f.usuario.is_active)
+    limite_30_dias = timezone.now() - timedelta(days=30)
+    funcionarios_recentes = sum(1 for f in funcionarios if f.data_cadastro >= limite_30_dias)
+
     context = {
         'usuario': request.user,
         'empresa': empresa,
         'aba_ativa': aba_ativa,
         'doc_form': doc_form,
         'documentos': documentos,
-        'total_funcionarios': Funcionario.objects.filter(empresa=empresa).count() if empresa else 0,
         'total_documentos': total_documentos,
         'docs_vigentes': docs_vigentes,
         'docs_alerta': docs_alerta,
         'count_e': count_e,
         'count_s': count_s,
         'count_g': count_g,
+        'func_form': func_form,
+        'funcionarios': funcionarios,
+        'total_funcionarios': total_funcionarios,
+        'funcionarios_ativos': funcionarios_ativos,
+        'funcionarios_recentes': funcionarios_recentes,
         'total_metas': 0,
         'total_comunidades': 0,
     }
@@ -750,3 +792,13 @@ def excluir_documento(request, doc_id):
     documento.delete()
     messages.success(request, "Documento removido do repositório.")
     return redirect('/perfil/?aba=documentos')
+
+
+@login_required(login_url='entrar')
+def remover_funcionario(request, func_id):
+    empresa = request.user.empresas.first()
+    funcionario = get_object_or_404(Funcionario, id=func_id, empresa=empresa)
+    nome = funcionario.usuario.get_full_name() or funcionario.usuario.username
+    funcionario.usuario.delete()
+    messages.success(request, f"Acesso de {nome} removido da equipe.")
+    return redirect('/perfil/?aba=funcionarios')
