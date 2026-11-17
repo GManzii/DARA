@@ -1,0 +1,16 @@
+{% load static %}
+<section class="pedro-card" aria-labelledby="pedroCardTitulo">
+    <div class="pedro-card-texto">
+        <span>Olá, eu sou o Pedro!</span>
+        <h2 id="pedroCardTitulo">Como posso ajudar hoje?</h2>
+    </div>
+    <img src="{% static 'core/img/pedro.svg' %}" alt="" class="pedro-card-img">
+
+    <form class="pedro-card-form" method="get" action="{% url 'pedro_chat' %}">
+        <label for="pedroCardInput" class="visually-hidden">Pergunte ao Pedro</label>
+        <input type="text" id="pedroCardInput" name="q" placeholder="Pergunte a PEDRO..." maxlength="1000" autocomplete="off">
+        <button type="submit" aria-label="Enviar pergunta ao Pedro">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+        </button>
+    </form>
+</section>

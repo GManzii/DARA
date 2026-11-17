@@ -21,10 +21,20 @@ from django.http import JsonResponse, HttpResponse, FileResponse
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
 import os
+from django.views.decorators.http import require_POST
+from django.core.cache import cache
+import json
+
+from . import pedro
 
 class LoginPersonalizadoView(LoginView):
 
     def get_success_url(self):
+
+        # Volta para a página que pediu o login (ex.: o chat do Pedro)
+        destino = self.get_redirect_url()
+        if destino:
+            return destino
 
         usuario = self.request.user
 
@@ -802,3 +812,84 @@ def remover_funcionario(request, func_id):
     funcionario.usuario.delete()
     messages.success(request, f"Acesso de {nome} removido da equipe.")
     return redirect('/perfil/?aba=funcionarios')
+
+
+# ---------------------------------------------------------------------------
+# PEDRO — assistente ESG (Gemini)
+# ---------------------------------------------------------------------------
+
+PEDRO_MAX_CARACTERES = 1000      # tamanho máximo de uma pergunta
+PEDRO_MAX_HISTORICO = 20         # mensagens guardadas na sessão / enviadas ao Gemini
+PEDRO_LIMITE_PERGUNTAS = 15      # perguntas por usuário...
+PEDRO_JANELA_SEGUNDOS = 5 * 60   # ...a cada 5 minutos
+
+
+@login_required(login_url='entrar')
+def pedro_chat(request):
+    # Pergunta vinda do card "Como posso ajudar hoje?" (enviada automaticamente)
+    pergunta_inicial = request.GET.get('q', '').strip()[:PEDRO_MAX_CARACTERES]
+
+    if hasattr(request.user, 'perfil_funcionario'):
+        voltar = reverse('area_funcionario')
+    else:
+        voltar = reverse('home')
+
+    return render(request, 'core/pedro_chat.html', {
+        'historico': request.session.get('pedro_historico', []),
+        'pergunta_inicial': pergunta_inicial,
+        'voltar': voltar,
+    })
+
+
+@require_POST
+def pedro_perguntar(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'erro': 'Entre na sua conta para falar com o Pedro.'}, status=401)
+
+    try:
+        mensagem = json.loads(request.body or b'{}').get('mensagem', '')
+    except (ValueError, AttributeError):
+        mensagem = ''
+    mensagem = str(mensagem).strip()
+
+    if not mensagem:
+        return JsonResponse({'erro': 'Escreva uma pergunta para o Pedro.'}, status=400)
+    if len(mensagem) > PEDRO_MAX_CARACTERES:
+        return JsonResponse(
+            {'erro': f'Sua pergunta é muito longa (máximo de {PEDRO_MAX_CARACTERES} caracteres).'},
+            status=400,
+        )
+
+    # Limite simples de perguntas para não estourar a cota do Gemini
+    chave_limite = f'pedro_limite_{request.user.pk}'
+    if cache.get(chave_limite, 0) >= PEDRO_LIMITE_PERGUNTAS:
+        return JsonResponse(
+            {'erro': 'Você fez muitas perguntas seguidas. Respire um pouco e tente de novo em alguns minutos. 🌱'},
+            status=429,
+        )
+    cache.add(chave_limite, 0, PEDRO_JANELA_SEGUNDOS)
+    cache.incr(chave_limite)
+
+    historico = request.session.get('pedro_historico', [])
+    agora = timezone.now().isoformat()
+    pergunta = {'autor': 'usuario', 'texto': mensagem, 'hora': agora}
+
+    try:
+        resposta = pedro.perguntar(
+            historico[-(PEDRO_MAX_HISTORICO - 1):] + [pergunta],
+            pedro.montar_contexto(request.user),
+        )
+    except pedro.PedroIndisponivel as erro:
+        return JsonResponse({'erro': str(erro)}, status=503)
+
+    resposta_msg = {'autor': 'pedro', 'texto': resposta, 'hora': timezone.now().isoformat()}
+    request.session['pedro_historico'] = (historico + [pergunta, resposta_msg])[-PEDRO_MAX_HISTORICO:]
+
+    return JsonResponse({'resposta': resposta, 'hora': resposta_msg['hora']})
+
+
+@require_POST
+@login_required(login_url='entrar')
+def pedro_limpar(request):
+    request.session.pop('pedro_historico', None)
+    return redirect('pedro_chat')

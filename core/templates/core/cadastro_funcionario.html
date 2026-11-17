@@ -1,84 +1,50 @@
-
 {% extends "core/base.html" %}
 
 {% block title %}Cadastro de colaborador{% endblock %}
+{% block app_class %}cadastro{% endblock %}
+{% block bottom_nav %}{% endblock %}
+
+{% block topbar %}
+    <header class="cadastro-top">
+        <a href="{% url 'home' %}" class="login-voltar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+            Voltar
+        </a>
+        <span class="eyebrow">Faça parte da DARA</span>
+        <h1>Sua equipe mais sustentável começa com você.</h1>
+        <p>Preencha seus dados e informe o código de convite fornecido pela sua empresa para acessar a plataforma.</p>
+    </header>
+{% endblock %}
 
 {% block content %}
+    <section class="cadastro-card">
+        <div class="cadastro-card-head">
+            <h2>Cadastro</h2>
+            <span>Colaborador</span>
+        </div>
 
-<section class="card cadastro-funcionario">
+        <form method="POST" class="form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
 
-    <span class="eyebrow">Faça parte da DARA</span>
+            {% include "core/_campo.html" with campo=form.nome_completo %}
+            {% include "core/_campo.html" with campo=form.email rotulo="E-mail" %}
+            {% include "core/_campo.html" with campo=form.senha %}
+            {% include "core/_campo.html" with campo=form.confirmar_senha %}
 
-    <h1>Cadastro de colaborador</h1>
-
-    <p>
-        Preencha seus dados e informe o código de convite
-        fornecido pela sua empresa para acessar a plataforma.
-    </p>
-
-    <form method="POST">
-        {% csrf_token %}
-
-        {% if form.non_field_errors %}
-            <div class="alert alert-error">
-                {{ form.non_field_errors }}
+            <div class="field">
+                <label for="{{ form.codigo_convite.id_for_label }}">{{ form.codigo_convite.label }}</label>
+                {{ form.codigo_convite }}
+                <span class="helptext">Solicite o código de convite ao responsável pela sua empresa.</span>
+                {{ form.codigo_convite.errors }}
             </div>
-        {% endif %}
 
-        <div class="form-group">
-            {{ form.nome_completo.label_tag }}
-            {{ form.nome_completo }}
-            {% for erro in form.nome_completo.errors %}
-                <small class="field-error">{{ erro }}</small>
-            {% endfor %}
-        </div>
+            <button type="submit" class="btn btn-bloco btn-cadastro">
+                Criar minha conta
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+        </form>
+    </section>
 
-        <div class="form-group">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-            {% for erro in form.email.errors %}
-                <small class="field-error">{{ erro }}</small>
-            {% endfor %}
-        </div>
-
-        <div class="form-group">
-            {{ form.senha.label_tag }}
-            {{ form.senha }}
-            {% for erro in form.senha.errors %}
-                <small class="field-error">{{ erro }}</small>
-            {% endfor %}
-        </div>
-
-        <div class="form-group">
-            {{ form.confirmar_senha.label_tag }}
-            {{ form.confirmar_senha }}
-            {% for erro in form.confirmar_senha.errors %}
-                <small class="field-error">{{ erro }}</small>
-            {% endfor %}
-        </div>
-
-        <div class="form-group">
-            {{ form.codigo_convite.label_tag }}
-            {{ form.codigo_convite }}
-            {% for erro in form.codigo_convite.errors %}
-                <small class="field-error">{{ erro }}</small>
-            {% endfor %}
-            <small>
-                Solicite o código de convite ao responsável pela sua empresa.
-            </small>
-        </div>
-
-        <button type="submit" class="btn btn-bloco">
-            Criar minha conta
-        </button>
-
-    </form>
-
-    <div class="form-footer">
-        Já possui uma conta?
-        <a href="{% url 'entrar' %}">Entrar</a>
-    </div>
-
-</section>
-
+    <p class="form-footer">Já tem conta? <a href="{% url 'entrar' %}">Entrar</a></p>
 {% endblock %}

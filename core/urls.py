@@ -32,4 +32,7 @@ urlpatterns = [
     path('conversas/<int:pk>/', views.conversa_detalhe, name='conversa_detalhe'),
     path('conversas/<int:pk>/integrantes/', views.conversa_integrantes, name='conversa_integrantes'),
     path('conversas/anexo/<int:pk>/', views.mensagem_anexo, name='mensagem_anexo'),
+    path('pedro/', views.pedro_chat, name='pedro_chat'),
+    path('pedro/perguntar/', views.pedro_perguntar, name='pedro_perguntar'),
+    path('pedro/limpar/', views.pedro_limpar, name='pedro_limpar'),
 ]

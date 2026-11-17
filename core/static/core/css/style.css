@@ -563,6 +563,7 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
 }
 
 .field .helptext { font-size: 0.8rem; color: var(--texto-suave); }
+.cadastro-card .field .helptext { color: var(--texto); opacity: 0.8; }
 
 .errorlist {
     list-style: none;
@@ -1808,4 +1809,277 @@ body.menu-aberto .drawer-backdrop { opacity: 1; pointer-events: auto; }
     justify-content: center;
     flex-shrink: 0;
     border: 1px solid #d5ccb8;
+}
+
+/* =========================================
+   12. Pedro — assistente ESG
+========================================= */
+:root {
+    --pedro-azul: #3c58b3;
+    --pedro-verde: #5b7f3a;
+    --pedro-oliva: #8a8f55;
+    --pedro-oliva-claro: #aeb072;
+    --pedro-lilas: #959dcc;
+}
+
+/* Card "Como posso ajudar hoje?" (Início e área do colaborador) */
+.pedro-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 12px;
+    padding: 24px 22px 22px;
+    border-radius: var(--raio-card);
+    background: var(--pedro-oliva-claro);
+    overflow: hidden;
+}
+.pedro-card-texto span {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--creme);
+}
+.pedro-card-texto h2 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--texto);
+    max-width: 12ch;
+}
+.pedro-card-img {
+    width: clamp(110px, 30vw, 170px);
+    margin: -8px -4px -18px 0;
+    align-self: start;
+    animation: pedro-flutua 4s ease-in-out infinite;
+}
+.pedro-card-form {
+    grid-column: 1 / -1;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    padding: 6px 6px 6px 22px;
+    border-radius: var(--raio-pill);
+    background: var(--creme);
+}
+.pedro-card-form input,
+.pedro-compositor input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font-size: 1rem;
+    color: var(--texto);
+    outline: none;
+}
+.pedro-card-form input { padding: 12px 0; }
+.pedro-card-form input::placeholder { color: var(--texto-suave); }
+.pedro-card-form button {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--social);
+    cursor: pointer;
+}
+.pedro-card-form button:hover { background: var(--creme-2); }
+.pedro-card-form button svg { width: 26px; height: 26px; }
+
+/* Tela de chat */
+.app.pedro-app {
+    background: linear-gradient(180deg, #f8f1dc 0%, #e8dfbf 100%);
+}
+.app.pedro-app .app-main {
+    padding: 20px 20px 0;
+    gap: 0;
+}
+
+.pedro-topo {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: #f6efdb;
+    border-bottom: 1px solid var(--linha);
+    color: var(--texto);
+}
+.pedro-topo-btn {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+}
+.pedro-topo-btn:hover { background: rgba(47, 66, 40, 0.08); }
+.pedro-topo-btn svg { width: 24px; height: 24px; }
+.pedro-topo-id {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.pedro-topo-avatar { width: 64px; height: 64px; }
+.pedro-topo-id strong {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--pedro-azul);
+}
+.pedro-topo-id small {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--pedro-verde);
+}
+
+.pedro-menu { position: relative; }
+.pedro-menu-lista {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 200px;
+    padding: 6px;
+    border-radius: 16px;
+    background: var(--creme);
+    box-shadow: var(--sombra);
+}
+.pedro-menu-lista form { margin: 0; }
+.pedro-menu-lista button,
+.pedro-menu-lista a {
+    display: block;
+    width: 100%;
+    padding: 12px 14px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    font-size: 0.95rem;
+    text-align: left;
+    text-decoration: none;
+    color: var(--texto);
+    cursor: pointer;
+}
+.pedro-menu-lista button:hover,
+.pedro-menu-lista a:hover { background: var(--creme-2); }
+
+.pedro-conversa {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 24px;
+}
+.pedro-data {
+    align-self: center;
+    padding: 6px 18px;
+    border-radius: var(--raio-pill);
+    background: var(--creme);
+    font-size: 0.85rem;
+    color: var(--texto-suave);
+}
+.pedro-msg {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    animation: pedro-entra .25s ease-out;
+}
+.pedro-msg.usuario { justify-content: flex-end; }
+.pedro-msg-avatar { width: 48px; height: 48px; flex: none; }
+.pedro-balao {
+    max-width: min(78%, 560px);
+    padding: 14px 18px 10px;
+    border-radius: 26px;
+    background: var(--pedro-lilas);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(47, 66, 40, 0.12);
+    overflow-wrap: anywhere;
+}
+.pedro-msg.usuario .pedro-balao { background: var(--pedro-oliva); }
+.pedro-msg.erro .pedro-balao { background: var(--social-claro); color: var(--texto); }
+.pedro-balao p { margin: 0 0 0.6em; }
+.pedro-balao ul { margin: 0 0 0.6em; padding-left: 1.2em; }
+.pedro-balao li + li { margin-top: 4px; }
+.pedro-balao time {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.72rem;
+    text-align: right;
+    opacity: 0.85;
+}
+
+.pedro-digitando { display: flex; gap: 6px; padding: 18px 20px; }
+.pedro-digitando span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: pedro-pula 1s infinite ease-in-out;
+}
+.pedro-digitando span:nth-child(2) { animation-delay: .15s; }
+.pedro-digitando span:nth-child(3) { animation-delay: .3s; }
+
+.pedro-compositor {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 -20px;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(rgba(232, 223, 191, 0), #e8dfbf 35%);
+}
+.pedro-compositor-pilula {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 6px 10px 6px 26px;
+    border-radius: var(--raio-pill);
+    background: var(--pedro-oliva);
+    box-shadow: 0 6px 16px rgba(47, 66, 40, 0.12);
+}
+.pedro-compositor input {
+    padding: 14px 0;
+    color: #fff;
+    font-size: 1.05rem;
+}
+.pedro-compositor input::placeholder { color: rgba(253, 248, 236, 0.85); }
+.pedro-compositor-btn {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--creme);
+    cursor: pointer;
+}
+.pedro-compositor-btn[hidden] { display: none; }
+.pedro-compositor-btn svg { width: 26px; height: 26px; }
+.pedro-compositor-btn:hover { background: rgba(253, 248, 236, 0.15); }
+.pedro-compositor-btn:disabled { cursor: wait; opacity: 0.7; }
+.pedro-compositor-btn.ouvindo { color: var(--social-claro); animation: pedro-pulsa 1s infinite; }
+
+@keyframes pedro-entra { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes pedro-pula { 0%, 80%, 100% { transform: translateY(0); opacity: .6; } 40% { transform: translateY(-5px); opacity: 1; } }
+@keyframes pedro-pulsa { 50% { opacity: 0.5; } }
+
+@media (min-width: 768px) {
+    .app.pedro-app .app-main { max-width: 900px; margin: 0 auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pedro-card-img, .pedro-msg, .pedro-digitando span { animation: none; }
 }

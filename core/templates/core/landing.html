@@ -396,7 +396,10 @@
                 <button id="pedroFecharChat" type="button">&times;</button>
             </div>
             <div class="pedro-chat-body">
-                <p>👋 Olá! Eu sou o Pedro. Em breve estarei pronto para ajudar com as metas ESG do seu negócio!</p>
+                <p>👋 Olá! Eu sou o Pedro. Posso tirar suas dúvidas sobre ESG e ajudar com as metas sustentáveis do seu negócio!</p>
+                <a href="{% url 'pedro_chat' %}" class="pedro-chat-cta">
+                    {% if user.is_authenticated %}Conversar com o Pedro{% else %}Entrar para conversar{% endif %} →
+                </a>
             </div>
     </div>
     <!-- Botão Pedro Bola (Fidelidade Geométrica ao Original) -->

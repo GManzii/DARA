@@ -10,10 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Lê o arquivo .env (se existir) para variáveis secretas, como a chave do Gemini.
+# Variáveis já definidas no ambiente têm prioridade.
+_arquivo_env = BASE_DIR / '.env'
+if _arquivo_env.exists():
+    for _linha in _arquivo_env.read_text(encoding='utf-8').splitlines():
+        _linha = _linha.strip()
+        if _linha and not _linha.startswith('#') and '=' in _linha:
+            _nome, _valor = _linha.split('=', 1)
+            os.environ.setdefault(_nome.strip(), _valor.strip().strip('"').strip("'"))
+
+# Pedro (assistente ESG) usa a API do Gemini
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-flash-lite-latest')
 
 
 # Quick-start development settings - unsuitable for production

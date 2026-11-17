@@ -1,0 +1,235 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block title %}Pedro{% endblock %}
+{% block app_class %}pedro-app{% endblock %}
+{% block bottom_nav %}{% endblock %}
+
+{% block topbar %}
+<header class="pedro-topo">
+    <a href="{{ voltar }}" class="pedro-topo-btn" aria-label="Voltar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </a>
+
+    <div class="pedro-topo-id">
+        <img src="{% static 'core/img/pedro_rosto.svg' %}" alt="" class="pedro-topo-avatar">
+        <div>
+            <strong>PEDRO</strong>
+            <small>Assistente ESG • online</small>
+        </div>
+    </div>
+
+    <div class="pedro-menu">
+        <button class="pedro-topo-btn" type="button" id="pedroMenuBtn" aria-label="Mais opções" aria-haspopup="true" aria-expanded="false">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+        </button>
+        <div class="pedro-menu-lista" id="pedroMenuLista" hidden>
+            <form method="post" action="{% url 'pedro_limpar' %}">
+                {% csrf_token %}
+                <button type="submit">Limpar conversa</button>
+            </form>
+            <a href="{% url 'pilares' %}">Ver pilares ESG</a>
+        </div>
+    </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="pedro-conversa" id="pedroConversa" aria-live="polite">
+    <span class="pedro-data">Hoje</span>
+
+    <div class="pedro-msg pedro" id="pedroBoasVindas">
+        <img src="{% static 'core/img/pedro_rosto.svg' %}" alt="" class="pedro-msg-avatar">
+        <div class="pedro-balao">
+            <p>Olá{% if user.first_name %}, {{ user.first_name }}{% endif %}! Eu sou o <strong>Pedro</strong> 🌍 Pode me perguntar qualquer coisa sobre ESG, sustentabilidade no seu negócio ou sobre o DARA.</p>
+        </div>
+    </div>
+</section>
+
+<form class="pedro-compositor" id="pedroForm" autocomplete="off">
+    {% csrf_token %}
+    <label for="pedroInput" class="visually-hidden">Sua pergunta</label>
+    <div class="pedro-compositor-pilula">
+    <input type="text" id="pedroInput" name="mensagem" placeholder="Pergunte algo ao PEDRO..." maxlength="1000" required>
+    <button type="button" class="pedro-compositor-btn" id="pedroMic" aria-label="Falar a pergunta" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg>
+    </button>
+    <button type="submit" class="pedro-compositor-btn" id="pedroEnviar" aria-label="Enviar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+    </button>
+    </div>
+</form>
+
+{{ historico|json_script:"pedro-historico" }}
+{{ pergunta_inicial|json_script:"pedro-pergunta-inicial" }}
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    var conversa = document.getElementById('pedroConversa');
+    var form = document.getElementById('pedroForm');
+    var input = document.getElementById('pedroInput');
+    var enviarBtn = document.getElementById('pedroEnviar');
+    var micBtn = document.getElementById('pedroMic');
+    var csrf = form.querySelector('[name=csrfmiddlewaretoken]').value;
+    var avatar = "{% static 'core/img/pedro_rosto.svg' %}";
+    var urlPerguntar = "{% url 'pedro_perguntar' %}";
+    var ocupado = false;
+
+    /* Texto do Pedro: escapa HTML e aceita **negrito** e listas com "-" */
+    function escapar(t) {
+        return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function formatar(texto) {
+        var html = '', lista = null;
+        escapar(texto).split('\n').forEach(function (linha) {
+            linha = linha.trim();
+            var item = linha.match(/^(?:[-*•]|\d+[.)])\s+(.*)$/);
+            if (item) {
+                if (!lista) { html += '<ul>'; lista = true; }
+                html += '<li>' + item[1] + '</li>';
+                return;
+            }
+            if (lista) { html += '</ul>'; lista = null; }
+            if (linha) html += '<p>' + linha + '</p>';
+        });
+        if (lista) html += '</ul>';
+        return html
+            .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+            .replace(/(^|[^*\w])\*(?!\s)([^*\n]+?)\*(?!\w)/g, '$1<em>$2</em>');
+    }
+
+    function hora(iso) {
+        var d = iso ? new Date(iso) : new Date();
+        return d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function rolar() {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function adicionar(autor, texto, iso, erro) {
+        var msg = document.createElement('div');
+        msg.className = 'pedro-msg ' + (autor === 'usuario' ? 'usuario' : 'pedro') + (erro ? ' erro' : '');
+        if (autor !== 'usuario') {
+            msg.innerHTML = '<img src="' + avatar + '" alt="" class="pedro-msg-avatar">';
+        }
+        var balao = document.createElement('div');
+        balao.className = 'pedro-balao';
+        if (autor === 'usuario') {
+            var p = document.createElement('p');
+            p.textContent = texto;
+            balao.appendChild(p);
+        } else {
+            balao.innerHTML = formatar(texto);
+        }
+        var h = document.createElement('time');
+        h.textContent = hora(iso);
+        balao.appendChild(h);
+        msg.appendChild(balao);
+        conversa.appendChild(msg);
+        rolar();
+        return msg;
+    }
+
+    function digitando() {
+        var msg = document.createElement('div');
+        msg.className = 'pedro-msg pedro';
+        msg.innerHTML = '<img src="' + avatar + '" alt="" class="pedro-msg-avatar">' +
+            '<div class="pedro-balao pedro-digitando" aria-label="Pedro está digitando"><span></span><span></span><span></span></div>';
+        conversa.appendChild(msg);
+        rolar();
+        return msg;
+    }
+
+    function enviar(texto) {
+        texto = (texto || '').trim();
+        if (!texto || ocupado) return;
+        ocupado = true;
+        enviarBtn.disabled = true;
+        input.value = '';
+        adicionar('usuario', texto);
+        var aguardando = digitando();
+
+        fetch(urlPerguntar, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+            body: JSON.stringify({ mensagem: texto })
+        })
+        .then(function (r) {
+            return r.json().catch(function () { return {}; });
+        })
+        .then(function (dados) {
+            aguardando.remove();
+            if (dados.resposta) {
+                adicionar('pedro', dados.resposta, dados.hora);
+            } else {
+                adicionar('pedro', dados.erro || 'Não consegui responder agora. Tente de novo.', null, true);
+            }
+        })
+        .catch(function () {
+            aguardando.remove();
+            adicionar('pedro', 'Estou sem conexão no momento. Tente de novo daqui a pouco.', null, true);
+        })
+        .finally(function () {
+            ocupado = false;
+            enviarBtn.disabled = false;
+            input.focus();
+        });
+    }
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        enviar(input.value);
+    });
+
+    /* Histórico guardado na sessão */
+    JSON.parse(document.getElementById('pedro-historico').textContent).forEach(function (m) {
+        adicionar(m.autor, m.texto, m.hora);
+    });
+
+    /* Pergunta vinda do card "Como posso ajudar hoje?" */
+    var inicial = JSON.parse(document.getElementById('pedro-pergunta-inicial').textContent);
+    if (inicial) {
+        history.replaceState(null, '', location.pathname);
+        enviar(inicial);
+    }
+
+    /* Menu ⋯ */
+    var menuBtn = document.getElementById('pedroMenuBtn');
+    var menuLista = document.getElementById('pedroMenuLista');
+    menuBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var abrir = menuLista.hidden;
+        menuLista.hidden = !abrir;
+        menuBtn.setAttribute('aria-expanded', abrir);
+    });
+    document.addEventListener('click', function () {
+        menuLista.hidden = true;
+        menuBtn.setAttribute('aria-expanded', false);
+    });
+
+    /* Microfone: reconhecimento de voz do próprio navegador (sem custo de API) */
+    var Reconhecimento = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (Reconhecimento) {
+        var rec = new Reconhecimento();
+        rec.lang = 'pt-BR';
+        rec.interimResults = false;
+        micBtn.hidden = false;
+        micBtn.addEventListener('click', function () {
+            if (micBtn.classList.contains('ouvindo')) { rec.stop(); return; }
+            micBtn.classList.add('ouvindo');
+            rec.start();
+        });
+        rec.onresult = function (e) {
+            input.value = e.results[0][0].transcript;
+            input.focus();
+        };
+        rec.onend = function () { micBtn.classList.remove('ouvindo'); };
+    }
+
+    if (!inicial) input.focus();
+})();
+</script>
+{% endblock %}
