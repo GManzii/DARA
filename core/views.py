@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
@@ -525,6 +526,38 @@ def perfil(request):
     limite_30_dias = timezone.now() - timedelta(days=30)
     funcionarios_recentes = sum(1 for f in funcionarios if f.data_cadastro >= limite_30_dias)
 
+    # =======================================================================
+    # INÍCIO DA LÓGICA DINÂMICA DO GRÁFICO DE RENTABILIDADE (CHART.JS)
+    # =======================================================================
+    
+    # Simulação do progresso (Na versão final, puxe do banco: ex: empresa.metas_cumpridas.count())
+    total_metas = 30
+    metas_cumpridas = 20
+    percentual_esg = metas_cumpridas / total_metas if total_metas > 0 else 0
+
+    # 1. Gerar os últimos 6 anos (ex: 2021 a 2026)
+    ano_atual = timezone.now().year
+    labels_anos = [str(ano_atual - i) for i in range(5, -1, -1)]
+
+    # 2. Calcular valores da linha Cinza (Sem ESG) vs Linha Verde (Com ESG)
+    faturamento_base = 62 # Valor inicial estipulado em R$ mil
+    valores_sem_esg = []
+    valores_com_esg = []
+
+    for i in range(6):
+        # Linha Cinza: Crescimento orgânico normal sem ESG (aprox. 3% ao ano)
+        base_ano = round(faturamento_base * ((1.03) ** i))
+        valores_sem_esg.append(base_ano)
+        
+        # Linha Verde: O ganho escala com o tempo (i) e baseia-se no percentual real de metas cumpridas
+        bonus_esg = 1 + (0.15 * percentual_esg * i) 
+        esg_ano = round(base_ano * bonus_esg)
+        valores_com_esg.append(esg_ano)
+        
+    # =======================================================================
+    # FIM DA LÓGICA DO GRÁFICO
+    # =======================================================================
+
     context = {
         'usuario': request.user,
         'empresa': empresa,
@@ -542,11 +575,18 @@ def perfil(request):
         'total_funcionarios': total_funcionarios,
         'funcionarios_ativos': funcionarios_ativos,
         'funcionarios_recentes': funcionarios_recentes,
-        'total_metas': 0,
+        
+        # Variáveis atualizadas para bater com o cálculo do gráfico
+        'total_metas': total_metas,
+        'metas_cumpridas': metas_cumpridas, 
         'total_comunidades': 0,
+
+        # JSON Dumps para enviar os arrays com segurança para o JavaScript no HTML
+        'labels_anos': json.dumps(labels_anos),
+        'valores_sem_esg': json.dumps(valores_sem_esg),
+        'valores_com_esg': json.dumps(valores_com_esg),
     }
     return render(request, 'core/perfil.html', context)
-
 # ---------------------------------------------------------------------------
 # Conversas
 # ---------------------------------------------------------------------------
