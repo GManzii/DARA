@@ -1,13 +1,45 @@
 /* =====================================
-   ESTRUTURA BASE (MOBILE FIRST - VERTICAL)
+   ESTRUTURA BASE E BOTÃO VOLTAR
 ===================================== */
 .comunidade-container-unico {
     width: 100%;
     max-width: 560px;
-    margin: 24px auto 60px;
+    margin: 20px auto 60px;
     padding: 0 16px;
 }
 
+.comunidade-nav-voltar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.btn-voltar-perfil {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: #FBF6E8;
+    color: #2D3E24;
+    border: 1px solid #DCD3BA;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(45, 62, 36, 0.05);
+    transition: background-color 0.2s, color 0.2s, transform 0.15s;
+}
+
+.btn-voltar-perfil:hover {
+    background-color: #2D3E24;
+    color: #FBF6E8;
+    border-color: #2D3E24;
+    transform: translateX(-2px);
+}
+
+/* =====================================
+   FEED CENTRAL (ESTILO PROTÓTIPO DARA)
+===================================== */
 .comunidade-feed {
     background-color: #FBF6E8;
     border-radius: 26px;

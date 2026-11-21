@@ -8,6 +8,13 @@
 <link rel="stylesheet" href="{% static 'comunidade/css/feed.css' %}">
 
 <div class="comunidade-container-unico">
+    <!-- Barra de navegação superior para voltar ao perfil -->
+    <div class="comunidade-nav-voltar">
+        <a href="javascript:history.back()" onclick="if(document.referrer === '' || document.referrer.includes('/comunidade/')) { window.location.href='/'; return false; }" class="btn-voltar-perfil">
+            ← Voltar ao perfil
+        </a>
+    </div>
+
     <main class="comunidade-feed">
         <div class="feed-header-centro">
             <h1>Comunidade</h1>
