@@ -46,8 +46,10 @@ class LoginPersonalizadoView(LoginView):
         # Dono ou outro usuário autenticado
         return reverse('home')
 
+
 def landing(request):
     return render(request, 'core/landing.html')
+
 
 def home(request):
     if request.user.is_authenticated and hasattr(request.user, 'perfil_funcionario'):
@@ -65,6 +67,7 @@ def home(request):
     if request.user.is_authenticated:
         return render(request, "core/home.html")
     return render(request, "core/boas_vindas.html")
+
 
 def escolher_perfil(request):
     if request.method == 'POST':
@@ -120,6 +123,7 @@ def area_dono(request):
     }
     return render(request, 'core/area_dono.html', context)
 
+
 def questionario_esg(request):
     if request.method == 'POST':
         form = QuestionarioESGForm(request.POST)
@@ -145,8 +149,8 @@ def questionario_esg(request):
         {'form': form}
     )
 
-def cadastro_funcionario(request):
 
+def cadastro_funcionario(request):
     # Impede que um usuário já autenticado crie outra conta
     if request.user.is_authenticated:
         if hasattr(request.user, 'perfil_funcionario'):
@@ -167,7 +171,6 @@ def cadastro_funcionario(request):
 
             try:
                 with transaction.atomic():
-
                     # Cria a conta do funcionário
                     usuario = User.objects.create_user(
                         username=dados['email'],
@@ -207,9 +210,9 @@ def cadastro_funcionario(request):
         {'form': form}
     )
 
+
 @login_required(login_url='entrar')
 def area_funcionario(request):
-
     if not hasattr(request.user, 'perfil_funcionario'):
         messages.error(
             request,
@@ -235,8 +238,6 @@ def about(request):
     # Passa a informação se o questionário foi respondido para liberar o link dos pilares
     exibir_pilares = request.session.get('questionario_preenchido', False)
     return render(request, "core/about.html", {'exibir_pilares': exibir_pilares})
-
-
 
 
 def pilares(request):
@@ -434,8 +435,6 @@ def pilares(request):
     return render(request, 'core/pilares.html', context)
 
 
-
-
 def contact(request):
     if request.method == 'POST':
         form = ContatoForm(request.POST)
@@ -455,10 +454,12 @@ def contact(request):
         {'form': form}
     )
 
-#apagar essa funcao depois, ela serve para limpar a escolha de dono ou funcionario (usar apenas no desenvolvimento)
+
+# apagar essa funcao depois, ela serve para limpar a escolha de dono ou funcionario (usar apenas no desenvolvimento)
 def trocar_perfil(request):
     request.session.pop('perfil', None)
     return redirect('home')
+
 
 @login_required(login_url='entrar')
 def perfil(request):
@@ -527,13 +528,24 @@ def perfil(request):
     funcionarios_recentes = sum(1 for f in funcionarios if f.data_cadastro >= limite_30_dias)
 
     # =======================================================================
-    # INÍCIO DA LÓGICA DINÂMICA DO GRÁFICO DE RENTABILIDADE (CHART.JS)
+    # INÍCIO DA LÓGICA DINÂMICA DO GRÁFICO DE RENTABILIDADE E METAS
     # =======================================================================
     
-    # Simulação do progresso (Na versão final, puxe do banco: ex: empresa.metas_cumpridas.count())
-    total_metas = 30
-    metas_cumpridas = 20
+    total_metas = 0
+    metas_cumpridas = 0
+    
+    if empresa:
+        # Busca automaticamente todos os campos do modelo Empresa que começam por 'esg_'
+        campos_esg = [f.name for f in empresa._meta.get_fields() if f.name.startswith('esg_')]
+        total_metas = len(campos_esg)
+        
+        # Conta quantas dessas metas estão como True (concluídas)
+        for campo in campos_esg:
+            if getattr(empresa, campo, False):
+                metas_cumpridas += 1
+
     percentual_esg = metas_cumpridas / total_metas if total_metas > 0 else 0
+    percentual_metas_int = int(percentual_esg * 100)
 
     # 1. Gerar os últimos 6 anos (ex: 2021 a 2026)
     ano_atual = timezone.now().year
@@ -555,7 +567,7 @@ def perfil(request):
         valores_com_esg.append(esg_ano)
         
     # =======================================================================
-    # FIM DA LÓGICA DO GRÁFICO
+    # FIM DA LÓGICA DO GRÁFICO E METAS
     # =======================================================================
 
     context = {
@@ -579,6 +591,7 @@ def perfil(request):
         # Variáveis atualizadas para bater com o cálculo do gráfico
         'total_metas': total_metas,
         'metas_cumpridas': metas_cumpridas, 
+        'percentual_metas': percentual_metas_int,
         'total_comunidades': 0,
 
         # JSON Dumps para enviar os arrays com segurança para o JavaScript no HTML
@@ -587,13 +600,14 @@ def perfil(request):
         'valores_com_esg': json.dumps(valores_com_esg),
     }
     return render(request, 'core/perfil.html', context)
+
+
 # ---------------------------------------------------------------------------
 # Conversas
 # ---------------------------------------------------------------------------
 
 TAMANHO_MAX_ANEXO = 10 * 1024 * 1024  # 10 MB
 IMAGENS_SEGURAS = {'image/png', 'image/jpeg', 'image/gif', 'image/webp'}
-
 
 def _empresa_do_usuario(usuario):
     """Empresa do usuário, seja ele funcionário ou dono. None se não tiver."""
@@ -833,6 +847,7 @@ def mensagem_anexo(request, pk):
     resposta['X-Content-Type-Options'] = 'nosniff'
     resposta['Cache-Control'] = 'private, max-age=3600'
     return resposta
+
 
 @login_required(login_url='entrar')
 def excluir_documento(request, doc_id):

@@ -19,19 +19,47 @@
     <main class="comunidade-feed">
         <h1>Comunidade DARA</h1>
 
+        <!-- Formulário para criar publicação -->
+        <form class="novo-post-form" method="POST" action="{% url 'comunidade_feed' %}" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px; background-color: #EAE3CA; padding: 15px; border-radius: 15px;">
+            {% csrf_token %}
+            <textarea name="texto" rows="3" placeholder="Partilha uma ideia, conquista ou dúvida..." required style="width: 100%; border: none; border-radius: 10px; padding: 15px; background-color: #F6F4E8; resize: none; box-sizing: border-box;"></textarea>
+            <button type="submit" style="align-self: flex-end; background-color: #B85B33; color: white; border: none; border-radius: 20px; padding: 10px 20px; font-weight: bold; cursor: pointer;">Publicar</button>
+        </form>
+
+        <!-- Lista de publicações dinâmicas -->
         <div class="feed-publicacoes">
-            <p>As publicações aparecerão aqui.</p>
+            {% for post in postagens %}
+            <div class="post-card" style="background: linear-gradient(145deg, #B3BE91, #9EAB7A); border-radius: 15px; padding: 20px; margin-bottom: 15px; color: white;">
+                
+                <div class="post-header" style="display: flex; gap: 15px; margin-bottom: 10px;">
+                    <div class="avatar" style="width: 40px; height: 40px; background-color: #4A5336; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        👤
+                    </div>
+                    <div class="post-info">
+                        <strong style="font-size: 0.9rem; display: block;">{{ post.autor.usuario.get_full_name|default:"Usuário" }}</strong>
+                        <small style="opacity: 0.8;">{{ post.get_categoria_display }} • {{ post.data_publicacao|date:"d/m/Y H:i" }}</small>
+                    </div>
+                </div>
+                
+                <p class="post-texto" style="margin-bottom: 15px; line-height: 1.4;">{{ post.conteudo }}</p>
+                
+                <div class="post-footer" style="display: flex; justify-content: flex-end; gap: 15px; font-size: 0.9rem;">
+                    <span>💬 {{ post.comentarios.count }}</span>
+                    <span>❤️ {{ post.curtidas.count }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <p style="text-align: center; color: #666; margin-top: 20px;">Ainda não existem publicações. Sê o primeiro a partilhar uma ideia!</p>
+            {% endfor %}
         </div>
     </main>
 
     <!-- Coluna direita: destaques -->
     <aside class="comunidade-destaques">
         <h2>Comunidade em destaque</h2>
-
         <section>
             <h3>Empresas participantes</h3>
         </section>
-
         <section>
             <h3>Discussões recentes</h3>
         </section>

@@ -37,16 +37,17 @@
         </div>
     </section>
 
-    <!-- 3. Card Metas ESG Cumpridas -->
+   <!-- 3. Card Metas ESG Cumpridas -->
     <section class="card card-esg-goals">
         <div class="goals-header">
             <h3>Metas ESG cumpridas</h3>
-            <span class="goals-count"><strong>{{ metas_cumpridas|default:20 }}</strong> / {{ total_metas|default:30 }}</span>
+            <span class="goals-count"><strong>{{ metas_cumpridas }}</strong> / {{ total_metas }}</span>
         </div>
         <div class="progress-bar-container">
-            <div class="progress-bar" style="width: 67%;"></div>
+            <!-- A largura da barra ajusta-se automaticamente com o estilo inline -->
+            <div class="progress-bar" style="width: {{ percentual_metas }}%;"></div>
         </div>
-        <p class="progress-subtitle">Você concluiu 67% das metas deste ciclo.</p>
+        <p class="progress-subtitle">Você concluiu {{ percentual_metas }}% das metas deste ciclo.</p>
     </section>
 
     <!-- 4. Lista de Atalhos e Métricas Dinâmicas -->
@@ -75,7 +76,7 @@
             <span class="stat-value">{{ total_metas|default:0 }} &rarr;</span>
         </a>
 
-        <a href="#" class="stat-item">
+        <a href="{% url 'comunidade_feed' %}" class="stat-item">
             <span class="stat-label">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                 Suas comunidades
