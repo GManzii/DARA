@@ -1,66 +1,303 @@
 /* =====================================
-   COMUNIDADE DARA
+   ESTRUTURA BASE (MOBILE FIRST - VERTICAL)
 ===================================== */
-@import url("/static/comunidade/css/feed.css");
-
-.app-comunidade {
-    --largura-app: 1440px;
-}
-/* =====================================
-   ESTRUTURA PRINCIPAL
-===================================== */
-
-.comunidade-container {
+.comunidade-container-unico {
     width: 100%;
-    max-width: 1320px;
-    margin: 0 auto;
-
-    display: grid;
-    grid-template-columns: 260px minmax(0, 1fr) 280px;
-    gap: 24px;
-
-    align-items: start;
-}
-
-.comunidade-perfil,
-.comunidade-feed,
-.comunidade-destaques {
-    background: var(--creme);
-    border-radius: var(--raio-medio);
-    padding: 24px;
-    box-shadow: var(--sombra);
+    max-width: 560px;
+    margin: 24px auto 60px;
+    padding: 0 16px;
 }
 
 .comunidade-feed {
-    min-width: 0;
+    background-color: #FBF6E8;
+    border-radius: 26px;
+    padding: 28px 24px;
+    box-shadow: 0 6px 20px rgba(45, 62, 36, 0.06);
 }
 
-.comunidade-destaques section {
-    padding: 16px 0;
-    border-bottom: 1px solid var(--linha);
+.feed-header-centro {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.feed-header-centro h1 {
+    font-size: 2rem;
+    color: #B85B33;
+    margin: 0 0 6px;
+    font-weight: 500;
+}
+
+.feed-header-centro p {
+    font-size: 0.9rem;
+    color: #4A4A3E;
+    margin: 0 auto;
+    max-width: 320px;
+    line-height: 1.4;
+}
+
+.feed-arena-container {
+    background: linear-gradient(180deg, #E2DAC4 0%, #ECE6D4 100%);
+    border-radius: 28px;
+    padding: 20px 18px;
+    box-shadow: inset 0 4px 14px rgba(80, 72, 48, 0.14);
+}
+
+/* Caixa de nova publicação */
+.composer-card-dara {
+    background-color: rgba(255, 255, 255, 0.88);
+    border-radius: 20px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(184, 91, 51, 0.25);
+}
+
+.composer-textarea {
+    width: 100%;
+    border: 1px solid #D8D0B8;
+    border-radius: 14px;
+    padding: 12px 14px;
+    background-color: #FBF6E8;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: #2D3E24;
+    resize: vertical;
+    min-height: 74px;
+    box-sizing: border-box;
+}
+
+.composer-textarea:focus {
+    outline: none;
+    border-color: #B85B33;
+    background-color: #FFFFFF;
+}
+
+.composer-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.select-categoria {
+    background-color: #F3EFE2;
+    border: 1px solid #D4CCB4;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 0.82rem;
+    color: #2D3E24;
+    font-family: inherit;
+    cursor: pointer;
+    max-width: 100%;
+}
+
+.btn-publicar-dara {
+    background-color: #B85B33;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 22px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-left: auto;
+}
+
+.btn-publicar-dara:hover {
+    background-color: #9E4B27;
+}
+
+/* Lista e Cards de Postagem */
+.feed-publicacoes {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.post-card-oliva {
+    background: linear-gradient(180deg, #A3A864 0%, #DBD5AD 100%);
+    border-radius: 22px;
+    padding: 18px 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    box-shadow: 0 4px 10px rgba(66, 76, 46, 0.08);
+}
+
+.post-avatar-circulo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    color: #F6F4E8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.avatar-verde {
+    background-color: #424C2E;
+}
+
+.avatar-terracota-post {
+    background-color: #B85B33;
+}
+
+.avatar-vinho {
+    background-color: #5D1D24;
+}
+
+.post-conteudo-box {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.post-meta-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.post-autor-nome {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2D3E24;
+}
+
+.post-tag-pill {
+    background-color: rgba(255, 255, 255, 0.45);
+    color: #2D3E24;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 12px;
+}
+
+.post-texto {
+    color: #FFFFFF;
+    font-size: 0.96rem;
+    line-height: 1.45;
+    margin: 0 0 14px;
+    text-shadow: 0 1px 2px rgba(45, 62, 36, 0.18);
+    white-space: pre-line;
+    word-break: break-word;
+}
+
+.post-rodape-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-top: auto;
+}
+
+.post-data {
+    color: #4A5238;
+    font-size: 0.75rem;
+}
+
+.post-icones {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+}
+
+.stat-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #5D1D24;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.empty-state-dara {
+    text-align: center;
+    padding: 32px 16px;
+    color: #4A5238;
+    font-size: 0.9rem;
 }
 
 /* =====================================
-   RESPONSIVIDADE
+   DESKTOP / COMPUTADOR (LAYOUT HORIZONTAL EM COLUNA ÚNICA)
 ===================================== */
-
-@media (max-width: 1000px) {
-    .comunidade-container {
-        grid-template-columns: 220px minmax(0, 1fr);
+@media (min-width: 900px) {
+    .comunidade-container-unico {
+        max-width: 1080px;
+        padding: 0 32px;
     }
 
-    .comunidade-destaques {
-        grid-column: 1 / -1;
-    }
-}
-
-@media (max-width: 650px) {
-    .comunidade-container {
-        grid-template-columns: 1fr;
+    .comunidade-feed {
+        padding: 36px 40px;
     }
 
-    .comunidade-perfil,
-    .comunidade-destaques {
-        grid-column: auto;
+    .feed-header-centro {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        text-align: left;
+        border-bottom: 1px solid #E5DEC9;
+        padding-bottom: 18px;
+        margin-bottom: 24px;
+    }
+
+    .feed-header-centro h1 {
+        font-size: 2.35rem;
+        margin: 0;
+    }
+
+    .feed-header-centro p {
+        margin: 0;
+        max-width: 440px;
+        text-align: right;
+        font-size: 0.95rem;
+    }
+
+    .feed-arena-container {
+        padding: 28px;
+    }
+
+    /* Compositor horizontal: texto à esquerda e controles empilhados à direita */
+    .composer-card-dara {
+        display: flex;
+        align-items: stretch;
+        gap: 18px;
+        padding: 18px 20px;
+        margin-bottom: 24px;
+    }
+
+    .composer-textarea {
+        flex: 1;
+        min-height: 76px;
+    }
+
+    .composer-actions {
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
+        margin-top: 0;
+        min-width: 195px;
+    }
+
+    .btn-publicar-dara {
+        margin-left: 0;
+        width: 100%;
+        padding: 10px 20px;
+    }
+
+    /* Cartões empilhados um embaixo do outro ocupando a largura horizontal */
+    .feed-publicacoes {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
     }
 }
