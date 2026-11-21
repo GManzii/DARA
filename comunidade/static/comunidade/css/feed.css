@@ -173,6 +173,12 @@
     color: #2D3E24;
 }
 
+.post-topo-acoes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .post-tag-pill {
     background-color: rgba(255, 255, 255, 0.45);
     color: #2D3E24;
@@ -180,6 +186,30 @@
     font-weight: 600;
     padding: 3px 10px;
     border-radius: 12px;
+}
+
+.form-excluir-post {
+    margin: 0;
+    display: inline-flex;
+}
+
+.btn-excluir-post {
+    background-color: rgba(255, 255, 255, 0.45);
+    border: none;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.15s;
+}
+
+.btn-excluir-post:hover {
+    background-color: #F5D6D2;
+    transform: scale(1.08);
 }
 
 .post-texto {
@@ -228,6 +258,112 @@
 }
 
 /* =====================================
+   MODAL PERSONALIZADO DE CONFIRMAÇÃO
+===================================== */
+.dara-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(30, 36, 22, 0.55);
+    backdrop-filter: blur(3px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 9999;
+}
+
+.dara-modal-overlay.ativo {
+    display: flex;
+    animation: fadeInOverlay 0.18s ease-out;
+}
+
+.dara-modal-card {
+    background-color: #FBF6E8;
+    border: 1.5px solid #DCD3BA;
+    border-radius: 26px;
+    padding: 28px 26px 24px;
+    width: 100%;
+    max-width: 390px;
+    text-align: center;
+    box-shadow: 0 18px 40px rgba(34, 44, 24, 0.25);
+    animation: popInModal 0.2s ease-out;
+}
+
+.dara-modal-icone {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    background-color: #F4DFD8;
+    color: #B85B33;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.dara-modal-card h2 {
+    margin: 0 0 8px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2D3E24;
+}
+
+.dara-modal-card p {
+    margin: 0 0 22px;
+    font-size: 0.9rem;
+    color: #5C6150;
+    line-height: 1.45;
+}
+
+.dara-modal-botoes {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn-modal-cancelar,
+.btn-modal-confirmar {
+    flex: 1;
+    border: none;
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-modal-cancelar {
+    background-color: #E7E0CC;
+    color: #3D492D;
+}
+
+.btn-modal-cancelar:hover {
+    background-color: #DAD1B8;
+}
+
+.btn-modal-confirmar {
+    background-color: #B85B33;
+    color: #FFFFFF;
+}
+
+.btn-modal-confirmar:hover {
+    background-color: #9E4B27;
+}
+
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popInModal {
+    from { opacity: 0; transform: scale(0.94); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* =====================================
    DESKTOP / COMPUTADOR (LAYOUT HORIZONTAL EM COLUNA ÚNICA)
 ===================================== */
 @media (min-width: 900px) {
@@ -266,7 +402,6 @@
         padding: 28px;
     }
 
-    /* Compositor horizontal: texto à esquerda e controles empilhados à direita */
     .composer-card-dara {
         display: flex;
         align-items: stretch;
@@ -294,7 +429,6 @@
         padding: 10px 20px;
     }
 
-    /* Cartões empilhados um embaixo do outro ocupando a largura horizontal */
     .feed-publicacoes {
         display: flex;
         flex-direction: column;

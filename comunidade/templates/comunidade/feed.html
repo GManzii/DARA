@@ -41,7 +41,19 @@
                     <div class="post-conteudo-box">
                         <div class="post-meta-topo">
                             <span class="post-autor-nome">{{ post.autor.get_full_name|default:post.autor.username }}</span>
-                            <span class="post-tag-pill">{{ post.get_categoria_display }}</span>
+
+                            <div class="post-topo-acoes">
+                                <span class="post-tag-pill">{{ post.get_categoria_display }}</span>
+
+                                {% if post.autor == request.user or request.user.is_superuser %}
+                                <form method="POST" action="{% url 'comunidade_excluir' post.id %}" class="form-excluir-post">
+                                    {% csrf_token %}
+                                    <button type="button" class="btn-excluir-post" onclick="abrirModalExcluir(this.form)" title="Apagar publicação" aria-label="Apagar publicação">
+                                        🗑️
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
                         </div>
 
                         <p class="post-texto">{{ post.conteudo }}</p>
@@ -65,4 +77,53 @@
         </div>
     </main>
 </div>
+
+<!-- MODAL PERSONALIZADO DE CONFIRMAÇÃO -->
+<div class="dara-modal-overlay" id="modalExcluirOverlay" aria-hidden="true">
+    <div class="dara-modal-card" role="dialog" aria-modal="true" aria-labelledby="modalExcluirTitulo">
+        <div class="dara-modal-icone">🗑️</div>
+        <h2 id="modalExcluirTitulo">Apagar publicação?</h2>
+        <p>Essa ação não poderá ser desfeita e a mensagem será removida da comunidade.</p>
+        <div class="dara-modal-botoes">
+            <button type="button" class="btn-modal-cancelar" onclick="fecharModalExcluir()">Cancelar</button>
+            <button type="button" class="btn-modal-confirmar" id="btnConfirmarExclusao">Sim, apagar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let formularioParaExcluir = null;
+    const modalOverlay = document.getElementById('modalExcluirOverlay');
+    const btnConfirmar = document.getElementById('btnConfirmarExclusao');
+
+    function abrirModalExcluir(form) {
+        formularioParaExcluir = form;
+        modalOverlay.classList.add('ativo');
+        modalOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function fecharModalExcluir() {
+        formularioParaExcluir = null;
+        modalOverlay.classList.remove('ativo');
+        modalOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    btnConfirmar.addEventListener('click', function () {
+        if (formularioParaExcluir) {
+            formularioParaExcluir.submit();
+        }
+    });
+
+    modalOverlay.addEventListener('click', function (e) {
+        if (e.target === modalOverlay) {
+            fecharModalExcluir();
+        }
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modalOverlay.classList.contains('ativo')) {
+            fecharModalExcluir();
+        }
+    });
+</script>
 {% endblock %}
