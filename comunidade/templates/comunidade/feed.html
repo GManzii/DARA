@@ -10,7 +10,7 @@
 <div class="comunidade-container-unico">
     <!-- Barra de navegação superior para voltar ao perfil -->
     <div class="comunidade-nav-voltar">
-        <a href="javascript:history.back()" onclick="if(document.referrer === '' || document.referrer.includes('/comunidade/')) { window.location.href='/'; return false; }" class="btn-voltar-perfil">
+        <a href="{% if request.user.perfil_funcionario %}{% url 'area_funcionario' %}{% else %}{% url 'perfil' %}{% endif %}" class="btn-voltar-perfil">
             ← Voltar ao perfil
         </a>
     </div>

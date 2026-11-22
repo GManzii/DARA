@@ -1,14 +1,236 @@
 {% extends "core/base.html" %}
 
-{% block title %}Colaborador{% endblock %}
+{% block title %}Perfil do Colaborador{% endblock %}
 
 {% block content %}
-    <section class="card empty-state">
-        <span class="eyebrow">Área do colaborador</span>
-        <h1>Em breve por aqui</h1>
-        <p>Estamos preparando esta área para você.</p>
-        <a href="{% url 'pilares' %}" class="btn">Conhecer os pilares ESG</a>
+<!-- PAINEL 1: VISÃO GERAL DO PERFIL DO COLABORADOR -->
+<div class="perfil-grid" id="painel-colab-resumo">
+
+    <!-- 1. Card do Perfil do Colaborador -->
+    <section class="card card-user-profile">
+        <div class="avatar-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </div>
+        <div class="user-info">
+            <span class="eyebrow">Área do colaborador</span>
+            <h1 class="user-name">{{ usuario.get_full_name|default:usuario.username }}</h1>
+            <p class="user-role">Colaborador(a) &bull; Membro desde {{ funcionario.data_cadastro|date:"d/m/Y" }}</p>
+            <p class="user-email">{{ usuario.email }}</p>
+        </div>
     </section>
 
+    <!-- 2. Card da Empresa Vinculada -->
+    <section class="card card-company">
+        <div class="company-info">
+            <span class="eyebrow">Sua empresa</span>
+            {% if empresa and empresa.nome_empresa %}
+                <h2 class="company-name">{{ empresa.nome_empresa }}</h2>
+                <p class="company-status">{{ empresa.get_segmento_display }} &bull; {{ empresa.cidade_estado }}</p>
+            {% else %}
+                <h2 class="company-name">Sem empresa vinculada</h2>
+                <p class="company-status">Entre em contato com o gestor da sua equipe.</p>
+            {% endif %}
+        </div>
+        <div class="badge-level">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            <span class="level-text">Equipe Ativa</span>
+        </div>
+    </section>
+
+    <!-- 3. Card Metas ESG da Empresa (Somente Acompanhamento) -->
+    <section class="card card-esg-goals">
+        <div class="goals-header">
+            <h3>Metas ESG da empresa</h3>
+            <span class="goals-count"><strong>{{ metas_cumpridas }}</strong> / {{ total_metas }}</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" style="width: {{ percentual_metas }}%;"></div>
+        </div>
+        <p class="progress-subtitle">A empresa já concluiu {{ percentual_metas }}% das práticas sustentáveis deste ciclo.</p>
+    </section>
+
+    <!-- 4. Lista de Atalhos do Colaborador (Sem documentos, cadastro de equipe ou rentabilidade) -->
+    <section class="card card-stats-list">
+        <a href="javascript:void(0);" onclick="alternarPainelColab('metas'); return false;" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                Acompanhar metas ESG
+            </span>
+            <span class="stat-value">{{ metas_cumpridas }}/{{ total_metas }} &rarr;</span>
+        </a>
+
+        {% if funcionario.acesso_comunidade %}
+        <a href="{% url 'comunidade_feed' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Comunidade DaRa
+            </span>
+            <span class="stat-value">Acessar &rarr;</span>
+        </a>
+        {% else %}
+        <div class="stat-item" style="opacity: 0.65; cursor: default;">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Comunidade DaRa
+            </span>
+            <span class="stat-value" style="font-size: 13px;">Aguardando liberação</span>
+        </div>
+        {% endif %}
+
+        <a href="{% url 'conversas' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5A6.5 6.5 0 0 1 21.5 20"/></svg>
+                Grupos e conversas
+            </span>
+            <span class="stat-value">{{ total_grupos|default:0 }} &rarr;</span>
+        </a>
+
+        <a href="{% url 'pilares' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                Conhecer os pilares ESG
+            </span>
+            <span class="stat-value">Ver guia &rarr;</span>
+        </a>
+    </section>
+
+    <!-- 5. Assistente Pedro -->
     {% include "core/_pedro_card.html" %}
+
+</div>
+
+<!-- PAINEL 2: VISUALIZAÇÃO DAS METAS ESG (SOMENTE LEITURA) -->
+<div id="painel-colab-metas" style="display: none;">
+
+    <div class="docs-topbar">
+        <div>
+            <span class="eyebrow">Acompanhamento de Sustentabilidade</span>
+            <h2>Metas ESG da {{ empresa.nome_empresa }}</h2>
+            <p>Visualize as práticas ambientais, sociais e de governança definidas pela gestão (modo leitura).</p>
+        </div>
+        <div class="docs-actions-top">
+            <button type="button" class="btn-dara-outline" onclick="alternarPainelColab('resumo')">
+                &larr; Voltar ao Perfil
+            </button>
+        </div>
+    </div>
+
+    <!-- KPIs por Pilar -->
+    <div class="docs-kpi-grid">
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Progresso Geral</span>
+            <div class="doc-kpi-value">{{ percentual_metas }}%</div>
+            <span class="doc-kpi-sub">{{ metas_cumpridas }} de {{ total_metas }} metas</span>
+        </div>
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Ambiental (E)</span>
+            <div class="doc-kpi-value">{{ resumo_pilares.ambiental.concluidas }}/{{ resumo_pilares.ambiental.total }}</div>
+            <span class="doc-kpi-sub">{{ resumo_pilares.ambiental.percentual }}% concluído</span>
+        </div>
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Social (S)</span>
+            <div class="doc-kpi-value">{{ resumo_pilares.social.concluidas }}/{{ resumo_pilares.social.total }}</div>
+            <span class="doc-kpi-sub">{{ resumo_pilares.social.percentual }}% concluído</span>
+        </div>
+        <div class="doc-kpi-card">
+            <span class="doc-kpi-label">Governança (G)</span>
+            <div class="doc-kpi-value">{{ resumo_pilares.governanca.concluidas }}/{{ resumo_pilares.governanca.total }}</div>
+            <span class="doc-kpi-sub">{{ resumo_pilares.governanca.percentual }}% concluído</span>
+        </div>
+    </div>
+
+    <!-- Tabela de Consulta das Metas (Sem checkboxes ou botões de alteração) -->
+    <section class="card">
+        <div class="docs-toolbar">
+            <div class="docs-search-box">
+                <input type="text" id="busca-metas-colab" onkeyup="filtrarMetasColab()" placeholder="Buscar prática ou meta ESG...">
+            </div>
+
+            <div class="docs-filter-group" id="filtros-pilar-colab">
+                <button type="button" class="doc-chip ativo" onclick="selecionarPilarColab('TODOS', this)">Todas</button>
+                <button type="button" class="doc-chip" onclick="selecionarPilarColab('E', this)">Ambiental (E)</button>
+                <button type="button" class="doc-chip" onclick="selecionarPilarColab('S', this)">Social (S)</button>
+                <button type="button" class="doc-chip" onclick="selecionarPilarColab('G', this)">Governança (G)</button>
+            </div>
+
+            <div class="docs-filter-group" id="filtros-status-colab">
+                <button type="button" class="doc-chip ativo" onclick="selecionarStatusColab('TODOS', this)">Todos os status</button>
+                <button type="button" class="doc-chip" onclick="selecionarStatusColab('CUMPRIDA', this)">Cumpridas</button>
+                <button type="button" class="doc-chip" onclick="selecionarStatusColab('PENDENTE', this)">Em andamento</button>
+            </div>
+        </div>
+
+        <div class="docs-table-wrap">
+            <table class="docs-table">
+                <thead>
+                    <tr>
+                        <th>Prática / Meta ESG</th>
+                        <th>Pilar</th>
+                        <th>Situação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for meta in lista_metas %}
+                    <tr class="meta-colab-row"
+                        data-pilar="{{ meta.pilar_sigla }}"
+                        data-status="{% if meta.concluida %}CUMPRIDA{% else %}PENDENTE{% endif %}"
+                        data-busca="{{ meta.titulo|lower }} {{ meta.descricao|lower }}">
+                        <td>
+                            <strong style="color: #2c2c2c;">{{ meta.titulo }}</strong>
+                            <div style="font-size: 12.5px; color: #6b685f; margin-top: 4px;">
+                                {{ meta.descricao }}
+                            </div>
+                        </td>
+                        <td>
+                            <span class="pilar-pill pilar-{{ meta.pilar_sigla }}">{{ meta.pilar_nome }}</span>
+                        </td>
+                        <td>
+                            {% if meta.concluida %}
+                                <span class="validade-badge val-vigente">Cumprida</span>
+                            {% else %}
+                                <span class="validade-badge val-atencao">Em andamento</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    let pilarColabAtual = 'TODOS';
+    let statusColabAtual = 'TODOS';
+
+    function alternarPainelColab(destino) {
+        document.getElementById('painel-colab-resumo').style.display = (destino === 'resumo') ? '' : 'none';
+        document.getElementById('painel-colab-metas').style.display = (destino === 'metas') ? 'block' : 'none';
+    }
+
+    function selecionarPilarColab(pilar, btn) {
+        pilarColabAtual = pilar;
+        document.querySelectorAll('#filtros-pilar-colab .doc-chip').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        filtrarMetasColab();
+    }
+
+    function selecionarStatusColab(status, btn) {
+        statusColabAtual = status;
+        document.querySelectorAll('#filtros-status-colab .doc-chip').forEach(b => b.classList.remove('ativo'));
+        btn.classList.add('ativo');
+        filtrarMetasColab();
+    }
+
+    function filtrarMetasColab() {
+        const termo = document.getElementById('busca-metas-colab').value.toLowerCase().trim();
+        document.querySelectorAll('.meta-colab-row').forEach(row => {
+            const batePilar = (pilarColabAtual === 'TODOS' || row.dataset.pilar === pilarColabAtual);
+            const bateStatus = (statusColabAtual === 'TODOS' || row.dataset.status === statusColabAtual);
+            const bateBusca = (!termo || row.dataset.busca.includes(termo));
+            row.style.display = (batePilar && bateStatus && bateBusca) ? '' : 'none';
+        });
+    }
+</script>
 {% endblock %}

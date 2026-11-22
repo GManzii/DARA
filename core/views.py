@@ -221,10 +221,79 @@ def area_funcionario(request):
         return redirect('home')
 
     funcionario = request.user.perfil_funcionario
+    empresa = funcionario.empresa
+
+    catalogo_esg = [
+        # Ambiental (E)
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_01_higiene_manipulacao', 'Higiene e Manipulação Segura', 'Garantir que 100% da equipe siga as normas de higiene e controle de temperatura dos alimentos.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_02_separacao_lixo', 'Separação Simples de Lixo', 'Lixeiras separadas para resíduos orgânicos e recicláveis na cozinha e no atendimento.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_03_coleta_oleo', 'Coleta de Óleo Usado', 'Armazenar o óleo de fritura em recipientes adequados e entregar a coletores credenciados.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_04_combate_desperdicio', 'Combate ao Desperdício Visível', 'Avisos amigáveis para conscientizar clientes sobre o desperdício em buffets ou pratos.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_06_recibos_digitais', 'Comandas e Recibos Digitais', 'Adotar comandas eletrônicas e enviar nota fiscal por e-mail ou WhatsApp para poupar papel.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_07_aeradores_torneiras', 'Aeradores nas Torneiras', 'Instalar adaptadores de vazão nas pias da cozinha e nos banheiros para poupar água.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_09_descarte_lampadas_baterias', 'Descarte de Lâmpadas e Baterias', 'Separar lâmpadas queimadas e pilhas para destinação em pontos de coleta da cidade.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_11_apagando_luz', 'Rotina Apagando Luz', 'Procedimento para desligar luzes e aparelhos em estoques, vestiários e ambientes vazios.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_12_uso_consciente_embalagens', 'Uso Consciente de Embalagens', 'Perguntar no delivery se o cliente realmente precisa de talheres e guardanapos descartáveis.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_14_troca_descartaveis', 'Troca Gradual de Descartáveis', 'Substituir recipientes de plástico por embalagens de papel kraft ou biodegradáveis.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_16_compra_produtor_local', 'Compra na Feira / Produtor Local', 'Comprar ingredientes hortifrúti diretamente de feirantes ou agricultores da região.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_18_compostagem_basica', 'Compostagem Básica', 'Encaminhar restos vegetais e cascas cruas para hortas comunitárias ou composteiras locais.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_22_equipamentos_inverter', 'Equipamentos Inverter / Eficientes', 'Trocar geladeiras e freezers antigos por modelos com selo Procel A ou tecnologia Inverter.'),
+        ('E', 'Ambiental (E)', 'ambiental', 'esg_25_energia_solar', 'Energia Solar (Alugada ou Própria)', 'Aderir a cooperativas regionais de energia solar para consumir eletricidade 100% limpa.'),
+        # Social (S)
+        ('S', 'Social (S)', 'social', 'esg_05_cardapio_transparente', 'Cardápio Transparente', 'Sinalizar claramente ingredientes, pratos vegetarianos/veganos e presença de alergênicos.'),
+        ('S', 'Social (S)', 'social', 'esg_13_doacao_excedente', 'Doação do Excedente Limpo', 'Parceria com ONGs para doação segura de alimentos preparados que não foram servidos.'),
+        ('S', 'Social (S)', 'social', 'esg_15_apoio_anti_lesao', 'Compressas e Apoio Anti-Lesão', 'Pausas ativas e orientação postural para cozinheiros e atendentes que passam horas em pé.'),
+        ('S', 'Social (S)', 'social', 'esg_19_folga_aniversario_bem_estar', 'Folga de Aniversário ou Benefício', 'Oferecer folga no aniversário ou pequenos incentivos de saúde/estudo para os funcionários.'),
+        ('S', 'Social (S)', 'social', 'esg_20_treinamento_diversidade', 'Treinamento Sobre Diversidade', 'Orientar a equipe sobre respeito e atendimento inclusivo a todos os perfis de clientes.'),
+        ('S', 'Social (S)', 'social', 'esg_23_opcoes_plant_based', 'Opções Plant-Based no Cardápio', 'Desenvolver e promover pratos saborosos 100% à base de plantas para incentivar a redução de carne.'),
+        # Governança (G)
+        ('G', 'Governança (G)', 'governanca', 'esg_08_organizacao_pvps', 'Organização PVPS no Estoque', "Aplicar a regra 'Primeiro que Vence, Primeiro que Sai' para evitar perdas de insumos."),
+        ('G', 'Governança (G)', 'governanca', 'esg_10_caixa_sugestoes', 'Caixa de Sugestões / Denúncias', 'Canal simples (caixinha física ou WhatsApp) para escutar a equipe de forma confidencial.'),
+        ('G', 'Governança (G)', 'governanca', 'esg_17_planilha_perdas', 'Planilha de Perdas na Produção', 'Pesar e registrar o desperdício diário do pré-preparo para ajustar o volume de compras.'),
+        ('G', 'Governança (G)', 'governanca', 'esg_21_ovos_cage_free_compra_etica', 'Ovos Cage-Free e Compra Ética', 'Priorizar ovos de galinhas livres de gaiola e carnes de fornecedores com certificado de manejo.'),
+        ('G', 'Governança (G)', 'governanca', 'esg_24_selo_certificacao_local', 'Selo ou Certificação Local', 'Obter selos municipais de sustentabilidade, qualidade sanitária ou Lixo Zero.'),
+    ]
+
+    lista_metas = []
+    resumo_pilares = {
+        'ambiental': {'concluidas': 0, 'total': 0, 'percentual': 0},
+        'social': {'concluidas': 0, 'total': 0, 'percentual': 0},
+        'governanca': {'concluidas': 0, 'total': 0, 'percentual': 0},
+    }
+
+    for sigla, nome_pilar, chave, campo, titulo, descricao in catalogo_esg:
+        concluida = bool(getattr(empresa, campo, False))
+        resumo_pilares[chave]['total'] += 1
+        if concluida:
+            resumo_pilares[chave]['concluidas'] += 1
+
+        lista_metas.append({
+            'pilar_sigla': sigla,
+            'pilar_nome': nome_pilar,
+            'titulo': titulo,
+            'descricao': descricao,
+            'concluida': concluida,
+        })
+
+    for dados in resumo_pilares.values():
+        if dados['total'] > 0:
+            dados['percentual'] = int((dados['concluidas'] / dados['total']) * 100)
+
+    total_metas = len(lista_metas)
+    metas_cumpridas = sum(1 for m in lista_metas if m['concluida'])
+    percentual_metas = int((metas_cumpridas / total_metas) * 100) if total_metas > 0 else 0
+    total_grupos = request.user.conversas.filter(tipo=Conversa.TIPO_GRUPO).count()
 
     contexto = {
+        'usuario': request.user,
         'funcionario': funcionario,
-        'empresa': funcionario.empresa,
+        'empresa': empresa,
+        'total_metas': total_metas,
+        'metas_cumpridas': metas_cumpridas,
+        'percentual_metas': percentual_metas,
+        'resumo_pilares': resumo_pilares,
+        'lista_metas': lista_metas,
+        'total_grupos': total_grupos,
     }
 
     return render(
@@ -232,7 +301,6 @@ def area_funcionario(request):
         'core/area_funcionario.html',
         contexto
     )
-
 
 def about(request):
     # Passa a informação se o questionário foi respondido para liberar o link dos pilares
