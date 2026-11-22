@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
@@ -21,29 +22,21 @@ from django.db import transaction
 from django.http import JsonResponse, HttpResponse, FileResponse
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
-import os
 from django.views.decorators.http import require_POST
 from django.core.cache import cache
-import json
 
 from . import pedro
+
 
 class LoginPersonalizadoView(LoginView):
 
     def get_success_url(self):
-
         # Volta para a página que pediu o login (ex.: o chat do Pedro)
         destino = self.get_redirect_url()
         if destino:
             return destino
 
-        usuario = self.request.user
-
-        # Verifica se é funcionário
-        if hasattr(usuario, 'perfil_funcionario'):
-            return reverse('area_funcionario')
-
-        # Dono ou outro usuário autenticado
+        # Dono e funcionário vão para a mesma tela inicial
         return reverse('home')
 
 
@@ -52,18 +45,7 @@ def landing(request):
 
 
 def home(request):
-    if request.user.is_authenticated and hasattr(request.user, 'perfil_funcionario'):
-        return redirect('area_funcionario')
-    # Se já escolheu um perfil, direciona para a área correspondente
-    perfil = request.session.get('perfil')
-
-    # if perfil == 'dono':
-    #     return redirect('area_dono')
-    # elif perfil == 'funcionario':
-    #     return redirect('area_funcionario')
-
-    # # Se ainda não escolheu, mostra a página inicial
-    # Quem já entrou vê os pilares; quem não entrou vê a tela de boas-vindas
+    # Quem já entrou (gestor ou funcionário) vê a tela inicial; quem não entrou vê boas-vindas
     if request.user.is_authenticated:
         return render(request, "core/home.html")
     return render(request, "core/boas_vindas.html")
@@ -89,7 +71,6 @@ def area_dono(request):
         empresa_form = EmpresaForm(request.POST)
 
         if user_form.is_valid() and empresa_form.is_valid():
-            # 1. Cria o Usuário
             email = user_form.cleaned_data['email']
             senha = user_form.cleaned_data['senha']
             nome_completo = user_form.cleaned_data['nome_completo']
@@ -102,13 +83,11 @@ def area_dono(request):
                 first_name=nome_completo
             )
 
-            # 2. Cria a Empresa e associa ao Usuário
             empresa = empresa_form.save(commit=False)
             empresa.telefone = telefone
             empresa.save()
             empresa.donos.add(user)
 
-            # 3. Loga o usuário automaticamente para continuar o fluxo
             login(request, user)
 
             messages.success(request, "Conta e empresa criadas! Agora responda o questionário inicial.")
@@ -130,7 +109,6 @@ def questionario_esg(request):
 
         if form.is_valid():
             respostas = form.cleaned_data
-
             request.session['respostas_esg'] = respostas
 
             messages.success(
@@ -151,11 +129,7 @@ def questionario_esg(request):
 
 
 def cadastro_funcionario(request):
-    # Impede que um usuário já autenticado crie outra conta
     if request.user.is_authenticated:
-        if hasattr(request.user, 'perfil_funcionario'):
-            return redirect('area_funcionario')
-
         return redirect('home')
 
     if request.method == 'POST':
@@ -164,14 +138,12 @@ def cadastro_funcionario(request):
         if form.is_valid():
             dados = form.cleaned_data
 
-            # Localiza a empresa pelo código de convite
             empresa = Empresa.objects.get(
                 codigo_convite=dados['codigo_convite']
             )
 
             try:
                 with transaction.atomic():
-                    # Cria a conta do funcionário
                     usuario = User.objects.create_user(
                         username=dados['email'],
                         email=dados['email'],
@@ -179,13 +151,11 @@ def cadastro_funcionario(request):
                         first_name=dados['nome_completo']
                     )
 
-                    # Vincula o funcionário à empresa
                     Funcionario.objects.create(
                         usuario=usuario,
                         empresa=empresa
                     )
 
-                # Realiza o login automaticamente
                 login(request, usuario)
 
                 messages.success(
@@ -193,7 +163,7 @@ def cadastro_funcionario(request):
                     f"Cadastro realizado! Você agora faz parte da equipe da {empresa.nome_empresa}."
                 )
 
-                return redirect('area_funcionario')
+                return redirect('home')
 
             except Exception:
                 messages.error(
@@ -214,107 +184,27 @@ def cadastro_funcionario(request):
 @login_required(login_url='entrar')
 def area_funcionario(request):
     if not hasattr(request.user, 'perfil_funcionario'):
-        messages.error(
-            request,
-            "Esta área é exclusiva para funcionários."
-        )
+        messages.error(request, "Esta área é exclusiva para funcionários.")
         return redirect('home')
+    return redirect('perfil')
 
-    funcionario = request.user.perfil_funcionario
-    empresa = funcionario.empresa
-
-    catalogo_esg = [
-        # Ambiental (E)
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_01_higiene_manipulacao', 'Higiene e Manipulação Segura', 'Garantir que 100% da equipe siga as normas de higiene e controle de temperatura dos alimentos.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_02_separacao_lixo', 'Separação Simples de Lixo', 'Lixeiras separadas para resíduos orgânicos e recicláveis na cozinha e no atendimento.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_03_coleta_oleo', 'Coleta de Óleo Usado', 'Armazenar o óleo de fritura em recipientes adequados e entregar a coletores credenciados.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_04_combate_desperdicio', 'Combate ao Desperdício Visível', 'Avisos amigáveis para conscientizar clientes sobre o desperdício em buffets ou pratos.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_06_recibos_digitais', 'Comandas e Recibos Digitais', 'Adotar comandas eletrônicas e enviar nota fiscal por e-mail ou WhatsApp para poupar papel.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_07_aeradores_torneiras', 'Aeradores nas Torneiras', 'Instalar adaptadores de vazão nas pias da cozinha e nos banheiros para poupar água.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_09_descarte_lampadas_baterias', 'Descarte de Lâmpadas e Baterias', 'Separar lâmpadas queimadas e pilhas para destinação em pontos de coleta da cidade.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_11_apagando_luz', 'Rotina Apagando Luz', 'Procedimento para desligar luzes e aparelhos em estoques, vestiários e ambientes vazios.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_12_uso_consciente_embalagens', 'Uso Consciente de Embalagens', 'Perguntar no delivery se o cliente realmente precisa de talheres e guardanapos descartáveis.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_14_troca_descartaveis', 'Troca Gradual de Descartáveis', 'Substituir recipientes de plástico por embalagens de papel kraft ou biodegradáveis.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_16_compra_produtor_local', 'Compra na Feira / Produtor Local', 'Comprar ingredientes hortifrúti diretamente de feirantes ou agricultores da região.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_18_compostagem_basica', 'Compostagem Básica', 'Encaminhar restos vegetais e cascas cruas para hortas comunitárias ou composteiras locais.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_22_equipamentos_inverter', 'Equipamentos Inverter / Eficientes', 'Trocar geladeiras e freezers antigos por modelos com selo Procel A ou tecnologia Inverter.'),
-        ('E', 'Ambiental (E)', 'ambiental', 'esg_25_energia_solar', 'Energia Solar (Alugada ou Própria)', 'Aderir a cooperativas regionais de energia solar para consumir eletricidade 100% limpa.'),
-        # Social (S)
-        ('S', 'Social (S)', 'social', 'esg_05_cardapio_transparente', 'Cardápio Transparente', 'Sinalizar claramente ingredientes, pratos vegetarianos/veganos e presença de alergênicos.'),
-        ('S', 'Social (S)', 'social', 'esg_13_doacao_excedente', 'Doação do Excedente Limpo', 'Parceria com ONGs para doação segura de alimentos preparados que não foram servidos.'),
-        ('S', 'Social (S)', 'social', 'esg_15_apoio_anti_lesao', 'Compressas e Apoio Anti-Lesão', 'Pausas ativas e orientação postural para cozinheiros e atendentes que passam horas em pé.'),
-        ('S', 'Social (S)', 'social', 'esg_19_folga_aniversario_bem_estar', 'Folga de Aniversário ou Benefício', 'Oferecer folga no aniversário ou pequenos incentivos de saúde/estudo para os funcionários.'),
-        ('S', 'Social (S)', 'social', 'esg_20_treinamento_diversidade', 'Treinamento Sobre Diversidade', 'Orientar a equipe sobre respeito e atendimento inclusivo a todos os perfis de clientes.'),
-        ('S', 'Social (S)', 'social', 'esg_23_opcoes_plant_based', 'Opções Plant-Based no Cardápio', 'Desenvolver e promover pratos saborosos 100% à base de plantas para incentivar a redução de carne.'),
-        # Governança (G)
-        ('G', 'Governança (G)', 'governanca', 'esg_08_organizacao_pvps', 'Organização PVPS no Estoque', "Aplicar a regra 'Primeiro que Vence, Primeiro que Sai' para evitar perdas de insumos."),
-        ('G', 'Governança (G)', 'governanca', 'esg_10_caixa_sugestoes', 'Caixa de Sugestões / Denúncias', 'Canal simples (caixinha física ou WhatsApp) para escutar a equipe de forma confidencial.'),
-        ('G', 'Governança (G)', 'governanca', 'esg_17_planilha_perdas', 'Planilha de Perdas na Produção', 'Pesar e registrar o desperdício diário do pré-preparo para ajustar o volume de compras.'),
-        ('G', 'Governança (G)', 'governanca', 'esg_21_ovos_cage_free_compra_etica', 'Ovos Cage-Free e Compra Ética', 'Priorizar ovos de galinhas livres de gaiola e carnes de fornecedores com certificado de manejo.'),
-        ('G', 'Governança (G)', 'governanca', 'esg_24_selo_certificacao_local', 'Selo ou Certificação Local', 'Obter selos municipais de sustentabilidade, qualidade sanitária ou Lixo Zero.'),
-    ]
-
-    lista_metas = []
-    resumo_pilares = {
-        'ambiental': {'concluidas': 0, 'total': 0, 'percentual': 0},
-        'social': {'concluidas': 0, 'total': 0, 'percentual': 0},
-        'governanca': {'concluidas': 0, 'total': 0, 'percentual': 0},
-    }
-
-    for sigla, nome_pilar, chave, campo, titulo, descricao in catalogo_esg:
-        concluida = bool(getattr(empresa, campo, False))
-        resumo_pilares[chave]['total'] += 1
-        if concluida:
-            resumo_pilares[chave]['concluidas'] += 1
-
-        lista_metas.append({
-            'pilar_sigla': sigla,
-            'pilar_nome': nome_pilar,
-            'titulo': titulo,
-            'descricao': descricao,
-            'concluida': concluida,
-        })
-
-    for dados in resumo_pilares.values():
-        if dados['total'] > 0:
-            dados['percentual'] = int((dados['concluidas'] / dados['total']) * 100)
-
-    total_metas = len(lista_metas)
-    metas_cumpridas = sum(1 for m in lista_metas if m['concluida'])
-    percentual_metas = int((metas_cumpridas / total_metas) * 100) if total_metas > 0 else 0
-    total_grupos = request.user.conversas.filter(tipo=Conversa.TIPO_GRUPO).count()
-
-    contexto = {
-        'usuario': request.user,
-        'funcionario': funcionario,
-        'empresa': empresa,
-        'total_metas': total_metas,
-        'metas_cumpridas': metas_cumpridas,
-        'percentual_metas': percentual_metas,
-        'resumo_pilares': resumo_pilares,
-        'lista_metas': lista_metas,
-        'total_grupos': total_grupos,
-    }
-
-    return render(
-        request,
-        'core/area_funcionario.html',
-        contexto
-    )
 
 def about(request):
-    # Passa a informação se o questionário foi respondido para liberar o link dos pilares
     exibir_pilares = request.session.get('questionario_preenchido', False)
     return render(request, "core/about.html", {'exibir_pilares': exibir_pilares})
 
 
 def pilares(request):
     empresa = None
+    eh_funcionario = False
 
     if request.user.is_authenticated:
-        empresa = request.user.empresas.first()
+        if hasattr(request.user, 'perfil_funcionario') and request.user.perfil_funcionario is not None:
+            eh_funcionario = True
+            empresa = request.user.perfil_funcionario.empresa
+        else:
+            empresa = request.user.empresas.first()
 
-    # Ações organizadas por pilar
     pilares_acoes = {
         'ambiental': [
             {
@@ -451,8 +341,7 @@ def pilares(request):
         ],
     }
 
-    # Salva somente as ações do pilar enviado
-    if request.method == 'POST' and empresa:
+    if request.method == 'POST' and empresa and not eh_funcionario:
         nome_pilar = request.POST.get('pilar')
 
         if nome_pilar not in pilares_acoes:
@@ -475,9 +364,8 @@ def pilares(request):
 
         return redirect('pilares')
 
-    # Prepara as ações para cada pilar
     context = {
-        'pode_editar': empresa is not None,
+        'pode_editar': (empresa is not None and not eh_funcionario),
     }
 
     for nome_pilar, acoes in pilares_acoes.items():
@@ -523,7 +411,6 @@ def contact(request):
     )
 
 
-# apagar essa funcao depois, ela serve para limpar a escolha de dono ou funcionario (usar apenas no desenvolvimento)
 def trocar_perfil(request):
     request.session.pop('perfil', None)
     return redirect('home')
@@ -531,13 +418,99 @@ def trocar_perfil(request):
 
 @login_required(login_url='entrar')
 def perfil(request):
+    eh_funcionario = hasattr(request.user, 'perfil_funcionario') and request.user.perfil_funcionario is not None
+
+    # =======================================================================
+    # PERFIL DO FUNCIONÁRIO (abre core/area_funcionario.html no botão Perfil)
+    # =======================================================================
+    if eh_funcionario:
+        funcionario = request.user.perfil_funcionario
+        empresa = funcionario.empresa
+
+        catalogo_esg = [
+            # Ambiental (E)
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_01_higiene_manipulacao', 'Higiene e Manipulação Segura', 'Garantir que 100% da equipe siga as normas de higiene e controle de temperatura dos alimentos.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_02_separacao_lixo', 'Separação Simples de Lixo', 'Lixeiras separadas para resíduos orgânicos e recicláveis na cozinha e no atendimento.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_03_coleta_oleo', 'Coleta de Óleo Usado', 'Armazenar o óleo de fritura em recipientes adequados e entregar a coletores credenciados.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_04_combate_desperdicio', 'Combate ao Desperdício Visível', 'Avisos amigáveis para conscientizar clientes sobre o desperdício em buffets ou pratos.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_06_recibos_digitais', 'Comandas e Recibos Digitais', 'Adotar comandas eletrônicas e enviar nota fiscal por e-mail ou WhatsApp para poupar papel.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_07_aeradores_torneiras', 'Aeradores nas Torneiras', 'Instalar adaptadores de vazão nas pias da cozinha e nos banheiros para poupar água.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_09_descarte_lampadas_baterias', 'Descarte de Lâmpadas e Baterias', 'Separar lâmpadas queimadas e pilhas para destinação em pontos de coleta da cidade.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_11_apagando_luz', 'Rotina Apagando Luz', 'Procedimento para desligar luzes e aparelhos em estoques, vestiários e ambientes vazios.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_12_uso_consciente_embalagens', 'Uso Consciente de Embalagens', 'Perguntar no delivery se o cliente realmente precisa de talheres e guardanapos descartáveis.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_14_troca_descartaveis', 'Troca Gradual de Descartáveis', 'Substituir recipientes de plástico por embalagens de papel kraft ou biodegradáveis.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_16_compra_produtor_local', 'Compra na Feira / Produtor Local', 'Comprar ingredientes hortifrúti diretamente de feirantes ou agricultores da região.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_18_compostagem_basica', 'Compostagem Básica', 'Encaminhar restos vegetais e cascas cruas para hortas comunitárias ou composteiras locais.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_22_equipamentos_inverter', 'Equipamentos Inverter / Eficientes', 'Trocar geladeiras e freezers antigos por modelos com selo Procel A ou tecnologia Inverter.'),
+            ('E', 'Ambiental (E)', 'ambiental', 'esg_25_energia_solar', 'Energia Solar (Alugada ou Própria)', 'Aderir a cooperativas regionais de energia solar para consumir eletricidade 100% limpa.'),
+            # Social (S)
+            ('S', 'Social (S)', 'social', 'esg_05_cardapio_transparente', 'Cardápio Transparente', 'Sinalizar claramente ingredientes, pratos vegetarianos/veganos e presença de alergênicos.'),
+            ('S', 'Social (S)', 'social', 'esg_13_doacao_excedente', 'Doação do Excedente Limpo', 'Parceria com ONGs para doação segura de alimentos preparados que não foram servidos.'),
+            ('S', 'Social (S)', 'social', 'esg_15_apoio_anti_lesao', 'Compressas e Apoio Anti-Lesão', 'Pausas ativas e orientação postural para cozinheiros e atendentes que passam horas em pé.'),
+            ('S', 'Social (S)', 'social', 'esg_19_folga_aniversario_bem_estar', 'Folga de Aniversário ou Benefício', 'Oferecer folga no aniversário ou pequenos incentivos de saúde/estudo para os funcionários.'),
+            ('S', 'Social (S)', 'social', 'esg_20_treinamento_diversidade', 'Treinamento Sobre Diversidade', 'Orientar a equipe sobre respeito e atendimento inclusivo a todos os perfis de clientes.'),
+            ('S', 'Social (S)', 'social', 'esg_23_opcoes_plant_based', 'Opções Plant-Based no Cardápio', 'Desenvolver e promover pratos saborosos 100% à base de plantas para incentivar a redução de carne.'),
+            # Governança (G)
+            ('G', 'Governança (G)', 'governanca', 'esg_08_organizacao_pvps', 'Organização PVPS no Estoque', "Aplicar a regra 'Primeiro que Vence, Primeiro que Sai' para evitar perdas de insumos."),
+            ('G', 'Governança (G)', 'governanca', 'esg_10_caixa_sugestoes', 'Caixa de Sugestões / Denúncias', 'Canal simples (caixinha física ou WhatsApp) para escutar a equipe de forma confidencial.'),
+            ('G', 'Governança (G)', 'governanca', 'esg_17_planilha_perdas', 'Planilha de Perdas na Produção', 'Pesar e registrar o desperdício diário do pré-preparo para ajustar o volume de compras.'),
+            ('G', 'Governança (G)', 'governanca', 'esg_21_ovos_cage_free_compra_etica', 'Ovos Cage-Free e Compra Ética', 'Priorizar ovos de galinhas livres de gaiola e carnes de fornecedores com certificado de manejo.'),
+            ('G', 'Governança (G)', 'governanca', 'esg_24_selo_certificacao_local', 'Selo ou Certificação Local', 'Obter selos municipais de sustentabilidade, qualidade sanitária ou Lixo Zero.'),
+        ]
+
+        lista_metas = []
+        resumo_pilares = {
+            'ambiental': {'concluidas': 0, 'total': 0, 'percentual': 0},
+            'social': {'concluidas': 0, 'total': 0, 'percentual': 0},
+            'governanca': {'concluidas': 0, 'total': 0, 'percentual': 0},
+        }
+
+        for sigla, nome_pilar, chave, campo, titulo, descricao in catalogo_esg:
+            concluida = bool(getattr(empresa, campo, False)) if empresa else False
+            resumo_pilares[chave]['total'] += 1
+            if concluida:
+                resumo_pilares[chave]['concluidas'] += 1
+
+            lista_metas.append({
+                'pilar_sigla': sigla,
+                'pilar_nome': nome_pilar,
+                'titulo': titulo,
+                'descricao': descricao,
+                'concluida': concluida,
+            })
+
+        for dados in resumo_pilares.values():
+            if dados['total'] > 0:
+                dados['percentual'] = int((dados['concluidas'] / dados['total']) * 100)
+
+        total_metas = len(lista_metas)
+        metas_cumpridas = sum(1 for m in lista_metas if m['concluida'])
+        percentual_metas = int((metas_cumpridas / total_metas) * 100) if total_metas > 0 else 0
+        total_grupos = request.user.conversas.filter(tipo=Conversa.TIPO_GRUPO).count()
+
+        contexto = {
+            'usuario': request.user,
+            'funcionario': funcionario,
+            'empresa': empresa,
+            'total_metas': total_metas,
+            'metas_cumpridas': metas_cumpridas,
+            'percentual_metas': percentual_metas,
+            'resumo_pilares': resumo_pilares,
+            'lista_metas': lista_metas,
+            'total_grupos': total_grupos,
+        }
+
+        return render(request, 'core/area_funcionario.html', contexto)
+
+    # =======================================================================
+    # PERFIL DO GESTOR (core/perfil.html)
+    # =======================================================================
     empresa = request.user.empresas.first()
     aba_ativa = request.GET.get('aba', 'visao_geral')
 
     doc_form = DocumentoForm()
     func_form = CadastroFuncionarioGestorForm()
 
-    # 1. Envio de Documento ESG
     if request.method == 'POST' and 'enviar_documento' in request.POST:
         doc_form = DocumentoForm(request.POST, request.FILES)
         if doc_form.is_valid() and empresa:
@@ -550,7 +523,6 @@ def perfil(request):
         else:
             aba_ativa = 'documentos'
 
-    # 2. Cadastro Direto de Funcionário pelo Gestor
     elif request.method == 'POST' and 'cadastrar_funcionario' in request.POST:
         func_form = CadastroFuncionarioGestorForm(request.POST)
         if func_form.is_valid() and empresa:
@@ -579,7 +551,6 @@ def perfil(request):
         else:
             aba_ativa = 'funcionarios'
 
-    # Dados e KPIs de Documentos
     documentos = list(empresa.documentos.all().order_by('-data_envio')) if empresa else []
     total_documentos = len(documentos)
     docs_vigentes = sum(1 for d in documentos if d.status == 'VIGENTE' and d.status_validade != 'vencido')
@@ -588,26 +559,17 @@ def perfil(request):
     count_s = sum(1 for d in documentos if d.pilar == 'S')
     count_g = sum(1 for d in documentos if d.pilar == 'G')
 
-    # Dados e KPIs de Funcionários
     funcionarios = list(empresa.funcionarios.select_related('usuario').all()) if empresa else []
     total_funcionarios = len(funcionarios)
     funcionarios_ativos = sum(1 for f in funcionarios if f.usuario.is_active)
     limite_30_dias = timezone.now() - timedelta(days=30)
     funcionarios_recentes = sum(1 for f in funcionarios if f.data_cadastro >= limite_30_dias)
 
-    # =======================================================================
-    # INÍCIO DA LÓGICA DINÂMICA DO GRÁFICO DE RENTABILIDADE E METAS
-    # =======================================================================
-    
     total_metas = 0
     metas_cumpridas = 0
-    
     if empresa:
-        # Busca automaticamente todos os campos do modelo Empresa que começam por 'esg_'
         campos_esg = [f.name for f in empresa._meta.get_fields() if f.name.startswith('esg_')]
         total_metas = len(campos_esg)
-        
-        # Conta quantas dessas metas estão como True (concluídas)
         for campo in campos_esg:
             if getattr(empresa, campo, False):
                 metas_cumpridas += 1
@@ -615,28 +577,18 @@ def perfil(request):
     percentual_esg = metas_cumpridas / total_metas if total_metas > 0 else 0
     percentual_metas_int = int(percentual_esg * 100)
 
-    # 1. Gerar os últimos 6 anos (ex: 2021 a 2026)
     ano_atual = timezone.now().year
     labels_anos = [str(ano_atual - i) for i in range(5, -1, -1)]
-
-    # 2. Calcular valores da linha Cinza (Sem ESG) vs Linha Verde (Com ESG)
-    faturamento_base = 62 # Valor inicial estipulado em R$ mil
+    faturamento_base = 62
     valores_sem_esg = []
     valores_com_esg = []
 
     for i in range(6):
-        # Linha Cinza: Crescimento orgânico normal sem ESG (aprox. 3% ao ano)
         base_ano = round(faturamento_base * ((1.03) ** i))
         valores_sem_esg.append(base_ano)
-        
-        # Linha Verde: O ganho escala com o tempo (i) e baseia-se no percentual real de metas cumpridas
-        bonus_esg = 1 + (0.15 * percentual_esg * i) 
+        bonus_esg = 1 + (0.15 * percentual_esg * i)
         esg_ano = round(base_ano * bonus_esg)
         valores_com_esg.append(esg_ano)
-        
-    # =======================================================================
-    # FIM DA LÓGICA DO GRÁFICO E METAS
-    # =======================================================================
 
     context = {
         'usuario': request.user,
@@ -655,18 +607,15 @@ def perfil(request):
         'total_funcionarios': total_funcionarios,
         'funcionarios_ativos': funcionarios_ativos,
         'funcionarios_recentes': funcionarios_recentes,
-        
-        # Variáveis atualizadas para bater com o cálculo do gráfico
         'total_metas': total_metas,
-        'metas_cumpridas': metas_cumpridas, 
+        'metas_cumpridas': metas_cumpridas,
         'percentual_metas': percentual_metas_int,
         'total_comunidades': 0,
-
-        # JSON Dumps para enviar os arrays com segurança para o JavaScript no HTML
         'labels_anos': json.dumps(labels_anos),
         'valores_sem_esg': json.dumps(valores_sem_esg),
         'valores_com_esg': json.dumps(valores_com_esg),
     }
+
     return render(request, 'core/perfil.html', context)
 
 
@@ -676,6 +625,7 @@ def perfil(request):
 
 TAMANHO_MAX_ANEXO = 10 * 1024 * 1024  # 10 MB
 IMAGENS_SEGURAS = {'image/png', 'image/jpeg', 'image/gif', 'image/webp'}
+
 
 def _empresa_do_usuario(usuario):
     """Empresa do usuário, seja ele funcionário ou dono. None se não tiver."""

@@ -1,0 +1,79 @@
+{% extends "core/base.html" %}
+
+{% block title %}Perfil{% endblock %}
+
+{% block content %}
+<div class="perfil-grid" id="painel-resumo">
+
+    <!-- 1. Card do Perfil do Colaborador -->
+    <section class="card card-user-profile">
+        <div class="avatar-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+        </div>
+        <div class="user-info">
+            <span class="eyebrow">Seu perfil</span>
+            <h1 class="user-name">{{ usuario.get_full_name|default:usuario.username }}</h1>
+            <p class="user-role">Colaborador(a)</p>
+            <p class="user-email">{{ usuario.email }}</p>
+        </div>
+    </section>
+
+    <!-- 2. Card da Empresa -->
+    <section class="card card-company">
+        <div class="company-info">
+            <span class="eyebrow">Sua empresa</span>
+            {% if empresa and empresa.nome_empresa %}
+                <h2 class="company-name">{{ empresa.nome_empresa }}</h2>
+                <p class="company-status">Em evolução sustentável</p>
+            {% else %}
+                <h2 class="company-name">Sem empresa vinculada</h2>
+                <p class="company-status">Solicite o código de convite ao seu gestor.</p>
+            {% endif %}
+        </div>
+        <div class="badge-level">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            <span class="level-text">Nível 2</span>
+        </div>
+    </section>
+
+    <!-- 3. Card Metas ESG Cumpridas -->
+    <section class="card card-esg-goals">
+        <div class="goals-header">
+            <h3>Metas ESG cumpridas</h3>
+            <span class="goals-count"><strong>{{ metas_cumpridas }}</strong> / {{ total_metas }}</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar" style="width: {{ percentual_metas }}%;"></div>
+        </div>
+        <p class="progress-subtitle">A empresa concluiu {{ percentual_metas }}% das metas deste ciclo.</p>
+    </section>
+
+    <!-- 4. Lista de Atalhos do Colaborador -->
+    <section class="card card-stats-list">
+        <a href="{% url 'pilares' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                Metas ESG
+            </span>
+            <span class="stat-value">{{ total_metas|default:0 }} &rarr;</span>
+        </a>
+
+        <a href="{% url 'comunidade_feed' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 14.5A6.5 6.5 0 0 1 21.5 20"/></svg>
+                Suas comunidades
+            </span>
+            <span class="stat-value">{{ total_comunidades|default:0 }} &rarr;</span>
+        </a>
+
+        <a href="{% url 'conversas' %}" class="stat-item">
+            <span class="stat-label">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Conversas
+            </span>
+            <span class="stat-value">{{ total_conversas|default:0 }} &rarr;</span>
+        </a>
+    </section>
+
+</div>
+{% endblock %}

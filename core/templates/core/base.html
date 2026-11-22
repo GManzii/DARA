@@ -68,12 +68,7 @@
         </button>
     </div>
 
-    
-{% if user.perfil_funcionario %}
-    <a href="{% url 'area_funcionario' %}" class="drawer-user">
-    {% else %}
     <a href="{% url 'perfil' %}" class="drawer-user">
-    {% endif %}
         <span class="avatar-circle" style="width:52px;height:52px">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
                 stroke-width="1.8" stroke-linecap="round"
@@ -98,80 +93,52 @@
         </span>
     </a>
 
-    
-{% if user.is_authenticated and user.perfil_funcionario %}
+    {% if user.is_authenticated and user.perfil_funcionario %}
 
-    <!-- Menu do funcionário -->
-    <ul class="drawer-links">
-        <li><a href="{% url 'area_funcionario' %}">Início</a></li>
-        <li><a href="{% url 'pilares' %}">Pilares ESG</a></li>
-        <li><a href="{% url 'conversas' %}">Conversas</a></li>
-        <li><a href="{% url 'about' %}">Sobre nós</a></li>
-        <li><a href="{% url 'contact' %}">Fale conosco</a></li>
-    </ul>
+        <!-- Menu do funcionário -->
+        <ul class="drawer-links">
+            <li><a href="{% url 'home' %}">Início</a></li>
+            <li><a href="{% url 'perfil' %}">Perfil</a></li>
+            <li><a href="{% url 'pilares' %}">Pilares ESG</a></li>
+            <li><a href="{% url 'conversas' %}">Conversas</a></li>
+            <li><a href="{% url 'about' %}">Sobre nós</a></li>
+            <li><a href="{% url 'contact' %}">Fale conosco</a></li>
+        </ul>
 
-{% else %}
+    {% else %}
 
-    <!-- Menu dos demais usuários -->
-    <ul class="drawer-links">
+        <!-- Menu do gestor/demais usuários -->
+        <ul class="drawer-links">
+            <li><a href="{% url 'home' %}">Início</a></li>
+            <li><a href="{% url 'perfil' %}">Perfil</a></li>
+            <li><a href="{% url 'pilares' %}">Pilares ESG</a></li>
 
-        <li><a href="{% url 'home' %}">
-            Início
-        </a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'conversas' %}">Conversas</a></li>
+                <li><a href="{% url 'questionario_esg' %}">Questionário ESG</a></li>
+            {% endif %}
 
-        <li><a href="{% url 'perfil' %}">
-            Perfil
-        </a></li>
+            <li><a href="{% url 'about' %}">Sobre nós</a></li>
+            <li><a href="{% url 'contact' %}">Fale conosco</a></li>
+            <li><a href="{% url 'trocar_perfil' %}">Trocar perfil</a></li>
+        </ul>
 
-        <li><a href="{% url 'pilares' %}">
-            Pilares ESG
-        </a></li>
+    {% endif %}
 
-        {% if user.is_authenticated %}
-            <li><a href="{% url 'conversas' %}">
-                Conversas
-            </a></li>
-
-            <li><a href="{% url 'questionario_esg' %}">
-                Questionário ESG
-            </a></li>
-        {% endif %}
-
-        <li><a href="{% url 'about' %}">
-            Sobre nós
-        </a></li>
-
-        <li><a href="{% url 'contact' %}">
-            Fale conosco
-        </a></li>
-
-        <li><a href="{% url 'trocar_perfil' %}">
-            Trocar perfil
-        </a></li>
-
-    </ul>
-
-{% endif %}
-
-<!-- Área de autenticação -->
-{% if user.is_authenticated %}
-
-    <form method="post" action="{% url 'sair' %}" class="drawer-sair">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-contorno btn-bloco">
-            Sair da conta
-        </button>
-    </form>
-
-{% else %}
-
-    <a href="{% url 'entrar' %}" class="btn btn-bloco drawer-sair">
-        Entrar com minha conta
-    </a>
-
-{% endif %}
+    <!-- Área de autenticação -->
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'sair' %}" class="drawer-sair">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-contorno btn-bloco">
+                Sair da conta
+            </button>
+        </form>
+    {% else %}
+        <a href="{% url 'entrar' %}" class="btn btn-bloco drawer-sair">
+            Entrar com minha conta
+        </a>
+    {% endif %}
 </aside>
-
 
 <script>
     (function () {
