@@ -115,7 +115,11 @@
 
             {% if user.is_authenticated %}
                 <li><a href="{% url 'conversas' %}">Conversas</a></li>
-                <li><a href="{% url 'questionario_esg' %}">Questionário ESG</a></li>
+                {% with empresa=user.empresas.first %}
+                    {% if empresa and not empresa.questionario_respondido %}
+                        <li><a href="{% url 'questionario_esg' %}">Questionário ESG</a></li>
+                    {% endif %}
+                {% endwith %}
             {% endif %}
 
             <li><a href="{% url 'about' %}">Sobre nós</a></li>

@@ -219,6 +219,9 @@ class Empresa(models.Model):
         default=False,
         verbose_name="Uso de Energia Solar: Cooperativas de energia solar ou geração própria 100% limpa"
     )
+
+    questionario_respondido = models.BooleanField(default=False)
+    
     def save(self, *args, **kwargs):
         if not self.codigo_convite:
             caracteres = string.ascii_uppercase + string.digits

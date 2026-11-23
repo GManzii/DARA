@@ -102,14 +102,16 @@ def area_dono(request):
     }
     return render(request, 'core/area_dono.html', context)
 
-
+@login_required(login_url='entrar')
 def questionario_esg(request):
+    empresa = _empresa_do_usuario(request.user)
     if request.method == 'POST':
-        form = QuestionarioESGForm(request.POST)
+        form = QuestionarioESGForm(request.POST, instance=empresa)
 
         if form.is_valid():
-            respostas = form.cleaned_data
-            request.session['respostas_esg'] = respostas
+            empresa = form.save(commit=False)
+            empresa.questionario_respondido = True
+            empresa.save()
 
             messages.success(
                 request,
@@ -119,7 +121,7 @@ def questionario_esg(request):
             return redirect('home')
 
     else:
-        form = QuestionarioESGForm()
+        form = QuestionarioESGForm(instance=empresa)
 
     return render(
         request,
