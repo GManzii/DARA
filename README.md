@@ -73,7 +73,7 @@ O site ficará disponível em <http://127.0.0.1:8000/>.
 <summary> Entrega 2 </summary>
 
 #### Deployment
-- Aplicação publicada: [https://daraesg.pythonanywhere.com](https://daraesg.pythonanywhere.com)
+- Aplicação publicada: [https://esgdara.pythonanywhere.com](https://esgdara.pythonanywhere.com)
   
 #### Screencasts
 
